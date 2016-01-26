@@ -1,0 +1,8 @@
+---
+title: "Insert Title Here"
+author: "Danny Wong"
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+layout: post
+---
+
+Start writing here...
