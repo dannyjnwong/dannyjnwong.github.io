@@ -1,22 +1,24 @@
 ---
-title: "Dealing with Death"
-author: "Danny Wong"
-date: "26th January 2016"
+title: Dealing with Death
+author: Danny Wong
+date: 26th January 2016
 output: word_document
 layout: post
+published: true
 ---
 
-After working as a doctor for 7 years, I was no longer a stranger to death. However, this was the first time a patient I had anaesthetised for surgery had died whilst on the operating table. 
 
-He was a man in his 80s, and had a cancer removed from his pelvis a year before. This time he came in with bleeding from the back passage that did not stop. We tried a number of different things, but the only option left to stop the bleeding was to take him to theatre. 
+After working as a doctor for 7 years, I was no longer a stranger to death. However, this was the first time death visited a patient I anaesthetised whilst he was still on the operating table. 
 
-"Have you told my wife?" was what he asked me when I was assessing him for his anaesthetic, "She's at home on her own..." "I'll make sure we tell her. Don't worry about her now," was my reply. But in my mind I was thinking, "You should be worrying about yourself right now," as his list of co-morbidities grew longer on my anaesthetic chart. He was clearly high risk. 
+He was a man in his 80s, and had a cancer removed from his pelvis a year before. This time he came in with bleeding from the back passage. We tried a number of different things to stop the bleed, but the only option left was to take him to theatre. 
 
-I told him of that he would need Intensive Care afterwards and that it was likely to be a difficult operation. But I never told him that he could die. In retrospect, I wonder if it was because I had never entertained that it might have happened, or whether I was avoiding having a difficult conversation. I still do not know.
+"Have you told my wife?" was what he asked me when I was assessing him for his anaesthetic, "She's at home on her own..." "I'll make sure we tell her, but don't worry about that now," was my reply. In my mind I was thinking, "You should be worrying about yourself right now," as his list of co-morbidities grew longer on my anaesthetic chart. He was clearly very high risk. 
 
-We prepared everything we needed, all the equipment was ready and all the theatre team members were ready. As I put him off to sleep, I promised him that we would take very good care of him, as he was clearly anxious about the situation. The anaesthetic was smooth, and we had crossed the first hurdle. I settled down to my side of the surgical drapes and watched the monitors, relieved that he had survived the anaesthetic induction. The surgeons opened up and the smell of faeces mixed with blood started drifting into the room. 
+I told him that he would need Intensive Care afterwards and that it was likely to be a difficult operation. But I did not mention that he might die. In retrospect, I wonder if it was because I had never entertained the thought that it could happen, or whether I was just trying to avoid a difficult conversation. I still do not know.
 
-Then the blood pressure started to fall.
+We prepared all the equipment we needed, and all the theatre team members were ready. As I put him off to sleep, I promised that we would take very good care of him, as he was clearly anxious about the situation. The anaesthetic was smooth, and we had crossed the first hurdle. I settled down to my side of the surgical drapes and watched the monitors, relieved that he had survived the anaesthetic induction. The surgeons opened up and the smell of faeces mixed with blood started drifting into the room. 
+
+Then the blood pressure started to fall, and soon disappeared.
 
 We resuscitated him over the next hour or so with a combination of chest compressions, blood products and adrenaline. But every time we managed to regain an output, it would only last so long before the bleeding raced ahead of us again. Eventually it was obvious that what we were doing was futile, and everyone in the room agreed that we should stop. 
 
