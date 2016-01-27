@@ -1,5 +1,5 @@
 ---
-title: Dealing with Death
+title: Death on the table
 author: Danny Wong
 date: 26th January 2016
 output: word_document
