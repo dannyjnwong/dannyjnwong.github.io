@@ -13,6 +13,7 @@ We will try to extract the data and make some inferences. I have borrowed [Hadle
 #Load the required packages
 require(rvest) #This package allows us to scrape data from html into R
 require(dplyr) #To wrangle data
+require(ggplot2) #To plot graphs
 
 #The data for each year is laid out in its own separate page
 x2015 <- read_html("http://specialtytraining.hee.nhs.uk/specialty-recruitment/competition-ratios/2015-competition-ratios/") %>%
@@ -56,19 +57,19 @@ x2014[18,1] <- "Paediatrics"
 x2013[16,1] <- "Paediatrics"
 
 #Join up the data into one dataframe
-x <- inner_join(x2015, x2014, by = "X1") %>% inner_join(x2013, by = "X1")
+x <- inner_join(x2013, x2014, by = "X1") %>% inner_join(x2015, by = "X1")
 
 #Rename the columns correctly
 colnames(x)[1] <- "Specialty"
-colnames(x)[2] <- "Apps2015"
-colnames(x)[3] <- "Posts2015"
-colnames(x)[4] <- "Ratio2015"
+colnames(x)[2] <- "Apps2013"
+colnames(x)[3] <- "Posts2013"
+colnames(x)[4] <- "Ratio2013"
 colnames(x)[5] <- "Apps2014"
 colnames(x)[6] <- "Posts2014"
 colnames(x)[7] <- "Ratio2014"
-colnames(x)[8] <- "Apps2013"
-colnames(x)[9] <- "Posts2013"
-colnames(x)[10] <- "Ratio2013"
+colnames(x)[8] <- "Apps2015"
+colnames(x)[9] <- "Posts2015"
+colnames(x)[10] <- "Ratio2015"
 #Remove the 1st row
 x <- x[-1, ]
 row.names(x) <- 1:nrow(x)
@@ -81,4 +82,51 @@ require(knitr)
 kable(x)
 ```
 
+This is still a little messy. The data is humanly readable, but we can't really use it for analysis in R. We need to try and tidy things up, and express all the rows as observations (the different years and the different specialties), and columns as the variables in question (number of applications, number of available posts, competition ratios). So let's do this.
+
+```{r, message=FALSE, warning=FALSE}
+#First let's add a column for the year
+x2015 <- mutate(x2015, Year = 2015)
+x2014 <- mutate(x2015, Year = 2014)
+x2013 <- mutate(x2015, Year = 2013)
+
+#Let's drop the first and last rows
+x2015 <- x2015[-1, ]
+x2015 <- x2015[-18, ]
+row.names(x2015) <- 1:nrow(x2015)
+
+#Repeat for the 2014 and 2013 dataframes
+x2014 <- x2014[-1, ]
+x2014 <- x2014[-18, ]
+row.names(x2014) <- 1:nrow(x2014)
+
+x2013 <- x2013[-1, ]
+x2013 <- x2013[-18, ]
+row.names(x2013) <- 1:nrow(x2013)
+
+#Now we can bind the rows together
+CompetitionRatios <- bind_rows(x2013, x2014) %>% bind_rows(x2015)
+
+#Rename the columns
+colnames(CompetitionRatios)[1] <- "Specialty"
+colnames(CompetitionRatios)[2] <- "Applicants"
+colnames(CompetitionRatios)[3] <- "Posts"
+colnames(CompetitionRatios)[4] <- "Ratio"
+```
+
+Now let's look at the resulting dataframe
+
+```{r, warning=FALSE, message=FALSE}
+require(knitr)
+kable(CompetitionRatios)
+```
+
+
 Now we can start doing something with the data. 
+
+Let's now plot some graphs to visualise the data
+
+```{r, message=FALSE, warning=FALSE}
+
+```
+
