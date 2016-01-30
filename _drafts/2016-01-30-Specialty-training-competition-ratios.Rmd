@@ -87,8 +87,24 @@ This is still a little messy. The data is humanly readable, but we can't really 
 ```{r, message=FALSE, warning=FALSE}
 #First let's add a column for the year
 x2015 <- mutate(x2015, Year = 2015)
-x2014 <- mutate(x2015, Year = 2014)
-x2013 <- mutate(x2015, Year = 2013)
+x2014 <- mutate(x2014, Year = 2014)
+x2013 <- mutate(x2013, Year = 2013)
+
+#Rename the columns (Could definitely be improved into an apply function)
+colnames(x2015)[1] <- "Specialty"
+colnames(x2015)[2] <- "Applicants"
+colnames(x2015)[3] <- "Posts"
+colnames(x2015)[4] <- "Ratio"
+
+colnames(x2014)[1] <- "Specialty"
+colnames(x2014)[2] <- "Applicants"
+colnames(x2014)[3] <- "Posts"
+colnames(x2014)[4] <- "Ratio"
+
+colnames(x2013)[1] <- "Specialty"
+colnames(x2013)[2] <- "Applicants"
+colnames(x2013)[3] <- "Posts"
+colnames(x2013)[4] <- "Ratio"
 
 #Let's drop the first and last rows
 x2015 <- x2015[-1, ]
@@ -97,21 +113,15 @@ row.names(x2015) <- 1:nrow(x2015)
 
 #Repeat for the 2014 and 2013 dataframes
 x2014 <- x2014[-1, ]
-x2014 <- x2014[-18, ]
+x2014 <- x2014[-19, ]
 row.names(x2014) <- 1:nrow(x2014)
 
 x2013 <- x2013[-1, ]
-x2013 <- x2013[-18, ]
+x2013 <- x2013[-17, ]
 row.names(x2013) <- 1:nrow(x2013)
 
 #Now we can bind the rows together
 CompetitionRatios <- bind_rows(x2013, x2014) %>% bind_rows(x2015)
-
-#Rename the columns
-colnames(CompetitionRatios)[1] <- "Specialty"
-colnames(CompetitionRatios)[2] <- "Applicants"
-colnames(CompetitionRatios)[3] <- "Posts"
-colnames(CompetitionRatios)[4] <- "Ratio"
 ```
 
 Now let's look at the resulting dataframe
@@ -121,12 +131,27 @@ require(knitr)
 kable(CompetitionRatios)
 ```
 
-
 Now we can start doing something with the data. 
 
 Let's now plot some graphs to visualise the data
 
 ```{r, message=FALSE, warning=FALSE}
+#Need to first convert the Specialty column from a vector of characters to factors
+CompetitionRatios$Specialty <- as.factor(CompetitionRatios$Specialty)
+CompetitionRatios$Ratio <- as.factor(CompetitionRatios$Ratio)
+CompetitionRatios$Year <- as.factor(CompetitionRatios$Year)
 
+ggplot(data=CompetitionRatios, aes(x=Year, y=Ratio, group = Specialty, colour = Specialty)) +
+  geom_line()
 ```
 
+So this is a little busy, it might be worth reducing the number of Specialties to just GP, CMT, CST, Obs and Gyn, ACCS EM and Anaesthetics
+
+```{r, message=FALSE, warning=FALSE}
+#Need to first convert the Specialty column from a vector of characters to factors
+CompetitionRatios2 <- CompetitionRatios %>% filter(Specialty == "Anaesthetics" | Specialty == "Core Medical Training" | Specialty == "Core Surgical Training" | Specialty == "General Practice")
+
+ggplot(data=CompetitionRatios2, aes(x=Year, y=Ratio, group = Specialty, colour = Specialty)) +
+  geom_line() +
+  geom_point(aes(shape = factor(Specialty)))
+```
