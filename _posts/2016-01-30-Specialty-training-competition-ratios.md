@@ -230,7 +230,7 @@ ggplot(data=CompetitionRatios, aes(x=Year, y=Ratio, group = Specialty, colour = 
 
 ![center](/figures/2016-01-30-Specialty-training-competition-ratios/unnamed-chunk-6-1.png) 
 
-So this is a little busy, it might be worth reducing the number of Specialties to just GP, CMT, CST, Paediatrics and Anaesthetics.
+So this is a little busy, it might be worth reducing the number of Specialties to just GP, CMT, CST, Paediatrics and Anaesthetics, the top 5 Specialties by number of applicants in all three years.
 
 
 {% highlight r %}
