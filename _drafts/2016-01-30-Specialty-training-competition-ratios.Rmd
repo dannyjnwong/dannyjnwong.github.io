@@ -157,3 +157,26 @@ ggplot(data=CompetitionRatios2, aes(x=Year, y=Ratio, group = Specialty, colour =
   geom_line() +
   geom_point(aes(shape = factor(Specialty)))
 ```
+
+We can immediately see that generally speaking for this group of specialties, other than Core Surgical Training, the Competition Ratio is reducing over these 3 years. Why is this so? Is it due more to dropping applicant numbers or an increase in posts?
+
+Let's plot the graphs of Applicants over time and Posts over time.
+
+```{r, message=FALSE, warning=FALSE}
+#Need to first convert the Specialty column from a vector of characters to factors
+CompetitionRatios2 <- CompetitionRatios %>% filter(Specialty == "Anaesthetics" | Specialty == "Core Medical Training" | Specialty == "Core Surgical Training" | Specialty == "General Practice" | Specialty == "Paediatrics")
+
+ggplot(data=CompetitionRatios2, aes(x=Year, y=Applicants, group = Specialty, colour = Specialty)) +
+  geom_line() +
+  geom_point(aes(shape = factor(Specialty)))
+
+ggplot(data=CompetitionRatios2, aes(x=Year, y=Posts, group = Specialty, colour = Specialty)) +
+  geom_line() +
+  geom_point(aes(shape = factor(Specialty)))
+```
+
+We can see that for GP, and CMT the number of applicants have been dropping year-on-year. Whereas for CST and Anaesthetics, the applicant numbers have been rising slightly. Paediatrics has been relatively static.
+
+However, despite the dropping number of applicants for GP and CMT, there have also been a significant increase year-on-year in the number of available posts for these specialties. Anaesthetics and Paediatrics have also had some increase in their number of posts.
+
+In conclusion, GP and CMT in particular have much less uptake in applicants, seemingly indicating that they are becoming less popular, despite the presumably increasing workforce demands for these two specialties. 
