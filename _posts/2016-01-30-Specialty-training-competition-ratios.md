@@ -219,8 +219,10 @@ Let's now plot some graphs to visualise the data
 {% highlight r %}
 #Need to first convert the Specialty column from a vector of characters to factors
 CompetitionRatios$Specialty <- as.factor(CompetitionRatios$Specialty)
-CompetitionRatios$Ratio <- as.factor(CompetitionRatios$Ratio)
+CompetitionRatios$Ratio <- as.numeric(CompetitionRatios$Ratio)
 CompetitionRatios$Year <- as.factor(CompetitionRatios$Year)
+CompetitionRatios$Applicants <- as.numeric(CompetitionRatios$Applicants)
+CompetitionRatios$Posts <- as.numeric(CompetitionRatios$Posts)
 
 ggplot(data=CompetitionRatios, aes(x=Year, y=Ratio, group = Specialty, colour = Specialty)) +
   geom_line()
@@ -228,12 +230,12 @@ ggplot(data=CompetitionRatios, aes(x=Year, y=Ratio, group = Specialty, colour = 
 
 ![center](/figures/2016-01-30-Specialty-training-competition-ratios/unnamed-chunk-6-1.png) 
 
-So this is a little busy, it might be worth reducing the number of Specialties to just GP, CMT, CST and Anaesthetics.
+So this is a little busy, it might be worth reducing the number of Specialties to just GP, CMT, CST, Paediatrics and Anaesthetics.
 
 
 {% highlight r %}
 #Need to first convert the Specialty column from a vector of characters to factors
-CompetitionRatios2 <- CompetitionRatios %>% filter(Specialty == "Anaesthetics" | Specialty == "Core Medical Training" | Specialty == "Core Surgical Training" | Specialty == "General Practice")
+CompetitionRatios2 <- CompetitionRatios %>% filter(Specialty == "Anaesthetics" | Specialty == "Core Medical Training" | Specialty == "Core Surgical Training" | Specialty == "General Practice" | Specialty == "Paediatrics")
 
 ggplot(data=CompetitionRatios2, aes(x=Year, y=Ratio, group = Specialty, colour = Specialty)) +
   geom_line() +
