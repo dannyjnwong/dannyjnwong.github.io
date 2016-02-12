@@ -1,0 +1,57 @@
+---
+title: "Looking at Specialty Training Competition Ratios (2)"
+author: "Danny Wong"
+date: "11 February, 2016"
+layout: post
+---
+
+Since my [last post](http://dannyjnwong.github.io/Specialty-training-competition-ratios/), some new data from Round 1 of the 2016 Specialty Training Applications [surfaced on Twitter](https://twitter.com/ASiTofficial/status/695945762199498752). This offered up the opportunity to update my graphs to include the most current data.
+
+Unfortunately, the data was presented in a picture format, so I had to hand-transcribe onto a spreadsheet, and appended it to the bottom of the data I scraped from my previous post. If you want to see the spreadsheet, I have uploaded it [here](https://raw.githubusercontent.com/dannyjnwong/dannyjnwong.github.io/master/data/CompetitionRatios2013-2016.csv).
+
+But let's fire up R.
+
+```{r, warning=FALSE, message=FALSE}
+#Load the required packages
+require(dplyr) #To wrangle data
+require(ggplot2) #To plot graphs
+require(knitr)
+
+#The data
+CompetitionRatios <- read.csv("https://raw.githubusercontent.com/dannyjnwong/dannyjnwong.github.io/master/data/CompetitionRatios2013-2016.csv")
+
+#Let's ensure the ratios are accurate
+CompetitionRatios <- mutate(CompetitionRatios, Ratio = Applicants/Posts)
+CompetitionRatios$Year <- as.factor(CompetitionRatios$Year)
+CompetitionRatios$Applicants <- as.numeric(CompetitionRatios$Applicants)
+CompetitionRatios$Posts <- as.numeric(CompetitionRatios$Posts)
+
+#Let's see the table
+kable(CompetitionRatios)
+```
+
+As you can see I have already formatted the data in the long table format. So we can go straight to graphing. We will visualise the Acute Specialties.
+
+```{r, message=FALSE, warning=FALSE, fig.width=6, fig.height=4}
+#Filter the specialties to analyse
+CompetitionRatios2 <- CompetitionRatios %>% filter(Specialty == "Anaesthetics" | Specialty == "Core Medical Training" | Specialty == "Core Surgical Training" | Specialty == "General Practice" | Specialty == "Paediatrics" | Specialty == "ACCS EM" | Specialty == "Obstetrics and Gynaecology")
+
+ggplot(data=CompetitionRatios2, aes(x=Year, y=Ratio, group = Specialty, colour = Specialty)) +
+  geom_line()
+#ggsave("Ratios2013-2016.png", width = 6, height = 4, units = "in", type = "cairo-png")
+ggplot(data=CompetitionRatios2, aes(x=Year, y=Applicants, group = Specialty, colour = Specialty)) +
+  geom_line()
+#ggsave("Applicants2013-2016.png", width = 6, height = 4, units = "in", type = "cairo-png")
+ggplot(data=CompetitionRatios2, aes(x=Year, y=Posts, group = Specialty, colour = Specialty)) +
+  geom_line()
+#ggsave("Posts2013-2016.png", width = 6, height = 4, units = "in", type = "cairo-png")
+
+CompetitionRatios3 <- CompetitionRatios %>% group_by(Year) %>% summarise(TotalApplicants = sum(Applicants), TotalPosts = sum(Posts)) %>% mutate(MeanRatio = TotalApplicants/TotalPosts)
+
+kable(CompetitionRatios3)
+
+ggplot(data=CompetitionRatios3, aes(x=Year, y=TotalApplicants, group=0)) + 
+  geom_line()
+```
+
+We therefore see that there's been a `r (1 - CompetitionRatios3[4,2] / CompetitionRatios3[1,2]) * 100`% reduction in Total Applicants between 2013 to 2016. Also, it is particularly bad in GP (`r (1 - CompetitionRatios[59,2] / CompetitionRatios[9,2]) * 100`% reduction) and CMT (`r (1 - CompetitionRatios[57,2] / CompetitionRatios[6,2]) * 100`% reduction) during the same time-frame.
