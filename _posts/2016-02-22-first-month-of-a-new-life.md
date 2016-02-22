@@ -1,6 +1,8 @@
 ---
 published: true
+layout: post
 ---
+
 
 
 ## First month of a new life
