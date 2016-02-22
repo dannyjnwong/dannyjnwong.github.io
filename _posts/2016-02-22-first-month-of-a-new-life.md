@@ -3,10 +3,6 @@ published: true
 layout: post
 ---
 
-
-
-## First month of a new life
-
 No coding in this post, just rambling!
 
 So I'm now a few weeks into my new life in research, and it has been a revelation. 
