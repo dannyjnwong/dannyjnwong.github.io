@@ -13,31 +13,11 @@ The data they provided is simulated and in an Microsoft Excel (.xls) spreadsheet
 {% highlight r %}
 #We will use the readxl package to read the data into R
 library(readxl)
-data <- read_excel("data/DataSetFile.xls")
-{% endhighlight %}
+data <- read_excel("../data/DataSetFile.xls")
 
-
-
-{% highlight text %}
-## Error: 'data/DataSetFile.xls' does not exist in current working directory ('C:/Users/Think/Dropbox/Documents/Work/Research/dannyjnwong.github.io/_drafts').
-{% endhighlight %}
-
-
-
-{% highlight r %}
 #The last 2 rows need to be removed, because they are actually annotations describing the dataset. The first column can be removed because they are just observation numbers.
 data <- data[1:42, 2:9]
-{% endhighlight %}
 
-
-
-{% highlight text %}
-## Error in `[.data.frame`(data, 1:42, 2:9): undefined columns selected
-{% endhighlight %}
-
-
-
-{% highlight r %}
 #We need to tell R that there are some categorical variables
 data$female <- as.factor(as.integer(data$female))
 data$drugstat <- as.factor(as.integer(data$drugstat))
@@ -85,13 +65,13 @@ describe(data)
 ##       n missing  unique 
 ##      40       2       2 
 ## 
-## 1 (20, 50%), 2 (20, 50%) 
+## 0 (20, 50%), 1 (20, 50%) 
 ## ---------------------------------------------------------------------------
 ## drugstat 
 ##       n missing  unique 
 ##      41       1       2 
 ## 
-## 1 (31, 76%), 2 (10, 24%) 
+## 0 (31, 76%), 1 (10, 24%) 
 ## ---------------------------------------------------------------------------
 ## heellen 
 ##       n missing  unique    Info    Mean     .05     .10     .25     .50 
@@ -117,7 +97,7 @@ describe(data)
 ##       n missing  unique 
 ##      42       0       3 
 ## 
-## 1 (7, 17%), 2 (21, 50%), 3 (14, 33%) 
+## 0 (7, 17%), 1 (21, 50%), 2 (14, 33%) 
 ## ---------------------------------------------------------------------------
 ## cd4 
 ##       n missing  unique    Info    Mean     .05     .10     .25     .50 
@@ -230,9 +210,9 @@ summary(model2)
 ## (Intercept)     226.13882   92.83294   2.436   0.0202 * 
 ## bwt               0.07550    0.02323   3.250   0.0026 **
 ## gestag           -6.48755    3.32436  -1.952   0.0593 . 
-## factor(ethnic)2 -46.91154   19.53192  -2.402   0.0219 * 
-## factor(ethnic)3 -27.22016   18.62705  -1.461   0.1531   
-## drugstat2       -17.43254   15.62062  -1.116   0.2722   
+## factor(ethnic)1 -46.91154   19.53192  -2.402   0.0219 * 
+## factor(ethnic)2 -27.22016   18.62705  -1.461   0.1531   
+## drugstat1       -17.43254   15.62062  -1.116   0.2722   
 ## ---
 ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 ## 

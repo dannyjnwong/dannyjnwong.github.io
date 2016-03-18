@@ -12,7 +12,7 @@ The data they provided is simulated and in an Microsoft Excel (.xls) spreadsheet
 ```{r Load_Data, warning=FALSE, message=FALSE}
 #We will use the readxl package to read the data into R
 library(readxl)
-data <- read_excel("data/DataSetFile.xls")
+data <- read_excel("../data/DataSetFile.xls")
 
 #The last 2 rows need to be removed, because they are actually annotations describing the dataset. The first column can be removed because they are just observation numbers.
 data <- data[1:42, 2:9]
