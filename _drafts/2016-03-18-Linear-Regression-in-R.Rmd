@@ -1,0 +1,8 @@
+---
+title: "Linear Regression in R"
+author: "Danny Wong"
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+layout: post
+---
+
+Start writing here...
