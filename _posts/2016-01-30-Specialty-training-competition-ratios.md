@@ -4,6 +4,8 @@ author: "Danny Wong"
 date: "30 January, 2016"
 layout: post
 blog: true
+tag:
+- R
 ---
 
 Health Education England's Medical and Dental Recruitment and Selection [website](http://specialtytraining.hee.nhs.uk/) publishes the numbers of applicants and available spaces, and hence the competition ratios for each of the Specialties for the last few years of recruitment.

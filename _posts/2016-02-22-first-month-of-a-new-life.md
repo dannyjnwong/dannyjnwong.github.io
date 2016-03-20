@@ -4,6 +4,8 @@ author: Danny Wong
 date: 22 February 2016
 layout: post
 blog: true
+tag:
+- thoughts
 ---
 
 

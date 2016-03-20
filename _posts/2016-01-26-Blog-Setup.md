@@ -4,6 +4,9 @@ author: "Danny Wong"
 date: "26 January, 2016"
 layout: post
 blog: true
+tag:
+- Jekyll
+- R
 ---
 
 The purpose of this blog is to share my research and R code in order to facilitate reproducibility. Therefore, I have structured this blog to allow me write using the following workflow: 
