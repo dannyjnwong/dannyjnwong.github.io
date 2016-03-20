@@ -1,8 +1,9 @@
 ---
 title: "Analysing Helipad Data"
 author: "Danny Wong"
-layout: post
+layout: default
 date: "Sunday, April 05, 2015"
+blog: true
 ---
 
 We have some data from the KSS HEMS patients conveyed to KCH.
