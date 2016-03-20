@@ -3,6 +3,7 @@ title: "Linear Regression in R"
 author: "Danny Wong"
 date: "18 March 2016"
 layout: post
+blog: true
 ---
 
 I recently attended an excellent [Introduction to Regression Analysis course](https://www.ucl.ac.uk/ich/short-courses-events/short-courses-events-publication/stats-regression) run by the [Centre for Applied Statistics Courses](http://www.ucl.ac.uk/ich/short-courses-events/about-stats-courses) at UCL. They taught the course with example output from SPSS, so here I try to replicate their steps in R.
