@@ -3,8 +3,8 @@ name: Danny Wong
 bio: Researcher at the National Institute of Academic Anaesthesia's Health Services Research Centre
 
 # if it's an external image, update below for true
-external-image: true
-picture: https://avatars2.githubusercontent.com/u/8995526?v=3&u=9f46df874b0d606513c8fe53a70282c2d7928c42&s=140
+external-image: false
+picture: 'assets/images/profile.png'
 
 url: http://dannyjnwong.github.io
 # your url: http://USERNAME.github.io
