@@ -10,3 +10,4 @@ tmp
 *.Rdata
 *.Rprofile
 *.Rhistory
+.Rproj.user
