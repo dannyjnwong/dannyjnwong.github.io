@@ -25,6 +25,7 @@ data$ethnic <- as.factor(as.integer(data$ethnic))
 {% endhighlight %}
 
 So now we have a dataframe of 42 observations and 8 variables:
+
   - `frcmax` = VmaxFRC(L/s), a measure of small airway function of the baby at birth
   - `female` = 0 (male), 1 (female)
   - `drugstat` = Whether the mother was administered pethidine during labour: 0 (No), 1 (Yes)
