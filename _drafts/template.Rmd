@@ -4,6 +4,9 @@ author: "Danny Wong"
 date: "`r format(Sys.time(), '%d %B, %Y')`"
 layout: post
 blog: true
+tag:
+- "insert tag 1 here"
+- "insert tag 2 here"
 ---
 
 Start writing here...
