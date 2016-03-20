@@ -6,4 +6,7 @@ npm-debug.log
 .bundle
 _site
 tmp
-.Rproj.user
+*.Rproj.user
+*.Rdata
+*.Rprofile
+*.Rhistory
