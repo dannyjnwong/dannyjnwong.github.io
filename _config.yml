@@ -17,7 +17,7 @@ highlighter: rouge
 analytics-google: 'UA-MYANALYTICS'
 
 # if you don't want comments in your posts, set to false
-#disqus: mydisqus
+disqus: dannyjnwong
 
 # if you don't have any of social below, comment the line
 #facebook: myfacebook
