@@ -1,1 +1,0 @@
-source("_drafts/rmd2md.R")
