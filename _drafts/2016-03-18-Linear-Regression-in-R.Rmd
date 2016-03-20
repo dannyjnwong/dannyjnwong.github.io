@@ -68,7 +68,7 @@ model2 <- lm(frcmax ~ bwt + gestag + factor(ethnic) + drugstat, data = data)
 summary(model2)
 ```
 
-###So what does this mean? 
+**So what does this mean?**
 
 In this model, the equation is `frcmax = 226.14 + 0.08(bwt) - 6.49(gestag) - 49.91(ethnic = African) - 27.22(ethnic = Asian) - 17.43(drugstat = 1)`.
 

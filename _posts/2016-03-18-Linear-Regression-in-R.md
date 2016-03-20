@@ -222,7 +222,7 @@ summary(model2)
 ## F-statistic: 4.741 on 5 and 34 DF,  p-value: 0.002158
 {% endhighlight %}
 
-###So what does this mean? 
+**So what does this mean?**
 
 In this model, the equation is `frcmax = 226.14 + 0.08(bwt) - 6.49(gestag) - 49.91(ethnic = African) - 27.22(ethnic = Asian) - 17.43(drugstat = 1)`.
 
