@@ -1,7 +1,7 @@
 ---
 title: "Linear Regression in R"
 author: "Danny Wong"
-date: "18 March, 2016"
+date: "18 March 2016"
 layout: post
 ---
 
@@ -144,7 +144,7 @@ stripchart(frcmax ~ female, vertical = TRUE, offset = .5, pch = 19, ylab = "FRC 
 
 ![center](/figures/2016-03-18-Linear-Regression-in-R/Exploratory-4.png) 
 
-We can now try to fit a linear model, our outcome variable of interest is `frcmax`, and we need to include the predictor `drugstat` in our model. But let's first fit the model `frcmax = a + b(bwt)`.
+We can now try to fit a linear model, our outcome variable of interest is `frcmax`, and we need to include the predictor `drugstat` in our model. But let's first fit this model $$frcmax = \alpha + \beta(bwt)$$
 
 
 {% highlight r %}
@@ -222,9 +222,9 @@ summary(model2)
 ## F-statistic: 4.741 on 5 and 34 DF,  p-value: 0.002158
 {% endhighlight %}
 
-So what does this mean? 
+###So what does this mean? 
 
-In this model, the equation is `frcmax = 226.14 + 0.08(bwt) - 6.49(gestag) - 49.91(ethnic = African) - 27.22(ethnic = Asian) - 17.43(drugstat = 1)`
+In this model, the equation is $$frcmax = 226.14 + 0.08(bwt) - 6.49(gestag) - 49.91(ethnic = African) - 27.22(ethnic = Asian) - 17.43(drugstat = 1)$$
 
 The Adjusted R^2 is 0.3241, meaning 32.41% of the variability of `frcmax` can be accounted for by the predictors in the model. `bwt` and `ethnic = African` had p-values <0.05, meaning these were significant independent predictors of `frcmax`. For every 1 unit increase in `bwt`, there is a 6.49 unit increase in `frcmax`, and `ethnic = African` resulted in a mean `frcmax` of -46.91 compared to `ethnic = White Caucasian`.
 
