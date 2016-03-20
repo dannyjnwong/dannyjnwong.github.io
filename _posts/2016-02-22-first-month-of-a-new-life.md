@@ -3,7 +3,7 @@ title: First month of a new life
 author: Danny Wong
 date: 22 February 2016
 layout: post
-published: true
+blog: true
 ---
 
 
