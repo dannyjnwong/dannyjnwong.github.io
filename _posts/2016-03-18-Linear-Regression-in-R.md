@@ -227,3 +227,5 @@ So what does this mean?
 In this model, the equation is `frcmax = 226.14 + 0.08(bwt) - 6.49(gestag) - 49.91(ethnic = African) - 27.22(ethnic = Asian) - 17.43(drugstat = 1)`
 
 The Adjusted R^2 is 0.3241, meaning 32.41% of the variability of `frcmax` can be accounted for by the predictors in the model. `bwt` and `ethnic = African` had p-values <0.05, meaning these were significant independent predictors of `frcmax`. For every 1 unit increase in `bwt`, there is a 6.49 unit increase in `frcmax`, and `ethnic = African` resulted in a mean `frcmax` of -46.91 compared to `ethnic = White Caucasian`.
+
+Since the p-value for `drugstat = 1` is 0.2722, it means that after adjusting for the other variables `bwt`, `gestag`, `ethnic` in this model, the null hypothesis is true and there is no statistically significantassociation between the use of pethidine during labour and VmaxFRC of the baby at birth.
