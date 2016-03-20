@@ -5,7 +5,9 @@ permalink: /about/
 ---
 ![Profile Image]({{ site.url }}/{{ site.picture }})
 
-I am an Anaesthetic Specialty Registrar from London, currently taking time Out-of-Programme for Research (OOPR). My research project is the Epidemiology of Critical Care provision after Surgery (EpiCCS), it has been designated the 2nd Sprint National Anaesthesia Project (SNAP-2) by the Royal College of Anaesthetists' [National Institute of Academic Anaesthesia (NIAA)](http://www.niaa.org.uk). 
+I am an ST5 Anaesthetic Specialty Registrar from London, currently taking time Out-of-Programme for Research (OOPR). My research project is the Epidemiology of Critical Care provision after Surgery (EpiCCS), it has been designated the [2nd Sprint National Anaesthesia Project (SNAP-2)](http://www.niaa-hsrc.org.uk/SNAP-2) by the Royal College of Anaesthetists' [National Institute of Academic Anaesthesia (NIAA)](http://www.niaa.org.uk). I am registered for an Medical Doctorate (MD) at the [Department of Applied Health Research (DAHR)](https://www.ucl.ac.uk/dahr), UCL.
+
+My research interests include statistical computing and mapping with R and QGIS.
 
 ### Curriculum Vitae
 
