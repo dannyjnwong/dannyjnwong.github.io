@@ -1,7 +1,7 @@
 ---
 title: "Analysing Helipad Data"
 author: "Danny Wong"
-layout: default
+layout: blog
 date: "Sunday, April 05, 2015"
 blog: true
 ---
