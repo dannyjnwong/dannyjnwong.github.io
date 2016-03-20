@@ -3,6 +3,7 @@ title: "Looking at Specialty Training Competition Ratios (2)"
 author: "Danny Wong"
 date: "11 February, 2016"
 layout: post
+blog: true
 ---
 
 Since my [last post](http://dannyjnwong.github.io/Specialty-training-competition-ratios/), some new data from Round 1 of the 2016 Specialty Training Applications [surfaced on Twitter](https://twitter.com/ASiTofficial/status/695945762199498752). This offered up the opportunity to update my graphs to include the most current data.
