@@ -9,7 +9,7 @@ picture: https://avatars2.githubusercontent.com/u/8995526?v=3&u=9f46df874b0d6065
 url: http://dannyjnwong.github.io/
 # your url: http://USERNAME.github.io
 
-permalink: /:title/
+permalink: :title/
 
 markdown: kramdown
 highlighter: rouge
