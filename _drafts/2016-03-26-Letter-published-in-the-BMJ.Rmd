@@ -15,8 +15,11 @@ Here is my article reproduced in full:
 > Gulland's article provides an interesting perspective on the trusts held up as shining examples by Hunt in pushing through the seven day services agenda.[1] The policy has repeatedly been used as an excuse by Hunt to push through a new junior doctors' contract, saying that changes to this contract are necessary to facilitate a seven day NHS.[2] Ironically all the measures cited by Gulland relate to the consultant cover at Salisbury and Northumbria. She does not mention the contribution that junior doctors may or may not need to make to facilitate seven day care, suggesting that the junior doctors' contract has nothing to do with seven day care.
 >
 > *Footnotes*
+>
 > Competing interests: I am a junior doctor.
 >
 > *References*
+>
 > 1. Gulland A. Seven day services: how are trusts doing against Keogh's clinical standards?BMJ 2016;352:i1258.
+>
 > 2. Jeremy Hunt updates parliament on the junior doctors' contract. Oral statement to parliament. 11 February 2016. https://www.gov.uk/government/speeches/jeremy-hunt-updates-parliament-on-the-junior-doctors-contract
