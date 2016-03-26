@@ -11,6 +11,7 @@ tag:
 This week I managed to get [a letter published in the BMJ](http://bmj.com/cgi/content/full/bmj.i1576?ijkey=Uo8zr2C2tn8DSHy&keytype=ref) responding to [an article written by Anne Gulland](http://www.bmj.com/content/352/bmj.i1258) about how some selected NHS trusts are doin against the "Seven Day NHS" standards.
 
 Here is my article reproduced in full:
+
 > Gulland's article provides an interesting perspective on the trusts held up as shining examples by Hunt in pushing through the seven day services agenda.[1] The policy has repeatedly been used as an excuse by Hunt to push through a new junior doctors' contract, saying that changes to this contract are necessary to facilitate a seven day NHS.[2] Ironically all the measures cited by Gulland relate to the consultant cover at Salisbury and Northumbria. She does not mention the contribution that junior doctors may or may not need to make to facilitate seven day care, suggesting that the junior doctors' contract has nothing to do with seven day care.
 >
 > *Footnotes*
