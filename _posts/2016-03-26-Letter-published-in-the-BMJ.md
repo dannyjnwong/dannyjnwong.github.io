@@ -17,5 +17,5 @@ Here is my article reproduced in full:
 > Competing interests: I am a junior doctor.
 >
 > *References*
-> 1. Gulland A. Seven day services: how are trusts doing against Keoghâ<U+0080><U+0099>s clinical standards?BMJ 2016;352:i1258.
-> 2. Jeremy Hunt updates parliament on the junior doctorsâ<U+0080><U+0099> contract. Oral statement to parliament. 11 February 2016. https://www.gov.uk/government/speeches/jeremy-hunt-updates-parliament-on-the-junior-doctors-contract
+> 1. Gulland A. Seven day services: how are trusts doing against Keogh's clinical standards?BMJ 2016;352:i1258.
+> 2. Jeremy Hunt updates parliament on the junior doctors' contract. Oral statement to parliament. 11 February 2016. https://www.gov.uk/government/speeches/jeremy-hunt-updates-parliament-on-the-junior-doctors-contract
