@@ -1,0 +1,24 @@
+---
+title: "Replacing values in a column with dplyr using logical statements"
+author: "Danny Wong"
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+layout: post
+blog: true
+tag:
+- R
+- coding
+---
+
+If I have a dataframe (dat) with two columns, and there are NA values in one column (col1) that I want to specifically replace into zeroes (or whatever other value) but only in rows with specific values in the second column (col2) I can use `mutate`, `replace` and `which` in the following way.
+```{r}
+library(dplyr)
+
+#Example dataframe
+dat <- data.frame(col1 = c(1, 2, 3, NA, NA, NA, 3, 2, 1, 0), col2 = c("Tom", "Dick", "Harry", "Dick", "Tom", "Harry", "Harry", "Dick", "Tom", "Harry"))
+
+print(dat)
+
+dat <- dat %>% mutate(col1 = replace(col1, which(is.na(col1) & col2 == "Tom"), 0))
+
+print(dat)
+```
