@@ -1,0 +1,31 @@
+---
+title: "Splitting a dataset into 2 partitions"
+author: "Danny Wong"
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+layout: post
+blog: true
+tag:
+- R
+- coding
+---
+
+We may sometimes need to split a dataset into 2 partitions, for example to create a training and testing dataset to fit a regression model and then perform internal validation.
+
+```{r}
+#Create simulated data
+set.seed(10)
+dat <- data.frame(col1 = rnorm(n = 100, mean = 1, sd = 1), col2 = runif(n = 100, min = 0, max = 1))
+
+#Create partitions
+set.seed(20)
+x <- sample(length(dat$col1), size = length(dat$col1)/3)  
+testing <- dat[x, ]
+training <- dat[-x, ]
+
+nrow(training)
+nrow(testing)
+
+head(training)
+head(testing)
+```
+
