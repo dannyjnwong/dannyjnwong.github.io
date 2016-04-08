@@ -111,7 +111,7 @@ summary(model)
 
 {% highlight r %}
 plot(W ~ Game, type="l", col="red", data = bulls, lty = 2)
-points(W ~ Game, type="l", col="green", data = warriors)
+points(W ~ Game, type="l", col="blue", data = warriors)
 
 #Add a dotted black line for the regression line
 abline(model, lty = 2)
