@@ -1,0 +1,41 @@
+---
+title: "Visualising categorical data with jittered plots"
+author: "Danny Wong"
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+layout: post
+blog: true
+tag:
+- R
+- coding
+---
+
+When looking at data, sometimes we want to explore the relationship between categorical data (binary, discrete, ordinal, etc). For example in the `mtcars` dataset included within installations of `r`, there are data of the number of cylinders (`cyl`) and whether the cars are automatic (`am = 0`) or manual (`am = 1`).
+
+```{r}
+head(mtcars)
+```
+
+To look at the relationship between `cyl` and `am`, we could just do a table.
+
+```{r}
+xtabs(~ am + cyl, data = mtcars)
+```
+
+But what might be easier to visualise would be to plot out the data.
+
+```{r}
+plot(am ~ cyl, data = mtcars)
+```
+
+Notice that because the points all get plotted over one another, you don't actually get to see the individual points. One way around this is to jitter the points.
+
+```{r}
+plot(jitter(am) ~ jitter(cyl), data = mtcars)
+```
+
+We could even plot the points and add a trendline to help us see any relationships which we could then base our further exploratory analyses on.
+
+```{r}
+scatter.smooth(jitter(mtcars$am) ~ jitter(mtcars$cyl), 
+               family = "gaussian", lpars = list(col = "red"))
+```
