@@ -1,0 +1,64 @@
+---
+title: "Webscraping NBA data: 2015-16 Golden State Warriors vs 1995-96 Chicago Bulls"
+author: "Danny Wong"
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+layout: post
+blog: true
+tag:
+- R
+- coding
+---
+
+The 2015-16 Golden State Warriors are on the verge of either equalling or beating the 1995-96 Chicago Bulls' record of 72 wins in the NBA regular season. Let's use `r` to scrape some data from NBA.com to graph the Warriors' progress over the season in comparison to the Bull's record-setting season.
+
+We will use the `rvest` [package](http://blog.rstudio.org/2014/11/24/rvest-easy-web-scraping-with-r/) to do so.
+
+```{r}
+library(rvest)
+library(tidyr)
+
+nba <- html("http://www.nba.com/news/2015-16-golden-state-warriors-chase-1995-96-chicago-bulls-all-time-wins-record/")
+data <- nba %>% html_nodes("table") %>% html_table(header = TRUE, fill = TRUE)
+
+summary(data)
+
+data <- data[[2]]
+
+data
+
+#split the dataframes into seperate Warriors and Bulls dataframes 
+colnames(data)[3] <- "Game" #To remove the space between Game Number
+
+warriors <- cbind(data[3], data[2])
+bulls <- cbind(data[3], data[5])
+
+#Separate the wins and losses into 2 columns
+warriors <- warriors %>% separate(col = Record, into = c("W", "L"), sep = "-")
+bulls <- bulls %>% separate(col = Record, into = c("W", "L"), sep = "-")
+
+#Plot with base graphics
+plot(W ~ Game, type="l", col="red", data = bulls)
+points(W ~ Game, type="l", col="green", data = warriors)
+```
+
+The plot in base graphics doesn't look that nice. Let's fire up `ggplot2`.
+
+```{r}
+library(ggplot2)
+
+#The dataframes need to be merged into a long format to plot it using gpglot2
+warriors$team <- "2015-16 Warriors"
+bulls$team <- "1995-96 Bulls"
+
+data <- rbind(warriors, bulls)
+
+#Change characters to factors and numbers
+data$team <- as.factor(data$team)
+data$W <- as.numeric(data$W)
+data$Game <- as.numeric(data$Game)
+
+#Now we can plot
+ggplot(data = data, aes(x = Game, y = W, group = team, colour = team)) +
+  geom_line()
+```
+
