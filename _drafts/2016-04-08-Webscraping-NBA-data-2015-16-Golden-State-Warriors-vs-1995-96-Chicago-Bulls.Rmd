@@ -13,7 +13,7 @@ The 2015-16 Golden State Warriors are on the verge of either equalling or beatin
 
 We will use the `rvest` [package](http://blog.rstudio.org/2014/11/24/rvest-easy-web-scraping-with-r/) to do so.
 
-```{r}
+```{r, warning=FALSE}
 library(rvest)
 library(tidyr)
 
@@ -24,7 +24,7 @@ summary(data)
 
 data <- data[[2]]
 
-data
+head(data)
 
 #split the dataframes into seperate Warriors and Bulls dataframes 
 colnames(data)[3] <- "Game" #To remove the space between Game Number
