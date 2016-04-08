@@ -254,34 +254,3 @@ points(W ~ Game, type="l", col="green", data = warriors)
 {% endhighlight %}
 
 ![center](/figures/2016-04-08-Webscraping-NBA-data-2015-16-Golden-State-Warriors-vs-1995-96-Chicago-Bulls/unnamed-chunk-1-1.png) 
-
-The plot in base graphics doesn't look that nice. Let's fire up `ggplot2`.
-
-
-{% highlight r %}
-library(ggplot2)
-
-#The dataframes need to be merged into a long format to plot it using gpglot2
-warriors$team <- "2015-16 Warriors"
-bulls$team <- "1995-96 Bulls"
-
-data <- rbind(warriors, bulls)
-
-#Change characters to factors and numbers
-data$team <- as.factor(data$team)
-data$W <- as.numeric(data$W)
-data$Game <- as.numeric(data$Game)
-
-#Now we can plot
-ggplot(data = data, aes(x = Game, y = W, group = team, colour = team)) +
-  geom_line()
-{% endhighlight %}
-
-
-
-{% highlight text %}
-## Warning: Removed 3 rows containing missing values (geom_path).
-{% endhighlight %}
-
-![center](/figures/2016-04-08-Webscraping-NBA-data-2015-16-Golden-State-Warriors-vs-1995-96-Chicago-Bulls/unnamed-chunk-2-1.png) 
-
