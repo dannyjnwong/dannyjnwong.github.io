@@ -75,21 +75,11 @@ points(W ~ Game, type="l", col="blue", data = warriors) #Solid blue line for War
 Do we think that the Warriors can get to 73 wins this season? Let's try and predict this with a linear regression model, now for a bit of fun! Of course this is fraught with methodological problems, so don't gamble any money based on the result.
 
 
+
 {% highlight r %}
 #Fit a linear model
 #Add a regression line
 model <- lm(W ~ Game, data = warriors)
-{% endhighlight %}
-
-
-
-{% highlight text %}
-## Error in lm.fit(x, y, offset = offset, singular.ok = singular.ok, ...): NA/NaN/Inf in 'y'
-{% endhighlight %}
-
-
-
-{% highlight r %}
 summary(model)
 {% endhighlight %}
 
