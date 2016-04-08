@@ -66,8 +66,80 @@ warriors <- warriors %>% separate(col = Record, into = c("W", "L"), sep = "-")
 bulls <- bulls %>% separate(col = Record, into = c("W", "L"), sep = "-")
 
 #Plot with base graphics
-plot(W ~ Game, type="l", col="red", data = bulls)
-points(W ~ Game, type="l", col="green", data = warriors)
+plot(W ~ Game, type="l", col="red", data = bulls, lty = 2) #Dotted red line for Bulls
+points(W ~ Game, type="l", col="blue", data = warriors) #Solid blue line for Warriors 
 {% endhighlight %}
 
 ![center](/figures/2016-04-08-Webscraping-NBA-data-2015-16-Golden-State-Warriors-vs-1995-96-Chicago-Bulls/unnamed-chunk-1-1.png) 
+
+Do we think that the Warriors can get to 73 wins this season? Let's try and predict this with a linear regression model, now for a bit of fun! Of course this is fraught with methodological problems, so don't gamble any money based on the result.
+
+
+{% highlight r %}
+#Fit a linear model
+#Add a regression line
+model <- lm(W ~ Game, data = warriors)
+{% endhighlight %}
+
+
+
+{% highlight text %}
+## Error in lm.fit(x, y, offset = offset, singular.ok = singular.ok, ...): NA/NaN/Inf in 'y'
+{% endhighlight %}
+
+
+
+{% highlight r %}
+summary(model)
+{% endhighlight %}
+
+
+
+{% highlight text %}
+## 
+## Call:
+## lm(formula = W ~ Game, data = warriors)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -1.4560 -0.3734  0.0666  0.4203  1.2465 
+## 
+## Coefficients:
+##             Estimate Std. Error t value Pr(>|t|)    
+## (Intercept) 1.573515   0.140730   11.18   <2e-16 ***
+## Game        0.882498   0.003056  288.73   <2e-16 ***
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Residual standard error: 0.6195 on 77 degrees of freedom
+##   (3 observations deleted due to missingness)
+## Multiple R-squared:  0.9991,	Adjusted R-squared:  0.9991 
+## F-statistic: 8.337e+04 on 1 and 77 DF,  p-value: < 2.2e-16
+{% endhighlight %}
+
+
+
+{% highlight r %}
+plot(W ~ Game, type="l", col="red", data = bulls, lty = 2)
+points(W ~ Game, type="l", col="green", data = warriors)
+
+#Add a dotted black line for the regression line
+abline(model, lty = 2)
+{% endhighlight %}
+
+![center](/figures/2016-04-08-Webscraping-NBA-data-2015-16-Golden-State-Warriors-vs-1995-96-Chicago-Bulls/unnamed-chunk-2-1.png) 
+
+{% highlight r %}
+#Predict number of wins
+#Add a regression line
+predict(model, newdata = data.frame(Game = 82), interval = "prediction")
+{% endhighlight %}
+
+
+
+{% highlight text %}
+##        fit      lwr     upr
+## 1 73.93832 72.67093 75.2057
+{% endhighlight %}
+
+Ok the model says that the Warriors will have **74** wins this season. BUT, they now have **70** wins and only **3** games left, making it an impossibility to reach 74 wins. So predicting based purely on this model can't be right.
