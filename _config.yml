@@ -14,7 +14,7 @@ permalink: /:title/
 markdown: kramdown
 highlighter: rouge
 
-analytics-google: 'UA-MYANALYTICS'
+analytics-google: 'UA-76197881-1'
 
 # if you don't want comments in your posts, set to false
 disqus: dannyjnwong
