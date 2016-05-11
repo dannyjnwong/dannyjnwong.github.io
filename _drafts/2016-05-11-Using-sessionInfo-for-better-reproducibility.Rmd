@@ -1,0 +1,19 @@
+---
+title: "Using sessionInfo() for better reproducibility"
+author: "Danny Wong"
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+layout: post
+blog: true
+tag:
+- r
+- coding
+---
+
+I've recently had some trouble with re-running some old code. It turns out that the error was that the package `ggplot2` had recently released a new version and that I had upgraded it without realising that it would alter how my old code functioned.
+
+As a result, I will now include `sessionInfo()` at the end of every piece of work I do, so that when I compile my `.Rmd` file, I will know in the future what the versions of the packages I used were. This will hopefully improve the reproducibility of my code.
+
+```{r}
+sessionInfo()
+```
+
