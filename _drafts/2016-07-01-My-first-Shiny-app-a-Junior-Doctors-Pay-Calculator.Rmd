@@ -14,8 +14,7 @@ I have recently written my first [Shiny](http://shiny.rstudio.com/) app in R. It
 
 The amazing thing is that it's written as a single R script file!
 
-```
-
+```{r, eval=FALSE}
 library(shiny)
 library(xtable)
 

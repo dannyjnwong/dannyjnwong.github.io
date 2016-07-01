@@ -14,8 +14,8 @@ I have recently written my first [Shiny](http://shiny.rstudio.com/) app in R. It
 
 The amazing thing is that it's written as a single R script file!
 
-```
 
+{% highlight r %}
 library(shiny)
 library(xtable)
 
@@ -271,5 +271,4 @@ server <- shinyServer(function(input, output) {
 
 # Run the application 
 shinyApp(ui = ui, server = server)
-
-```
+{% endhighlight %}
