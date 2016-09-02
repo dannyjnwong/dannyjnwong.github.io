@@ -17,7 +17,7 @@ Fortunately the UK has been releasing public data of this information for some t
 ```{r, message=FALSE, warning=FALSE, dpi=300}
 library(ggplot2)
 
-accidents <- read.csv("data/DfTRoadSafety_Accidents_2015.csv")
+accidents <- read.csv("../data/DfTRoadSafety_Accidents_2015.csv")
 
 #Load the map data for the UK
 UK_map_data <- map_data("world", c('UK', 'Isle of Man','Isle of Wight', 'Wales:Anglesey'))
