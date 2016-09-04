@@ -1,13 +1,13 @@
 ---
 title: "Mapping UK Traffic Accidents"
 author: "Danny Wong"
-date: "`r format(Sys.time(), '%d %B, %Y')`"
+date: "02 September 2016"
 layout: post
 blog: true
 tag:
 - R
 - coding
-- mapping
+- GIS
 ---
 
 I saw a [post on Lucas Puente's blog](http://lucaspuente.github.io/notes/2016/09/01/Mapping_Traffic_Fatalities) today which mapped US traffic fatalities in 2015 using an open dataset released by the US National Highway Traffic Safety Administration and was inspired to do similar using UK data. 
@@ -43,3 +43,7 @@ map
 ```
 
 Thanks to Lucas for sharing his method! 
+
+```{r}
+sessionInfo()
+```
