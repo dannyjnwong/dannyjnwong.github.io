@@ -26,7 +26,7 @@ UK_map_data <- map_data("world", c('UK', 'Isle of Man','Isle of Wight', 'Wales:A
 #Start plotting
 map <- ggplot() + 
   geom_polygon(data=UK_map_data, aes(x=long,y=lat,group=group), colour = alpha("black", 1/4), fill = NA) +
-  #Add points (one per fatality):
+  #Add points (one per incident):
   geom_point(data=accidents, aes(x=Longitude, y=Latitude), alpha=0.05, size=0.2, col="red") +
   #Add a title:
   ggtitle("Traffic Accidents in 2015") +
