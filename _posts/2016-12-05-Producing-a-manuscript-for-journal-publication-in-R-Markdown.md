@@ -29,7 +29,8 @@ The title, author and date parts are quite self-explanatory. The output in this 
 
 In the next chunk we set up the document with data and with the required packages.
 
-```
+
+{% highlight r %}
 knitr::opts_chunk$set(echo = TRUE)
 
 library(dplyr)
@@ -79,7 +80,7 @@ data <- theatre %>% select(Hospital.Number, Op.number, Op.duration) %>%
 
 data$Month <- month(data$Date, label = TRUE)
 counts <- xtabs(~ Year + Month, data = data)
-```
+{% endhighlight %}
 
 We can see that I load the packages `dplyr`, `lubridate` and `readxl`, and set `options(digits = 1)` in order to control the number of significant figures that comes out. This is still not the most elegant solution as there are still nagging problems with how the R Markdown output displays numbers after the decimal places, and this has been [well-described elsewhere](http://stackoverflow.com/questions/3245862/format-numbers-to-significant-figures-nicely-in-r).
 

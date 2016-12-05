@@ -29,7 +29,7 @@ The title, author and date parts are quite self-explanatory. The output in this 
 
 In the next chunk we set up the document with data and with the required packages.
 
-```
+```{r, eval=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 
 library(dplyr)
