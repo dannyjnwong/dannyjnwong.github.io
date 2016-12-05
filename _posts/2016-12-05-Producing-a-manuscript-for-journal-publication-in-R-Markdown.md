@@ -1,0 +1,239 @@
+---
+title: "Producing a manuscript for journal publication in R Markdown"
+author: "Danny Wong"
+date: "05 December 2016"
+layout: post
+blog: true
+tag:
+- R
+- coding
+- R Markdown
+---
+
+I recently had my first paper written completely in R Markdown accepted for publication by a journal. I thought it would be a good opportunity to talk about my current workflow, since it's been a while since I last blogged. In some ways the paper itself is irrelevant, but if you're interested in seeing the paper in it's accepted manuscript format, [click here](dannyjnwong.github.io/assets/others/manuscript_accepted.pdf).
+
+The first thing about R Markdown is that it has a [YAML](https://en.wikipedia.org/wiki/YAML) configuration header. In my manuscript it looks like this:
+
+```
+---
+title: 'Short Report: Evaluating Services at a Major Trauma Centre Before Helipad Construction'
+author: "Danny Wong, James Bedford, Simon Luck & Roger Bloomer"
+date: "29 July 2016"
+output: word_document
+csl: ./references/bib/american-medical-association.csl
+bibliography: ./references/bib/Helipad.bib
+---
+```
+
+The title, author and date parts are quite self-explanatory. The output in this case is `word_document`, which was chosen because the journal I submitted to wanted that format for its submissions, and also many of my collaborators find it easier to use Word for its track changes feature when we collaborate. `csl` refers to the [citation style language](http://citationstyles.org/), which pandoc uses to then help decide the format of the references and so on. I keep my references organised using [zotero](https://www.zotero.org/), which allows me to output the reference in a `bibtex` or `biblatex` file, that is also referenced in the YAML header. Together, the `.csl` and `.bib` files tell pandoc where to find my references and how to display them. Zotero has a `csl` [repository](https://www.zotero.org/styles) which has a whole variety of styles to choose from, most of the major journals are supported.
+
+In the next chunk we set up the document with data and with the required packages.
+
+```
+knitr::opts_chunk$set(echo = TRUE)
+
+library(dplyr)
+library(lubridate)
+library(readxl)
+
+options(digits = 1)
+
+#Load 2014 data
+data <- read.csv("data/KCHTARN_cleaned.csv", na.strings=c("NA","n/a", "-", ""))
+data$Date <- dmy(data$Arvd)
+data$Year <- 2014
+data <- filter(data, Date >=dmy("01/01/2014") & Date <=dmy("31/12/2014")) %>% #then sort by date
+  arrange(Date) 
+data <- data %>% mutate(death = as.integer(ifelse(data$outtext == "Dead", "1", "0"))) %>% 
+  select(Hospital.Number, Date, Year, Age, Gender, IncPostcode, Arvmode, ISS, ps14, ttCT, ttop, op_1, op_2, op_3, LOS, HDU.LOS, ITU.LOS, death)
+
+#Load 2015 data
+data2 <- read.csv("data/KCHTARN2015.csv", na.strings=c("NA","n/a", "-", ""))
+data2$Date <- dmy(data2$Arvd)
+data2$Year <- 2015
+data2 <- filter(data2, Date >=dmy("01/01/2015") & Date <=dmy("31/12/2015")) %>% #then sort by date
+  arrange(Date)
+data2 <- data2 %>% mutate(death = as.integer(ifelse(data2$outtext == "Dead", "1", "0"))) %>% 
+  select(Hospital.Number, Date, Year, Age, Gender, IncPostcode, Arvmode, ISS, ps14, ttCT, ttop, op_1, op_2, op_3, LOS, HDU.LOS, ITU.LOS, death)
+
+data <- bind_rows(data, data2)
+rm(data2)
+
+#data <- data %>% mutate(HDU.LOS = replace(HDU.LOS, which(is.na(HDU.LOS)), 0)) %>%
+#  mutate(ITU.LOS = replace(ITU.LOS, which(is.na(ITU.LOS)), 0))
+
+#Load theatre utilisation data
+theatre <- read_excel("data/TheatreTime.xlsx", col_types = c("text", "numeric", "text", "date", "numeric", 
+                                                             "text", "text", "text", "numeric", "date",
+                                                             "date", "date", "date", "date", "date",
+                                                             "date", "date", "date", "date", "date",
+                                                             "date", "date", "date", "date", "date",
+                                                             "date", "date", "date", "date", "date",
+                                                             "date", "date", "date", "numeric"))
+
+data <- theatre %>% select(Hospital.Number, Op.number, Op.duration) %>% 
+  right_join(data) %>% 
+  mutate(Op.number = replace(Op.number, which(is.na(Op.number)), 0)) %>% 
+  mutate(Op.duration = replace(Op.duration, which(is.na(Op.duration)), 0)) %>%
+  select(-Hospital.Number)
+
+data$Month <- month(data$Date, label = TRUE)
+counts <- xtabs(~ Year + Month, data = data)
+```
+
+We can see that I load the packages `dplyr`, `lubridate` and `readxl`, and set `options(digits = 1)` in order to control the number of significant figures that comes out. This is still not the most elegant solution as there are still nagging problems with how the R Markdown output displays numbers after the decimal places, and this has been [well-described elsewhere](http://stackoverflow.com/questions/3245862/format-numbers-to-significant-figures-nicely-in-r).
+
+The chunk then sets us up to write text with R code inline.
+
+
+{% highlight r %}
+##Abstract 
+
+### Introduction
+
+Two of the Four hospitals designated as Major Trauma Centres in London, United Kingdom, currently operate on-site helicopter landing pads. King's College Hospital (KCH) is constructing a third. We evaluate current trauma services at KCH, prior to the helipad entering service, establishing baseline workload and mortality measures.
+
+### Methods
+
+We retrospectively analysed data from patients admitted 01/01/2014&ndash;31/12/2015 to KCH following major trauma with on-scene Helicopter Emergency Medical Services (HEMS) involvement (n = `r nrow(data)`), using the Trauma Audit & Research Network (TARN) database.
+
+### Results
+
+Median Injury Severity Score (ISS) of the cohort was `r median(data$ISS)` (Interquartile Range `r quantile(data$ISS, 0.25)`&ndash;`r quantile(data$ISS, 0.75)`). Median Length of Stay was `r median(data$LOS)` days (IQR `r quantile(data$LOS, 0.25)`&ndash;`r quantile(data$LOS, 0.75)`). Fifty-seven percent of the patients received Intensive Care Unit (ICU) admission, with a median ICU LOS of `r median(data$ITU.LOS, na.rm = TRUE)` days (IQR `r quantile(data$ITU.LOS, 0.25, na.rm = TRUE)`&ndash;`r quantile(data$ITU.LOS, 0.75, na.rm = TRUE)`) in this subgroup. There was no significant difference in ISS, LOS or ICU LOS between 2014 and 2015. `r sum(data$Op.number >= 1, na.rm = TRUE)` patients (`r sum(data$Op.number >= 1, na.rm = TRUE)/(nrow(data))*100`%) underwent &ge;1 operation, accounting for `r sum(data$Op.duration)` hours of operating theatre time in total. Cox Proportional Hazards regression showed no difference in survival outcomes between 2014 and 2015.
+
+### Conclusion
+
+Baseline workload and mortality measures were obtained, forming the basis of future service evaluation to assess the impact of helipad construction.
+{% endhighlight %}
+
+We now get into the meat of the manuscript, and the abstract is what the above chunk of code would produce. Writing `median()` (replacing the quotation marks with backticks) then produces a number within the text corresponding to the function call, in this case the median ISS score for the patients.
+
+I won't reproduce the entire source code for the manuscript but will include 2 further chunks to talk about referencing and then figures and tables:
+
+```
+## Introduction
+
+The development of Major Trauma Networks in England was a National requirement set out within the revised 2010/11 NHS England Operating Framework.[@department_of_health_revision_2010; @imison_reconfiguration_2014] King's College Hospital (KCH) began functioning as a Major Trauma Centre (MTC) in April 2010 as part of the South East London Trauma Network, subsequently expanding coverage to also service Kent and Medway in April 2013 as the MTC for the South East London, Kent and Medway Trauma Network (SELKaM).
+
+SELKaM serves a population of approximately 4.5 million, operating a "hub-and-spoke" model, with KCH as the MTC supported by seven trauma units and three local emergency hospitals. Prehospital emergency care services within SELKaM are provided by London Ambulance Service and South East Coast Ambulance Service, with enhanced prehospital medical teams (HEMS) provided by Kent, Surrey and Sussex Air Ambulance Trust and London's Air Ambulance.
+
+Patients transported to KCH by helicopter land at a nearby park necessitating secondary land ambulance transfer to the hospital, with time-critical patients potentially "overflying" KCH to another MTC with an operational helipad. Of the 4 MTCs in London, 2 currently have on-site helicopter landing pads &ndash;The Royal London Hospital in Whitechapel, and St. George's Hospital in Tooting. KCH expects to commence operations of a newly-built elevated helipad within the hospital footprint in the second half of 2016. We therefore evaluate the current trauma services at KCH, as part of a service evaluation to assess the future impact of the helipad.
+```
+
+This chunk above demonstrates how we put in references with square brackets and "@". The `[@department_of_health_revision_2010]` pulls a reference with that particular identifier from the `.bib` file specified at the front of the YAML and pandoc inserts it with the appropriate style into the text, when the paper is knitted.
+
+The following code chunk shows how figures are drawn once you knit the paper. High quality figures can be output by calling `pdf()` and then `dev.off()`. The `.pdf` file can then be manipulated in GIMP or photoshop to meet the specifications required by the journal. Unfortunately this is still a necessary step because different journals can be particular about how the image files are uploaded. Presumably in the future I could write a call to Ghostscript or other scriptable graphics device to fully code the entire process for even better reproducibility, but somehow manipulating images in a GUI still yields the best results at the moment.
+
+
+{% highlight r %}
+library(tidyr)
+
+#Data prep for figures
+counts <- xtabs(~ Year + Month, data = data) %>% data.frame()
+OpMonth <- theatre %>% select(contains("start")) %>% 
+  gather() %>% 
+  select(value) %>% 
+  rename(OpStart = value)
+OpMonth <- theatre %>% select(contains("end"), -Gender) %>% 
+  gather() %>% 
+  select(value) %>% 
+  rename(OpEnd = value) %>%
+  bind_cols(OpMonth)
+OpMonth <- OpMonth %>% mutate(duration = difftime(OpEnd, OpStart, units = "hours")) %>%
+  filter(!is.na(duration))
+OpMonth$Month <- month(OpMonth$OpStart, label = TRUE)
+OpMonth$Year <- year(OpMonth$OpStart)
+OpMonth <- xtabs(duration ~ Year + Month, data = OpMonth) %>% data.frame()
+
+#pdf("outputs/figures/figure1a.pdf", colormodel="cmyk", width = 8, height = 4)
+yrange <- range(0:120)
+xrange <- range(1:12)
+plot(xrange, yrange, data = subset(counts, Year == 2014), type = "n",
+     main = "(A): 2014 Workload",
+     xaxt = "n",
+     xlab = "",
+     ylab = "Number of Cases/Hours in Theatre")
+axis(1, at = c(1:12), 
+     labels = c("Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"))
+
+lines(Freq ~ Month, data = subset(counts, Year == 2014), type = "o", lty = 1)
+lines(Freq ~ Month, data = subset(OpMonth, Year == 2014), type = "o", lty = 2, col = "red")
+legend("topleft", legend=c("No. of Cases", "Hours in Theatre"), lty = c(1, 2), col = c(1, 2), inset = 0.02, cex = 0.8, y.intersp=0, horiz = TRUE, bty = "n")
+#dev.off()
+
+#pdf("outputs/figures/figure1b.pdf", colormodel="cmyk", width = 8, height = 4)
+yrange <- range(0:120)
+xrange <- range(1:12)
+plot(xrange, yrange, data = subset(counts, Year == 2015), type = "n",
+     main = "(B): 2015 Workload",
+     xaxt = "n",
+     xlab = "Month",
+     ylab = "Number of Cases/Hours in Theatre")
+axis(1, at = c(1:12), 
+     labels = c("Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"))
+
+lines(Freq ~ Month, data = subset(counts, Year == 2015), type = "o", lty = 1)
+lines(Freq ~ Month, data = subset(OpMonth, Year == 2015), type = "o", lty = 2, col = "red")
+legend("topleft", legend=c("No. of Cases", "Hours in Theatre"), lty = c(1, 2), col = c(1 , 2), inset = 0.02, cex = 0.8, y.intersp=0, horiz = TRUE, bty = "n")
+#dev.off()
+{% endhighlight %}
+
+Lastly, the following chunk shows how I formatted a table for the publication
+
+
+{% highlight r %}
+### Table 1
+
+|Characteristic|Calendar Year 2014|Calendar Year 2015|Total Cohort|
+|:-------------|:----------------:|:----------------:|:----------:|
+|Number of cases|`r table(data$Year)[1]`|`r table(data$Year)[2]`|`r nrow(data)`|
+|Median age (IQR), years|`r median(subset(data, Year==2014)$Age)` (`r quantile(subset(data, Year==2014)$Age, 0.25)`&ndash;`r quantile(subset(data, Year==2014)$Age, 0.75)`)|`r median(subset(data, Year==2015)$Age)` (`r quantile(subset(data, Year==2015)$Age, 0.25)`&ndash;`r quantile(subset(data, Year==2015)$Age, 0.75)`)|`r median(data$Age)` (`r quantile(data$Age, 0.25)`&ndash;`r quantile(data$Age, 0.75)`)|
+|Males (%)|`r table(subset(data, Year==2014)$Gender)[2]` (`r table(subset(data, Year==2014)$Gender)[2]/nrow(subset(data, Year==2014))*100`%)|`r table(subset(data, Year==2015)$Gender)[2]` (`r table(subset(data, Year==2015)$Gender)[2]/nrow(subset(data, Year==2015))*100`%)|`r table(data$Gender)[2]` (`r table(data$Gender)[2]/nrow(data)*100`%)|
+|ISS (IQR)|`r median(subset(data, Year==2014)$ISS)` (`r quantile(subset(data, Year==2014)$ISS, 0.25)`&ndash;`r quantile(subset(data, Year==2014)$ISS, 0.75)`)|`r median(subset(data, Year==2015)$ISS)` (`r quantile(subset(data, Year==2015)$ISS, 0.25)`&ndash;`r quantile(subset(data, Year==2015)$ISS, 0.75)`)|`r median(data$ISS)` (`r quantile(data$ISS, 0.25)`&ndash;`r quantile(data$ISS, 0.75)`)|
+|Median LOS (IQR), days|`r median(subset(data, Year==2014)$LOS)` (`r quantile(subset(data, Year==2014)$LOS, 0.25)`&ndash;`r quantile(subset(data, Year==2014)$LOS, 0.75)`)|`r median(subset(data, Year==2015)$LOS)` (`r quantile(subset(data, Year==2015)$LOS, 0.25)`&ndash;`r quantile(subset(data, Year==2015)$LOS, 0.75)`)|`r median(data$LOS)` (`r quantile(data$LOS, 0.25)`&ndash;`r quantile(data$LOS, 0.75)`)|
+|Mean Duration spent in Operating Theatre (SD), hours|`r mean(subset(data, Year == 2014)$Op.duration)` (`r sd(subset(data, Year == 2014)$Op.duration)`)|`r mean(subset(data, Year == 2015)$Op.duration)` (`r sd(subset(data, Year == 2015)$Op.duration)`)|`r mean(data$Op.duration)` (`r sd(data$Op.duration)`)|
+|Inpatient Deaths (%)|`r sum(subset(data, Year==2014)$death)` (`r sum(subset(data, Year==2014)$death)/nrow(subset(data, Year==2014))*100`%)|`r sum(subset(data, Year==2015)$death)` (`r sum(subset(data, Year==2015)$death)/nrow(subset(data, Year==2015))*100`%)|`r sum(data$death)` (`r sum(data$death)/nrow(data)*100`%)|
+
+  Table: Table 1 Caption: A summary of patient characteristics. ISS: Injury Severity Score; LOS: Length of Stay; IQR: Inter-Quartile Range; SD: Standard Deviation.
+{% endhighlight %}
+By using this method, the cells are populated by numbers which are generated from R code and any changes to the data upstream will cascade downstream so that the numbers will reflect these changes. It looks like a wall of gibberish, because it is, but actually once you get used to what you are typing it makes sense.
+
+If you want to see the actual [source in all its glory, I've posted it here](dannyjnwong.github.io/assets/others/manuscript.Rmd)! You can also find the [`.bib` file here](dannyjnwong.github.io/assets/others/Helipad.bib). 
+
+Hope this helps someone else write a manuscript in R Markdown in the future!
+
+
+{% highlight r %}
+sessionInfo()
+{% endhighlight %}
+
+
+
+{% highlight text %}
+## R version 3.3.1 (2016-06-21)
+## Platform: x86_64-w64-mingw32/x64 (64-bit)
+## Running under: Windows >= 8 x64 (build 9200)
+## 
+## locale:
+## [1] LC_COLLATE=English_United Kingdom.1252 
+## [2] LC_CTYPE=English_United Kingdom.1252   
+## [3] LC_MONETARY=English_United Kingdom.1252
+## [4] LC_NUMERIC=C                           
+## [5] LC_TIME=English_United Kingdom.1252    
+## 
+## attached base packages:
+## [1] stats     graphics  grDevices utils     datasets  methods   base     
+## 
+## other attached packages:
+## [1] dplyr_0.5.0 knitr_1.14 
+## 
+## loaded via a namespace (and not attached):
+##  [1] Rcpp_0.12.7        digest_0.6.10      assertthat_0.1    
+##  [4] R6_2.1.2           grid_3.3.1         plyr_1.8.4        
+##  [7] DBI_0.5            gtable_0.2.0       formatR_1.4       
+## [10] magrittr_1.5       evaluate_0.9       scales_0.4.0.9003 
+## [13] ggplot2_2.1.0.9001 stringi_1.1.1      lazyeval_0.2.0    
+## [16] rmarkdown_1.0      tools_3.3.1        stringr_1.0.0     
+## [19] munsell_0.4.3      yaml_2.1.13        colorspace_1.2-6  
+## [22] htmltools_0.3.5    tibble_1.2
+{% endhighlight %}
