@@ -10,7 +10,7 @@ tag:
 - R Markdown
 ---
 
-I recently had my first paper written completely in R Markdown accepted for publication by a journal. I thought it would be a good opportunity to talk about my current workflow, since it's been a while since I last blogged. In some ways the paper itself is irrelevant, but if you're interested in seeing the paper in it's accepted manuscript format, [click here](dannyjnwong.github.io/assets/others/manuscript_accepted.pdf).
+I recently had my first paper written completely in R Markdown accepted for publication by a journal. I thought it would be a good opportunity to talk about my current workflow, since it's been a while since I last blogged. In some ways the paper itself is irrelevant, but if you're interested in seeing the paper in its accepted manuscript format, [click here](https://dannyjnwong.github.io/assets/others/manuscript_accepted.pdf).
 
 The first thing about R Markdown is that it has a [YAML](https://en.wikipedia.org/wiki/YAML) configuration header. In my manuscript it looks like this:
 
@@ -199,7 +199,7 @@ Lastly, the following chunk shows how I formatted a table for the publication
 {% endhighlight %}
 By using this method, the cells are populated by numbers which are generated from R code and any changes to the data upstream will cascade downstream so that the numbers will reflect these changes. It looks like a wall of gibberish, because it is, but actually once you get used to what you are typing it makes sense.
 
-If you want to see the actual [source in all its glory, I've posted it here](dannyjnwong.github.io/assets/others/manuscript.Rmd)! You can also find the [`.bib` file here](dannyjnwong.github.io/assets/others/Helipad.bib). 
+If you want to see the actual [source in all its glory, I've posted it here](https://dannyjnwong.github.io/assets/others/manuscript.Rmd)! You can also find the [`.bib` file here](https://dannyjnwong.github.io/assets/others/Helipad.bib). 
 
 Hope this helps someone else write a manuscript in R Markdown in the future!
 
