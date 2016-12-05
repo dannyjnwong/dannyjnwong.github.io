@@ -1,0 +1,359 @@
+---
+title: 'Short Report: Evaluating Services at a Major Trauma Centre Before Helipad Construction'
+author: "Danny Wong, James Bedford, Simon Luck & Roger Bloomer"
+date: "29 July 2016"
+output: word_document
+csl: ./references/bib/american-medical-association.csl
+bibliography: ./references/bib/Helipad.bib
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+library(dplyr)
+library(lubridate)
+library(readxl)
+
+options(digits = 1)
+
+#Load 2014 data
+data <- read.csv("data/KCHTARN_cleaned.csv", na.strings=c("NA","n/a", "-", ""))
+data$Date <- dmy(data$Arvd)
+data$Year <- 2014
+data <- filter(data, Date >=dmy("01/01/2014") & Date <=dmy("31/12/2014")) %>% #then sort by date
+  arrange(Date) 
+data <- data %>% mutate(death = as.integer(ifelse(data$outtext == "Dead", "1", "0"))) %>% 
+  select(Hospital.Number, Date, Year, Age, Gender, IncPostcode, Arvmode, ISS, ps14, ttCT, ttop, op_1, op_2, op_3, LOS, HDU.LOS, ITU.LOS, death)
+
+#Load 2015 data
+data2 <- read.csv("data/KCHTARN2015.csv", na.strings=c("NA","n/a", "-", ""))
+data2$Date <- dmy(data2$Arvd)
+data2$Year <- 2015
+data2 <- filter(data2, Date >=dmy("01/01/2015") & Date <=dmy("31/12/2015")) %>% #then sort by date
+  arrange(Date)
+data2 <- data2 %>% mutate(death = as.integer(ifelse(data2$outtext == "Dead", "1", "0"))) %>% 
+  select(Hospital.Number, Date, Year, Age, Gender, IncPostcode, Arvmode, ISS, ps14, ttCT, ttop, op_1, op_2, op_3, LOS, HDU.LOS, ITU.LOS, death)
+
+data <- bind_rows(data, data2)
+rm(data2)
+
+#data <- data %>% mutate(HDU.LOS = replace(HDU.LOS, which(is.na(HDU.LOS)), 0)) %>%
+#  mutate(ITU.LOS = replace(ITU.LOS, which(is.na(ITU.LOS)), 0))
+
+#Load theatre utilisation data
+theatre <- read_excel("data/TheatreTime.xlsx", col_types = c("text", "numeric", "text", "date", "numeric", 
+                                                             "text", "text", "text", "numeric", "date",
+                                                             "date", "date", "date", "date", "date",
+                                                             "date", "date", "date", "date", "date",
+                                                             "date", "date", "date", "date", "date",
+                                                             "date", "date", "date", "date", "date",
+                                                             "date", "date", "date", "numeric"))
+
+data <- theatre %>% select(Hospital.Number, Op.number, Op.duration) %>% 
+  right_join(data) %>% 
+  mutate(Op.number = replace(Op.number, which(is.na(Op.number)), 0)) %>% 
+  mutate(Op.duration = replace(Op.duration, which(is.na(Op.duration)), 0)) %>%
+  select(-Hospital.Number)
+
+data$Month <- month(data$Date, label = TRUE)
+counts <- xtabs(~ Year + Month, data = data)
+```
+
+## Title Page
+
+### Title: A Service Evaluation of Major Trauma Services at a Large Teaching Hospital Prior to Helicopter Landing Pad Construction
+  
+### Corresponding author: 
+
+#### Dr Danny Jon Nian WONG ~1,2,~ ~*~
+
+### Co-authors: 
+
+#### Dr James BEDFORD ^1,2^
+
+#### Mr Simon LUCK ^3^
+
+#### Dr Roger BLOOMER ^4^
+
+>1. UCL/UCLH Surgical Outcomes Research Centre (SOuRCe), 3rd Floor, Maple Link Corridor, University College Hospital, 235 Euston Road, London NW1 2BU, UK 
+>
+>2. Department of Applied Health Research, University College London, 1&ndash;19 Torrington Place, London WC1E 7HB, UK
+>
+>3. Emergency Department, King's College Hospital, King's College Hospital NHS Foundation Trust, Denmark Hill, London SE5 9RS, UK
+>
+>4. Anaesthetics Department, King's College Hospital, King's College Hospital NHS Foundation Trust, Denmark Hill, London SE5 9RS, UK
+>
+>*. Address for correspondence: Department of Applied Health Research, University College London, 1&ndash;19 Torrington Place, London WC1E 7HB, UK. E-mail: danny.wong@ucl.ac.uk. Telephone: +44-7833678225
+
+### Word count, excluding title page, abstract, references, figures and tables.
+
+words
+
+## Abstract
+
+### Introduction
+
+Two of the Four hospitals designated as Major Trauma Centres in London, United Kingdom, currently operate on-site helicopter landing pads. King's College Hospital (KCH) is constructing a third. We evaluate current trauma services at KCH, prior to the helipad entering service, establishing baseline workload and mortality measures.
+
+### Methods
+
+We retrospectively analysed data from patients admitted 01/01/2014&ndash;31/12/2015 to KCH following major trauma with on-scene Helicopter Emergency Medical Services (HEMS) involvement (n = `r nrow(data)`), using the Trauma Audit & Research Network (TARN) database.
+
+### Results
+
+Median Injury Severity Score (ISS) of the cohort was `r median(data$ISS)` (Interquartile Range `r quantile(data$ISS, 0.25)`&ndash;`r quantile(data$ISS, 0.75)`). Median Length of Stay was `r median(data$LOS)` days (IQR `r quantile(data$LOS, 0.25)`&ndash;`r quantile(data$LOS, 0.75)`). Fifty-seven percent of the patients received Intensive Care Unit (ICU) admission, with a median ICU LOS of `r median(data$ITU.LOS, na.rm = TRUE)` days (IQR `r quantile(data$ITU.LOS, 0.25, na.rm = TRUE)`&ndash;`r quantile(data$ITU.LOS, 0.75, na.rm = TRUE)`) in this subgroup. There was no significant difference in ISS, LOS or ICU LOS between 2014 and 2015. `r sum(data$Op.number >= 1, na.rm = TRUE)` patients (`r sum(data$Op.number >= 1, na.rm = TRUE)/(nrow(data))*100`%) underwent &ge;1 operation, accounting for `r sum(data$Op.duration)` hours of operating theatre time in total. Cox Proportional Hazards regression showed no difference in survival outcomes between 2014 and 2015.
+
+### Conclusion
+
+Baseline workload and mortality measures were obtained, forming the basis of future service evaluation to assess the impact of helipad construction.
+
+## Introduction
+
+The development of Major Trauma Networks in England was a National requirement set out within the revised 2010/11 NHS England Operating Framework.[@department_of_health_revision_2010; @imison_reconfiguration_2014] King's College Hospital (KCH) began functioning as a Major Trauma Centre (MTC) in April 2010 as part of the South East London Trauma Network, subsequently expanding coverage to also service Kent and Medway in April 2013 as the MTC for the South East London, Kent and Medway Trauma Network (SELKaM).
+
+SELKaM serves a population of approximately 4.5 million, operating a "hub-and-spoke" model, with KCH as the MTC supported by seven trauma units and three local emergency hospitals. Prehospital emergency care services within SELKaM are provided by London Ambulance Service and South East Coast Ambulance Service, with enhanced prehospital medical teams (HEMS) provided by Kent, Surrey and Sussex Air Ambulance Trust and London's Air Ambulance.
+
+Patients transported to KCH by helicopter land at a nearby park necessitating secondary land ambulance transfer to the hospital, with time-critical patients potentially "overflying" KCH to another MTC with an operational helipad. Of the 4 MTCs in London, 2 currently have on-site helicopter landing pads &ndash;The Royal London Hospital in Whitechapel, and St. George's Hospital in Tooting. KCH expects to commence operations of a newly-built elevated helipad within the hospital footprint in the second half of 2016. We therefore evaluate the current trauma services at KCH, as part of a service evaluation to assess the future impact of the helipad.
+
+## Methods
+
+<!--*Cohort:*--> Using data from the Trauma Audit & Research Network (TARN) database[@tarn_trauma_2016], a retrospective analysis was performed of all patients admitted to KCH from 01/01/2014 to 31/12/2015 following major trauma where there was on-scene HEMS doctor involvement. 
+
+<!--*Ethics:*--> Ethics approval was not required as this study was classed as service evaluation<!-- and not research according to the Health Research Authority online decision tool (http://www.hra-decisiontools.org.uk/ethics/)-->. The request for TARN data was locally reviewed and approved according to Trust information governance policy.
+
+<!--*Hospital Resource Utilisation:*--> We measured monthly admission frequency, hospital Length of Stay (LOS), Intensive Care Unit (ICU) LOS and operating theatre utilisation &ndash;well-recognised measures of hospital resource utilisation.[@cannoodt_effect_1984; @rapoport_explaining_1990; @greenwell_theatre_2003] TARN data was linked to the iSOFT Galaxy operating theatre management system database to calculate the duration spent by patients in the operating theatre undergoing surgery, which was defined as the time the patient physically arrived in the theatre/anaesthetic room until the time the patient physically departed theatre.
+
+<!--*Survival Analysis:*--> A Cox Proportional Hazards model was constructed to compare survival outcomes between patients admitted in 2014 and 2015 calendar years in order to adjust for potential confounders.[@fox_cox_2002] The following predictor variables were included in the Cox model: age, sex, Injury Severity Score (ISS) and year of admission. 
+
+<!--*Statistical Analyses*:--> All analyses were performed using R software version 3.3.1 (R Foundation for Statistical Computing, Vienna, Austria).
+
+## Results
+
+### Patient characteristics
+
+We identified `r nrow(data)` cases for analysis. The median age of the cohort was `r median(data$Age)` (IQR `r quantile(data$Age, 0.25)`&ndash;`r quantile(data$Age, 0.75)`) years. There were `r table(data$Age < 16)[2]` (`r table(data$Age < 16)[2]/nrow(data)*100`%) paediatric patients (<16 years old). The median ISS was `r median(data$ISS)` (IQR `r quantile(data$ISS, 0.25)`&ndash;`r quantile(data$ISS, 0.75)`). Table 1 summarises the patient characteristics.
+
+### Hospital Resource Utilisation
+
+The median admissions per month was `r median(counts)` patients (range `r min(counts)`&ndash;`r max(counts)`) (Figure 1). Case frequency did not follow a clear seasonal pattern.
+
+The cohort accounted for a total of `r sum(subset(data, Year == 2014)$LOS)` hospital bed-days in 2014 and `r sum(subset(data, Year == 2015)$LOS)` bed-days in 2015. Of the cohort, `r sum(!is.na(data$ITU.LOS))` (`r sum(!is.na(data$ITU.LOS))/nrow(data)*100`%) patients received Intensive Care Unit (ICU) admission, with a median ICU LOS in this subgroup of `r median(data$ITU.LOS, na.rm = TRUE)` days (IQR `r quantile(data$ITU.LOS, 0.25, na.rm = TRUE)`&ndash;`r quantile(data$ITU.LOS, 0.75, na.rm = TRUE)`). The total ICU bed-days accounted for by this subgroup was `r sum(subset(data, Year == 2014)$ITU.LOS, na.rm = TRUE)` and `r sum(subset(data, Year == 2015)$ITU.LOS, na.rm = TRUE)` in 2014 and 2015, respectively. Summary LOS statistics are summarised in Table 1. There was no difference in hospital LOS or ICU LOS between 2014 and 2015 (Mann-Whitney U test, p = `r wilcox.test(LOS ~ Year, data = data)$p.value`, and p = `r wilcox.test(ITU.LOS ~ Year, data = data)$p.value` respectively). 
+
+In terms of operating theatre utilisation, `r table(data$Op.number)[2]` patients (`r table(data$Op.number)[2]/(nrow(data))*100`%) underwent 1 operation; `r table(data$Op.number)[3]` (`r table(data$Op.number)[3]/(nrow(data))*100`%) underwent 2 operations; and `r sum(data$Op.number >= 3, na.rm = TRUE)` (`r sum(data$Op.number >= 3, na.rm = TRUE)/(nrow(data))*100`%) underwent &ge;3 operations. In total the cohort accounted for `r sum(data$Op.duration)` hours of operating theatre time. The mean number of hours spent per patient in the operating theatre is summarised in Table 1. Theatre utilisation by month appeared to loosely correlate with case frequency (Figure 1).
+
+### Survival Analysis
+
+```{r, message=FALSE, warning=FALSE, include=FALSE}
+library(survival)
+
+#Create the Survival object
+TARN.surv <- Surv(data$LOS, data$death)
+cox.surv <- coxph(TARN.surv ~ ISS + Age + Gender + factor(Year), data = data)
+
+#We want to display how estimated survival differs between years.
+#We need to create a dataframe with two rows, one for each value of year; 
+#the other covariates are fixed to their average values.
+data.year <- with(data, data.frame(Year=as.factor(c(2014, 2015)), ISS=rep(mean(ISS), 2), Age=rep(mean(Age), 2), Gender=rep("Male", 2)))
+
+summary(cox.surv)
+
+summary(survfit(cox.surv), times=c(15, 30, 60))
+```
+
+Overall in-hospital mortality for the cohort was `r sum(data$death)/nrow(data)*100`%. Using Cox regression, the adjusted Hazard Ratio (HR) was lower in 2015 compared to 2014, but this did not reach statistical significance (HR = `r exp(coef(cox.surv))[4]`, 95% confidence interval `r summary(cox.surv)$conf.int[4,3]`&ndash;`r summary(cox.surv)$conf.int[4,4]`, p-value = `r summary(cox.surv)$coefficients[4,5]`). The Cox model is summarised in Table 2.
+
+## Discussion
+
+We report a two-year cohort of patients admitted to KCH who received HEMS intervention, establishing baseline measures before the on-site helipad enters service. Our analysis demonstrates that major trauma patients consume substantial hospital resources, in terms of inpatient bed-days, operating theatre time and ICU resources. After risk adjustment, survival between 2014 and 2015 was not significantly different.
+
+Other groups have previously reported increased case numbers and workload following helipad construction at their institutions in the south of England.[@freshwater_extending_2014; @haq_skys_2015] In the first year after opening in April 2014, 192 patients were admitted via the new helipad constructed at St. George's Hospital in Tooting (SGH), the MTC for the adjacent South West London & Surrey Trauma Network.[@st_georges_university_hospitals_nhs_foundation_trust_st_2015] This translated to 16 patients per month, some of whom were time-critical patients from the SELKaM network who would have previously been brought to KCH. 
+
+With the new helipad opening, we hypothesise that the major trauma caseload will be redistributed in South London, Kent, Surrey and Sussex. In particular, a small increase in caseload at KCH is anticipated due to the appropriate return of time-critical SELKaM network patients, who temporarily bypassed the hospital to land at SGH's helipad. The hospital management estimates a mean of 4 helipad landings per week (unpublished data). <!--This may lead to an increase in acuity and injury severity in the trauma admissions at KCH, accompanied by increases in hospital LOS, ICU LOS and theatre utilisation. We acknowledge however that some of these changes may be mitigated by other service reconfigurations in the region, such as the relocation of neurosurgery services from Princess Royal Hospital, Haywards Heath, to the Royal Sussex County Hospital in Brighton.[@brighton_and_sussex_university_hospitals_service_2015]-->
+
+We therefore intend to repeat our analysis after the helipad has entered service, to assess its impact on resource utilisation and patient survival at our major trauma centre.
+
+## Contributors 
+
+All authors contributed substantially to the creation of this paper. We thank M. Tunnicliff and R. Bentley for critically reviewing the manuscript.
+
+## Competing interests 
+
+None declared.
+
+## Funding sources
+
+This research did not receive any specific grant from funding agencies in the public, commercial, or not-for-profit sectors.
+
+## Figures
+
+### Figure 1
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+library(tidyr)
+
+#Data prep for figures
+counts <- xtabs(~ Year + Month, data = data) %>% data.frame()
+OpMonth <- theatre %>% select(contains("start")) %>% 
+  gather() %>% 
+  select(value) %>% 
+  rename(OpStart = value)
+OpMonth <- theatre %>% select(contains("end"), -Gender) %>% 
+  gather() %>% 
+  select(value) %>% 
+  rename(OpEnd = value) %>%
+  bind_cols(OpMonth)
+OpMonth <- OpMonth %>% mutate(duration = difftime(OpEnd, OpStart, units = "hours")) %>%
+  filter(!is.na(duration))
+OpMonth$Month <- month(OpMonth$OpStart, label = TRUE)
+OpMonth$Year <- year(OpMonth$OpStart)
+OpMonth <- xtabs(duration ~ Year + Month, data = OpMonth) %>% data.frame()
+
+#pdf("outputs/figures/figure1a.pdf", colormodel="cmyk", width = 8, height = 4)
+yrange <- range(0:120)
+xrange <- range(1:12)
+plot(xrange, yrange, data = subset(counts, Year == 2014), type = "n",
+     main = "(A): 2014 Workload",
+     xaxt = "n",
+     xlab = "",
+     ylab = "Number of Cases/Hours in Theatre")
+axis(1, at = c(1:12), 
+     labels = c("Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"))
+
+lines(Freq ~ Month, data = subset(counts, Year == 2014), type = "o", lty = 1)
+lines(Freq ~ Month, data = subset(OpMonth, Year == 2014), type = "o", lty = 2, col = "red")
+legend("topleft", legend=c("No. of Cases", "Hours in Theatre"), lty = c(1, 2), col = c(1, 2), inset = 0.02, cex = 0.8, y.intersp=0, horiz = TRUE, bty = "n")
+#dev.off()
+
+#pdf("outputs/figures/figure1b.pdf", colormodel="cmyk", width = 8, height = 4)
+yrange <- range(0:120)
+xrange <- range(1:12)
+plot(xrange, yrange, data = subset(counts, Year == 2015), type = "n",
+     main = "(B): 2015 Workload",
+     xaxt = "n",
+     xlab = "Month",
+     ylab = "Number of Cases/Hours in Theatre")
+axis(1, at = c(1:12), 
+     labels = c("Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"))
+
+lines(Freq ~ Month, data = subset(counts, Year == 2015), type = "o", lty = 1)
+lines(Freq ~ Month, data = subset(OpMonth, Year == 2015), type = "o", lty = 2, col = "red")
+legend("topleft", legend=c("No. of Cases", "Hours in Theatre"), lty = c(1, 2), col = c(1 , 2), inset = 0.02, cex = 0.8, y.intersp=0, horiz = TRUE, bty = "n")
+#dev.off()
+```
+
+Figure 1: Case frequency and theatre utilisation by month in 2014 (A), and 2015 (B). 
+
+<!-- 
+
+## Alternative Figure 1
+
+```{r, eval=FALSE, message=FALSE, warning=FALSE, include=FALSE}
+yrange <- range(0:30)
+xrange <- range(1:12)
+plot(xrange, yrange, data = subset(counts, Year == 2015), type = "n",
+     main = "Fig. 1a: Monthly Case Frequency",
+     xaxt = "n",
+     xlab = "Month",
+     ylab = "Number of Cases")
+axis(1, at = c(1:12), 
+     labels = c("Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"))
+
+lines(Freq ~ Month, data = subset(counts, Year == 2014), type = "o")
+lines(Freq ~ Month, data = subset(counts, Year == 2015), type = "o", col = "red")
+legend("bottomleft", legend=c("2014", "2015"), lty = 1, col=c(1 ,2), inset = 0.02, cex = 0.8, y.intersp=0, horiz = TRUE)
+
+yrange <- range(0:110)
+xrange <- range(1:12)
+plot(xrange, yrange, data = subset(OpMonth, Year == 2015), type = "n",
+     main = "Fig. 1b: Operating Theatre Utilisation\nfor Major Trauma (Monthly Totals)",
+     xaxt = "n",
+     xlab = "Month",
+     ylab = "Hours")
+axis(1, at = c(1:12), 
+     labels = c("Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"))
+
+lines(Freq ~ Month, data = subset(OpMonth, Year == 2014), type = "o")
+lines(Freq ~ Month, data = subset(OpMonth, Year == 2015), type = "o", col = "red")
+legend("bottomleft", legend=c("2014", "2015"), lty = 1, col=c(1 ,2), inset = 0.02, cex = 0.8, y.intersp=0, horiz = TRUE)
+```
+
+### Figure 2
+
+```{r, eval=FALSE, include=FALSE}
+#Plot survival curve
+#pdf("outputs/figures/figure2.pdf", colormodel="cmyk", width = 8, height = 4)
+plot(survfit(cox.surv, newdata = data.year), 
+     ylim = c(0.85, 1),
+     lty = c(1,2),
+     col = c(1,2), 
+     mark.time	= FALSE,
+     xlab = "Time (days)",
+     ylab = "Survival Probability",
+     main = "Fig. 2: Cox Regression Survival Curves\n2014 vs. 2015")
+legend("bottomleft", legend=c("2014", "2015"), lty = c(1, 2), col = c(1, 2), inset = 0.02, cex = 0.8, y.intersp=0, horiz = TRUE)
+#dev.off()
+```
+
+  Figure 2: Cox model-adjusted survival curves comparing 2014 to 2015 mortality. ISS matched at `r data.year[1,2]`, age matched at `r data.year[1,3]` years, and patient gender matched as Male.  
+
+### Potential Figure 3
+
+```{r, eval=FALSE, message=FALSE, warning=FALSE, include=FALSE}
+library(ggmap)
+
+outputdata <- read.csv("data/geocode/TARN_geocode.csv")
+
+KCH <- geocode("King's College Hospital, Denmark Hill, London", source = "google")
+
+#Get map
+UK <- c(left = -0.6, bottom = 51.0, right = 1.6, top = 51.6)
+ukmap <- get_stamenmap(UK, zoom = 10, maptype = "toner-lite")
+ggmap(ukmap, extent = "normal") + 
+  geom_jitter(data = outputdata, aes(x = outputdata$lon, y = outputdata$lat, fill = "red", alpha = 0.95), col = "white", size = 3, shape = 21) + 
+  geom_point(data = KCH, aes(x = lon, y = lat), col = "skyblue", fill = "blue", size = 3, shape = 21) +
+  coord_map(projection="mercator", xlim=c(-0.60, 1.6), ylim=c(51.0, 51.6)) +
+  guides(fill=FALSE, alpha=FALSE, size=FALSE) +
+  ylab("Latitude") + xlab("Longitude") + ggtitle("Approximate sites of incidents")
+
+#Contour map
+ggmap(ukmap) + 
+  geom_point(data = KCH, aes(x = lon, y = lat), col = "skyblue", fill = "blue", size = 3, shape = 21) +
+  stat_density2d(data = outputdata, aes(x = lon, y = lat, fill = ..level.., alpha = 0.8) , size = 0.3, bins = 10, geom = "density2d", show_guide = FALSE, col = "red") +
+  coord_map(projection="mercator", xlim=c(-0.60, 1.6), ylim=c(51.0, 51.6)) +
+  theme(legend.position = "none") +
+  ylab("Latitude") + xlab("Longitude") + ggtitle("2D Density plot of incidents")
+
+#ggsave("outputs/maps/TARNheatmap.png", type = "cairo-png")
+```
+
+-->
+
+## Tables
+
+### Table 1
+
+|Characteristic|Calendar Year 2014|Calendar Year 2015|Total Cohort|
+|:-------------|:----------------:|:----------------:|:----------:|
+|Number of cases|`r table(data$Year)[1]`|`r table(data$Year)[2]`|`r nrow(data)`|
+|Median age (IQR), years|`r median(subset(data, Year==2014)$Age)` (`r quantile(subset(data, Year==2014)$Age, 0.25)`&ndash;`r quantile(subset(data, Year==2014)$Age, 0.75)`)|`r median(subset(data, Year==2015)$Age)` (`r quantile(subset(data, Year==2015)$Age, 0.25)`&ndash;`r quantile(subset(data, Year==2015)$Age, 0.75)`)|`r median(data$Age)` (`r quantile(data$Age, 0.25)`&ndash;`r quantile(data$Age, 0.75)`)|
+|Males (%)|`r table(subset(data, Year==2014)$Gender)[2]` (`r table(subset(data, Year==2014)$Gender)[2]/nrow(subset(data, Year==2014))*100`%)|`r table(subset(data, Year==2015)$Gender)[2]` (`r table(subset(data, Year==2015)$Gender)[2]/nrow(subset(data, Year==2015))*100`%)|`r table(data$Gender)[2]` (`r table(data$Gender)[2]/nrow(data)*100`%)|
+|ISS (IQR)|`r median(subset(data, Year==2014)$ISS)` (`r quantile(subset(data, Year==2014)$ISS, 0.25)`&ndash;`r quantile(subset(data, Year==2014)$ISS, 0.75)`)|`r median(subset(data, Year==2015)$ISS)` (`r quantile(subset(data, Year==2015)$ISS, 0.25)`&ndash;`r quantile(subset(data, Year==2015)$ISS, 0.75)`)|`r median(data$ISS)` (`r quantile(data$ISS, 0.25)`&ndash;`r quantile(data$ISS, 0.75)`)|
+|Median LOS (IQR), days|`r median(subset(data, Year==2014)$LOS)` (`r quantile(subset(data, Year==2014)$LOS, 0.25)`&ndash;`r quantile(subset(data, Year==2014)$LOS, 0.75)`)|`r median(subset(data, Year==2015)$LOS)` (`r quantile(subset(data, Year==2015)$LOS, 0.25)`&ndash;`r quantile(subset(data, Year==2015)$LOS, 0.75)`)|`r median(data$LOS)` (`r quantile(data$LOS, 0.25)`&ndash;`r quantile(data$LOS, 0.75)`)|
+|Mean Duration spent in Operating Theatre (SD), hours|`r mean(subset(data, Year == 2014)$Op.duration)` (`r sd(subset(data, Year == 2014)$Op.duration)`)|`r mean(subset(data, Year == 2015)$Op.duration)` (`r sd(subset(data, Year == 2015)$Op.duration)`)|`r mean(data$Op.duration)` (`r sd(data$Op.duration)`)|
+|Inpatient Deaths (%)|`r sum(subset(data, Year==2014)$death)` (`r sum(subset(data, Year==2014)$death)/nrow(subset(data, Year==2014))*100`%)|`r sum(subset(data, Year==2015)$death)` (`r sum(subset(data, Year==2015)$death)/nrow(subset(data, Year==2015))*100`%)|`r sum(data$death)` (`r sum(data$death)/nrow(data)*100`%)|
+
+  Table: Table 1 Caption: A summary of patient characteristics. ISS: Injury Severity Score; LOS: Length of Stay; IQR: Inter-Quartile Range; SD: Standard Deviation.
+
+### Table 2
+
+```{r, echo=FALSE}
+library(pander)
+panderOptions("round", 3)
+panderOptions("keep.trailing.zeros", TRUE)
+pander(summary(cox.surv)$coefficients, 
+       covariate.labels = c("ISS", "Age", "Sex = Male","Year = 2015"))
+```
+  
+  Table: Table 2 Caption: Cox Proportional Hazards Model comparing 2014 to 2015, adjusting for ISS, age, sex and year of admission. ISS: Injury Severity Score.
+  
+## References
