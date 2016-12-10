@@ -11,7 +11,7 @@ tag:
 
 I've always wondered if there was variation across the UK with regards to Critical Care bed capacity. In other words, are there regions in the UK where there are more Critical Care beds per population than others?
 
-There're publically available datasets which we can use to try and answer this question:
+There're publicly available datasets which we can use to try and answer this question:
 
 - NHS England hosts data on the [Critical Care capacity by month and by trust](https://www.england.nhs.uk/statistics/statistical-work-areas/critical-care-capacity/critical-care-bed-capacity-and-urgent-operations-cancelled-2016-17-data/).
 - The Office of National Statistics hosts estimates on the [population sizes in the different Clinical Commissioning Groups](https://www.ons.gov.uk/peoplepopulationandcommunity/populationandmigration/populationestimates/datasets/clinicalcommissioninggroupmidyearpopulationestimates).
