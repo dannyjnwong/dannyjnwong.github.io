@@ -82,6 +82,8 @@ This yields a 5 category scale, which should be easier for the human eye to dist
 Finally we replot the map.
 
 ```{r, message=FALSE, warning=FALSE, dpi=300}
+map.f <- fortify(map, region = "Name")
+
 #We merge our map with the dataframe again, now containing the binned data
 merge.map.f <- merge(map.f, CCG_CC_beds_join, by.x = "id", by.y = "Name", all.x=TRUE) #%>% 
 

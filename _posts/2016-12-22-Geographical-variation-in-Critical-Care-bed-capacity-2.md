@@ -50,6 +50,8 @@ Finally we replot the map.
 
 
 {% highlight r %}
+map.f <- fortify(map, region = "Name")
+
 #We merge our map with the dataframe again, now containing the binned data
 merge.map.f <- merge(map.f, CCG_CC_beds_join, by.x = "id", by.y = "Name", all.x=TRUE) #%>% 
 
@@ -96,13 +98,13 @@ sessionInfo()
 ## [4] readxl_0.1.1       dplyr_0.5.0        knitr_1.14        
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] Rcpp_0.12.7        magrittr_1.5       maps_3.1.1        
-##  [4] munsell_0.4.3      colorspace_1.2-6   lattice_0.20-33   
-##  [7] R6_2.1.2           stringr_1.0.0      plyr_1.8.4        
-## [10] tools_3.3.1        grid_3.3.1         gtable_0.2.0      
-## [13] DBI_0.5            rgeos_0.3-21       digest_0.6.10     
-## [16] lazyeval_0.2.0     assertthat_0.1     tibble_1.2        
-## [19] RColorBrewer_1.1-2 mapproj_1.2-4      formatR_1.4       
-## [22] evaluate_0.9       labeling_0.3       stringi_1.1.1     
-## [25] scales_0.4.0.9003
+##  [1] Rcpp_0.12.7        magrittr_1.5       maptools_0.8-40   
+##  [4] maps_3.1.1         munsell_0.4.3      colorspace_1.2-6  
+##  [7] lattice_0.20-33    R6_2.1.2           stringr_1.0.0     
+## [10] plyr_1.8.4         tools_3.3.1        grid_3.3.1        
+## [13] gtable_0.2.0       DBI_0.5            rgeos_0.3-21      
+## [16] digest_0.6.10      lazyeval_0.2.0     assertthat_0.1    
+## [19] tibble_1.2         RColorBrewer_1.1-2 mapproj_1.2-4     
+## [22] formatR_1.4        evaluate_0.9       labeling_0.3      
+## [25] stringi_1.1.1      scales_0.4.0.9003  foreign_0.8-66
 {% endhighlight %}
