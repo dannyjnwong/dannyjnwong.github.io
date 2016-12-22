@@ -1,7 +1,7 @@
 ---
-title: "Geographical variation in Critical Care bed capacity"
+title: "Geographical variation in Critical Care bed capacity (Part 1)"
 author: "Danny Wong"
-date: "09 December 2016"
+date: "09 December, 2016"
 layout: post
 blog: true
 tag:
@@ -30,19 +30,6 @@ library(ggplot2)
 #Load the data
 CC_beds <- read_excel("../data/MSitRep-October-2016-1VHw9.xls", skip = 14)[3:155,2:4] %>%
   rename(beds = `Number of Adult critical care beds`)
-{% endhighlight %}
-
-
-
-{% highlight text %}
-## DEFINEDNAME: 20 00 00 01 0b 00 00 00 02 00 00 00 00 00 00 07 3b 00 00 00 00 0e 00 00 00 ff 00 
-## DEFINEDNAME: 20 00 00 01 0b 00 00 00 01 00 00 00 00 00 00 07 3b 01 00 00 00 0e 00 00 00 ff 00 
-## DEFINEDNAME: 20 00 00 01 0b 00 00 00 02 00 00 00 00 00 00 07 3b 00 00 00 00 0e 00 00 00 ff 00 
-## DEFINEDNAME: 20 00 00 01 0b 00 00 00 01 00 00 00 00 00 00 07 3b 01 00 00 00 0e 00 00 00 ff 00 
-## DEFINEDNAME: 20 00 00 01 0b 00 00 00 02 00 00 00 00 00 00 07 3b 00 00 00 00 0e 00 00 00 ff 00 
-## DEFINEDNAME: 20 00 00 01 0b 00 00 00 01 00 00 00 00 00 00 07 3b 01 00 00 00 0e 00 00 00 ff 00 
-## DEFINEDNAME: 20 00 00 01 0b 00 00 00 02 00 00 00 00 00 00 07 3b 00 00 00 00 0e 00 00 00 ff 00 
-## DEFINEDNAME: 20 00 00 01 0b 00 00 00 01 00 00 00 00 00 00 07 3b 01 00 00 00 0e 00 00 00 ff 00
 {% endhighlight %}
 
 
@@ -76,15 +63,6 @@ CCG_pop <- read_excel("../data/SAPE18DT5-mid-2015-ccg-syoa-estimates.xls", skip 
 
 
 
-{% highlight text %}
-## DEFINEDNAME: 21 00 00 01 0b 00 00 00 02 00 00 00 00 00 00 0d 3b 00 00 00 00 fa 00 02 00 02 00 
-## DEFINEDNAME: 21 00 00 01 0b 00 00 00 02 00 00 00 00 00 00 0d 3b 00 00 00 00 fa 00 02 00 02 00 
-## DEFINEDNAME: 21 00 00 01 0b 00 00 00 02 00 00 00 00 00 00 0d 3b 00 00 00 00 fa 00 02 00 02 00 
-## DEFINEDNAME: 21 00 00 01 0b 00 00 00 02 00 00 00 00 00 00 0d 3b 00 00 00 00 fa 00 02 00 02 00
-{% endhighlight %}
-
-
-
 {% highlight r %}
 colnames(CCG_pop) <- c("code", "CCG", "pop")
 
@@ -99,7 +77,7 @@ map <- readOGR("../data/CCG_BSC_Apr2015.geojson", "OGRGeoJSON")
 ## OGR data source with driver: GeoJSON 
 ## Source: "../data/CCG_BSC_Apr2015.geojson", layer: "OGRGeoJSON"
 ## with 209 features
-## It has 12 fields
+## It has 11 fields
 {% endhighlight %}
 
 
@@ -161,7 +139,7 @@ head(CCG_CC_beds_join)
 
 
 {% highlight text %}
-## # A tibble: 6 × 5
+## # A tibble: 6 ? 5
 ##                                  Name crit_care_beds      code    pop
 ##                                 <chr>          <dbl>     <chr>  <dbl>
 ## 1 NHS AIREDALE, WHARFEDALE AND CRAVEN              7 E38000001 159311
@@ -182,7 +160,7 @@ tail(CCG_CC_beds_join)
 
 
 {% highlight text %}
-## # A tibble: 6 × 5
+## # A tibble: 6 ? 5
 ##                Name crit_care_beds      code    pop crit_care_beds_per_pop
 ##               <chr>          <dbl>     <chr>  <dbl>                  <dbl>
 ## 1  NHS WEST NORFOLK             13 E38000203 174146               7.465001
@@ -230,46 +208,6 @@ ggplot() +
 
 ![center](/figures/2016-12-09-Geographical-variation-in-Critical-Care-bed-capacity/unnamed-chunk-4-2.png)
 
-I realise because of the continuous scale, it is quite hard to distinguish between the areas with high density of Critical Care beds vs. those with lower densities. Therefore I have decided to bin the Critical Care beds per 100,000 popultation into some arbitrarily selected ranges
-
-
-{% highlight r %}
-CCG_CC_beds_join <- CCG_CC_beds_join %>% mutate(beds_binned = cut(crit_care_beds_per_pop, c(0,3,5,10,20, Inf)))
-
-table(CCG_CC_beds_join$beds_binned)
-{% endhighlight %}
-
-
-
-{% highlight text %}
-## 
-##    (0,3]    (3,5]   (5,10]  (10,20] (20,Inf] 
-##        8       33       38       26       19
-{% endhighlight %}
-
-This yields a 5 category scale, which should be easier for the human eye to distinguish.
-
-Finally we replot:
-
-
-{% highlight r %}
-#We merge our map with the dataframe again, now containing the binned data
-merge.map.f <- merge(map.f, CCG_CC_beds_join, by.x = "id", by.y = "Name", all.x=TRUE) #%>% 
-
-#Reorder otherwise the plot will look weird
-final.plot <- merge.map.f[order(merge.map.f$order), ] 
-
-#Plot!
-ggplot() +
-  geom_polygon(data = final.plot, aes(x = long, y = lat, group = group, fill = beds_binned),
-               color = "black", size = 0.1) +
-  coord_map() +
-  scale_fill_brewer(palette = "Blues") +
-  theme_minimal()
-{% endhighlight %}
-
-![center](/figures/2016-12-09-Geographical-variation-in-Critical-Care-bed-capacity/unnamed-chunk-6-1.png)
-
 
 {% highlight r %}
 sessionInfo()
@@ -293,17 +231,17 @@ sessionInfo()
 ## [1] stats     graphics  grDevices utils     datasets  methods   base     
 ## 
 ## other attached packages:
-## [1] ggplot2_2.1.0.9001 rgdal_1.2-4        sp_1.2-3          
-## [4] readxl_0.1.1       dplyr_0.5.0        knitr_1.14        
+## [1] knitr_1.14         ggplot2_2.1.0.9001 rgdal_1.2-4       
+## [4] readxl_0.1.1       dplyr_0.5.0        sp_1.2-3          
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] Rcpp_0.12.7        magrittr_1.5       maps_3.1.1        
-##  [4] maptools_0.8-40    munsell_0.4.3      colorspace_1.2-6  
-##  [7] lattice_0.20-33    R6_2.1.2           stringr_1.0.0     
-## [10] plyr_1.8.4         tools_3.3.1        grid_3.3.1        
-## [13] gtable_0.2.0       DBI_0.5            rgeos_0.3-21      
-## [16] digest_0.6.10      lazyeval_0.2.0     assertthat_0.1    
-## [19] tibble_1.2         RColorBrewer_1.1-2 mapproj_1.2-4     
-## [22] formatR_1.4        evaluate_0.9       labeling_0.3      
-## [25] stringi_1.1.1      scales_0.4.0.9003  foreign_0.8-66
+##  [1] Rcpp_0.12.7       magrittr_1.5      maptools_0.8-40  
+##  [4] maps_3.1.1        munsell_0.4.3     colorspace_1.2-6 
+##  [7] lattice_0.20-33   R6_2.1.2          stringr_1.0.0    
+## [10] plyr_1.8.4        tools_3.3.1       grid_3.3.1       
+## [13] gtable_0.2.0      DBI_0.5           rgeos_0.3-21     
+## [16] lazyeval_0.2.0    assertthat_0.1    digest_0.6.10    
+## [19] tibble_1.2        formatR_1.4       mapproj_1.2-4    
+## [22] evaluate_0.9      labeling_0.3      stringi_1.1.1    
+## [25] scales_0.4.0.9003 foreign_0.8-66
 {% endhighlight %}
