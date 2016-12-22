@@ -128,14 +128,14 @@ ggplot() +
   theme_minimal()
 ```
 
-##Addendum: 22 December 2016
+##Addendum
 
 I realise because of the continuous scale, it is quite hard to distinguish between the areas with high density of Critical Care beds vs. those with lower densities. Therefore I have decided to bin the Critical Care beds per 100,000 popultation into some arbitrarily selected ranges
 
 ```{r, message=FALSE, warning=FALSE}
 CCG_CC_beds_join <- CCG_CC_beds_join %>% mutate(beds_binned = cut(crit_care_beds_per_pop, c(0,3,5,10,20, Inf)))
 
-table(CCG_CC_beds_join)
+table(CCG_CC_beds_join$beds_binned)
 ```
 
 This yields a 5 category scale, which should be easier for the human eye to distinguish.
