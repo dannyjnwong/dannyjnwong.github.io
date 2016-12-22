@@ -1,0 +1,115 @@
+---
+title: "Fast food outlets in CCG areas"
+author: "Danny Wong"
+date: "21 December 2016"
+layout: post
+blog: true
+tag:
+- R
+- coding
+- GIS
+---
+
+I've always wondered if there was a relationship between the density of fast food outlets in an area and the health outcomes in that area. There are many studies linking the number of fast food outlets in neighbourhoods to [obesity](https://www.ncbi.nlm.nih.gov/pubmed/25788473) [rates](https://www.ncbi.nlm.nih.gov/pubmed/25343730), [Type 2 Diabetes](https://www.ncbi.nlm.nih.gov/pubmed/25358618), and [cardiovascular outcomes](https://www.ncbi.nlm.nih.gov/pubmed/15913078). But these seem to have been done in small areas and not utilising large open data sources.
+
+[Openstreetmap (OSM)](https://www.openstreetmap.org/#map=5/51.500/-0.100) is a free, open, community-driven mapping initiative which powers many other applications. It has data which is available to download, and updated daily. Geofabrik.de [maintains daily mirrors of OSM data](https://www.geofabrik.de/data/download.html) that can be downloaded. These include details of all sorts of points of interest, like roads, parks, buildings, etc. Importantly for our purposes, it contains the latitude and longitude codes for fast food outlets! We download the shapefiles for England from [here](http://download.geofabrik.de/europe/great-britain/england.html), and I filter out the layer for points of interest, select the fast food outlet coordinates then convert them to a GeoJSON file on QGIS before manipulating them in `R`. 
+
+The reason I convert to GeoJSON is that I previously did this for the [CCG maps](http://dannyjnwong.github.io/Geographical-variation-in-Critical-Care-bed-capacity/), when I looked at Critical Care beds, and since I'm going to use them again here, converting to GeoJSON in QGIS saves me the hassle of having to line-up the projections of the spatial dataframes.
+
+Now let's load up the spatial data.
+
+```{r, message=FALSE, warning=FALSE}
+#Load the required packages
+library(dplyr)
+library(readxl)
+library(rgdal)
+library(sp)
+library(ggplot2)
+
+#Load the fast food outlet coordinates
+fast_food <- readOGR("../data/fast_food.geojson", "OGRGeoJSON")
+
+#Load the CCG polygons as we did before
+map <- readOGR("../data/CCG_BSC_Apr2015.geojson", "OGRGeoJSON")
+map$Name <- gsub("&", "and", map$Name)
+map$Name <- gsub("Airedale, Wharfdale and Craven", "Airedale, Wharfedale and Craven", map$Name)
+map$Name <- gsub("South East Staffs and Seisdon Peninsular", "South East Staffordshire and Seisdon Peninsula", map$Name)
+map$Name <- gsub("North, East, West Devon", "Northern, Eastern and Western Devon", map$Name)
+map$Name <- paste("NHS", map$Name)
+map$Name <- toupper(map$Name)
+map[which(map$Name == "NHS WEST LONDON (KANDC AND QPP)"),1] <- "NHS WEST LONDON"
+map$area_sqkm <- raster::area(map) / 1000000
+
+#Check we have it all loaded up correctly
+plot(map)
+plot(fast_food, add = TRUE, col = "red")
+```
+
+Now that we have the spatial data loaded up we can join them to see how many fast food outlets are in each CCG.
+
+```{r, message=FALSE, warning=FALSE}
+#Perform the join using the sp function over()
+fast_food_join <- cbind(as.data.frame(fast_food), over(fast_food, map))
+
+fast_food_table <- table(fast_food_join$Name) %>% as.data.frame() %>% arrange(desc(Freq))
+head(fast_food_table)
+
+#Add population data
+CCG_pop <- read_excel("../data/SAPE18DT5-mid-2015-ccg-syoa-estimates.xls", skip = 4, sheet = 2)[c(7:18, 21:31, 34:53, 56:78, 83:96, 99:113, 116:133, 136:149, 154:185, 190:198, 201:214, 217:236, 239:245),c(1, 4:5)]
+colnames(CCG_pop) <- c("code", "CCG", "pop")
+CCG_pop$CCG <- gsub("&", "and", CCG_pop$CCG)
+CCG_pop$CCG <- toupper(CCG_pop$CCG)
+
+#Join and then calculate the number of fast food outlets per population
+fast_food_table <- left_join(fast_food_table, CCG_pop, by = c("Var1" = "CCG")) %>%
+  mutate(FF_per_pop = Freq/pop*100000) %>%
+  left_join(as.data.frame(map)[,c("Name", "area_sqkm")], by = c("Var1" = "Name")) %>%
+  mutate(FF_per_sqkm = Freq/area_sqkm)
+head(fast_food_table)
+```
+
+Now we have a dataframe of fast food outlets per population in each CCG. We need to link them to the health outcomes.
+
+NHS England tracks a collection of CCG outcomes in the [CCG Outcomes Indicator Set (CCGOIS)](http://content.digital.nhs.uk/ccgois). We can look at the following indicators to start off with:
+
+- [1.2 Under 75 mortality from cardiovascular disease](https://indicators.hscic.gov.uk/download/Clinical%20Commissioning%20Group%20Indicators/Data/CCG_1.2_I00754_D.csv)
+- [1.4 Myocardial infarction, stroke and stage 5 chronic kidney disease in people with diabetes](https://indicators.hscic.gov.uk/download/Clinical%20Commissioning%20Group%20Indicators/Data/CCG_1.4_I00770_D.csv)
+- [1.5 Mortality within 30 days of hospital admission for stroke](https://indicators.hscic.gov.uk/download/Clinical%20Commissioning%20Group%20Indicators/Data/CCG_1.5_I00771_D.csv)
+- [1.9 Under 75 mortality from cancer](https://indicators.hscic.gov.uk/download/Clinical%20Commissioning%20Group%20Indicators/Data/CCG_1.9_I00756_D.csv)
+- [1.22 Hip fracture: incidence](https://indicators.hscic.gov.uk/download/Clinical%20Commissioning%20Group%20Indicators/Data/CCG_1.22_I01973_D.csv)
+- [2.8 Complications associated with diabetes](https://indicators.hscic.gov.uk/download/Clinical%20Commissioning%20Group%20Indicators/Data/CCG_2.8_I00786_D.csv)
+
+##Under 75 mortality from cardiovascular disease
+
+```{r CVS, message=FALSE, warning=FALSE}
+fast_food_table <- read.csv("https://indicators.hscic.gov.uk/download/Clinical%20Commissioning%20Group%20Indicators/Data/CCG_1.2_I00754_D.csv") %>% 
+  filter(Breakdown == "CCG") %>% 
+  filter(Reporting.period == 2015) %>% 
+  filter(Gender == "Person") %>%
+  select(Level.description, ONS.code, DSR) %>%
+  rename(CVS_mort = DSR , CCG = Level.description) %>%
+  right_join(fast_food_table, by = c("ONS.code" = "code"))
+
+plot(CVS_mort ~ FF_per_pop, data = fast_food_table)
+abline(lm(CVS_mort ~ FF_per_pop, data = fast_food_table))
+```
+
+##Under 75 mortality from cancer
+
+```{r Cancer, message=FALSE, warning=FALSE}
+fast_food_table <- read.csv("https://indicators.hscic.gov.uk/download/Clinical%20Commissioning%20Group%20Indicators/Data/CCG_1.9_I00756_D.csv") %>% 
+  filter(Breakdown == "CCG") %>% 
+  filter(Reporting.period == 2015) %>% 
+  filter(Gender == "Person") %>%
+  select(ONS.code, DSR) %>%
+  rename(Cancer_mort = DSR) %>%
+  right_join(fast_food_table, by = "ONS.code")
+
+plot(Cancer_mort ~ FF_per_pop, data = fast_food_table)
+abline(lm(Cancer_mort ~ FF_per_pop, data = fast_food_table))
+```
+
+
+```{r}
+sessionInfo()
+```
