@@ -230,7 +230,7 @@ ggplot() +
 
 ![center](/figures/2016-12-09-Geographical-variation-in-Critical-Care-bed-capacity/unnamed-chunk-4-2.png)
 
-##Addendum: 22/12/2016
+##Addendum: 22 December 2016
 
 I realise because of the continuous scale, it is quite hard to distinguish between the areas with high density of Critical Care beds vs. those with lower densities. Therefore I have decided to bin the Critical Care beds per 100,000 popultation into some arbitrarily selected ranges
 
