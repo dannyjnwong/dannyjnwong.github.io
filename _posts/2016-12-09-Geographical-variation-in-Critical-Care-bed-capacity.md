@@ -1,7 +1,7 @@
 ---
 title: "Geographical variation in Critical Care bed capacity - Part 1"
 author: "Danny Wong"
-date: "22 December 2016"
+date: "09 December 2016"
 layout: post
 blog: true
 tag:
@@ -125,7 +125,7 @@ plot(map)
 points(x = CC_beds$Longitude, y = CC_beds$Latitude, col = "red", pch = 19)
 {% endhighlight %}
 
-![center](/figures/2016-12-22-Geographical-variation-in-Critical-Care-bed-capacity/unnamed-chunk-2-1.png)
+![center](/figures/2016-12-09-Geographical-variation-in-Critical-Care-bed-capacity/unnamed-chunk-2-1.png)
 
 Not very pretty at the moment, but essentially the polygons represent the CCG regions in England, and each red dot represents a Trust with Critical Care beds.
 
@@ -218,7 +218,7 @@ ggplot() +
   theme_minimal()
 {% endhighlight %}
 
-![center](/figures/2016-12-22-Geographical-variation-in-Critical-Care-bed-capacity/unnamed-chunk-4-1.png)
+![center](/figures/2016-12-09-Geographical-variation-in-Critical-Care-bed-capacity/unnamed-chunk-4-1.png)
 
 {% highlight r %}
 ggplot() +
@@ -228,7 +228,7 @@ ggplot() +
   theme_minimal()
 {% endhighlight %}
 
-![center](/figures/2016-12-22-Geographical-variation-in-Critical-Care-bed-capacity/unnamed-chunk-4-2.png)
+![center](/figures/2016-12-09-Geographical-variation-in-Critical-Care-bed-capacity/unnamed-chunk-4-2.png)
 
 ##Addendum: 22 December 2016
 
@@ -268,7 +268,7 @@ ggplot() +
   theme_minimal()
 {% endhighlight %}
 
-![center](/figures/2016-12-22-Geographical-variation-in-Critical-Care-bed-capacity/unnamed-chunk-6-1.png)
+![center](/figures/2016-12-09-Geographical-variation-in-Critical-Care-bed-capacity/unnamed-chunk-6-1.png)
 
 
 {% highlight r %}
