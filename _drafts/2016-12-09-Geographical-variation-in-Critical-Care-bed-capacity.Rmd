@@ -1,7 +1,7 @@
 ---
 title: "Geographical variation in Critical Care bed capacity (Part 1)"
 author: "Danny Wong"
-date: "09 December 2016"
+date: "09 December, 2016"
 layout: post
 blog: true
 tag:
@@ -102,7 +102,7 @@ Some CCGs have zero Critical Care Beds.
 
 Let's now plot a choropleth!
 
-```{r, message=FALSE, warning=FALSE, dpi=300}
+```{r, message=FALSE, warning=FALSE}
 #We will first need to fortify the map SpatialPolygonsDataframe so that ggplot2 can plot it
 map.f <- fortify(map, region = "Name")
 
@@ -125,36 +125,6 @@ ggplot() +
   geom_polygon(data = final.plot, aes(x = long, y = lat, group = group, fill = crit_care_beds_per_pop),
                color = "black", size = 0.1) +
   coord_map() +
-  theme_minimal()
-```
-
-##Addendum
-
-I realise because of the continuous scale, it is quite hard to distinguish between the areas with high density of Critical Care beds vs. those with lower densities. Therefore I have decided to bin the Critical Care beds per 100,000 popultation into some arbitrarily selected ranges
-
-```{r, message=FALSE, warning=FALSE}
-CCG_CC_beds_join <- CCG_CC_beds_join %>% mutate(beds_binned = cut(crit_care_beds_per_pop, c(0,3,5,10,20, Inf)))
-
-table(CCG_CC_beds_join$beds_binned)
-```
-
-This yields a 5 category scale, which should be easier for the human eye to distinguish.
-
-Finally we replot:
-
-```{r, message=FALSE, warning=FALSE, dpi=300}
-#We merge our map with the dataframe again, now containing the binned data
-merge.map.f <- merge(map.f, CCG_CC_beds_join, by.x = "id", by.y = "Name", all.x=TRUE) #%>% 
-
-#Reorder otherwise the plot will look weird
-final.plot <- merge.map.f[order(merge.map.f$order), ] 
-
-#Plot!
-ggplot() +
-  geom_polygon(data = final.plot, aes(x = long, y = lat, group = group, fill = beds_binned),
-               color = "black", size = 0.1) +
-  coord_map() +
-  scale_fill_brewer(palette = "Blues") +
   theme_minimal()
 ```
 
