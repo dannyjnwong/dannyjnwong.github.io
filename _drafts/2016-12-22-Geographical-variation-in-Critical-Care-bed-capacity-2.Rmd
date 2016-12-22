@@ -1,0 +1,104 @@
+---
+title: "Geographical variation in Critical Care bed capacity (Part 2)"
+author: "Danny Wong"
+date: "22 December 2016"
+layout: post
+blog: true
+tag:
+- R
+- Coding
+---
+
+In my [last post](http://dannyjnwong.github.io/Geographical-variation-in-Critical-Care-bed-capacity/), I started cleaning some openly accessible data to look at whether we can see if there was geographical variation in Critical Care beds. 
+
+We ended up with a couple of choropleths which didn't look that great. 
+
+I realise because of the continuous scale, it is quite hard to distinguish between the areas with high density of Critical Care beds vs. those with lower densities. Therefore I have decided to bin the Critical Care beds per 100,000 population into some arbitrarily selected ranges
+
+```{r, message=FALSE, warning=FALSE}
+#Load the required packages
+library(dplyr)
+library(readxl)
+library(rgdal)
+library(sp)
+library(ggplot2)
+```
+
+Assuming we have already loaded the data we needed from the previous post, we just need to make some categorical variables from the continuous variable of number of Critical Care beds per 100,000 population using the `cut()` function.
+
+```{r, message=FALSE, warning=FALSE, include=FALSE}
+#Load the data
+CC_beds <- read_excel("../data/MSitRep-October-2016-1VHw9.xls", skip = 14)[3:155,2:4] %>%
+  rename(beds = `Number of Adult critical care beds`)
+
+#Load the trust data with Latitude and Longitude coordinates
+trust <- read.csv("../data/trust.csv")
+
+#Join the two to get the latitude and longitude codes
+CC_beds <- left_join(CC_beds, trust, by = c("Code" = "OrganisationCode" )) %>%
+  select(Code, HospitalName = Name, beds, Latitude, Longitude)
+
+#There are some Trusts with NA values for Latitude and Longitude
+#This is likely because the Trusts operate over a number of sites
+#To get around this we have to use different Hospital data and get the geometric mean coordinates
+hospitals <- read.csv("../data/Hospital 20160921.csv")
+x <- CC_beds %>% filter(is.na(Latitude)) %>%
+  left_join(hospitals, by = c("Code" = "ParentODSCode")) %>%
+  select(Code, HospitalName, beds, Latitude = Latitude.y, Longitude = Longitude.y) %>% 
+  group_by(Code) %>% 
+  summarise(Latitude = mean(Latitude), Longitude = mean(Longitude))
+CC_beds <- CC_beds %>% filter(is.na(Latitude)) %>%
+  select(-Latitude, -Longitude) %>%
+  left_join(x, by = "Code") %>%
+  rbind(CC_beds %>% filter(!is.na(Latitude)))
+
+#Join the coordinates to the CC_beds
+
+CCG_pop <- read_excel("../data/SAPE18DT5-mid-2015-ccg-syoa-estimates.xls", skip = 4, sheet = 2)[c(7:18, 21:31, 34:53, 56:78, 83:96, 99:113, 116:133, 136:149, 154:185, 190:198, 201:214, 217:236, 239:245),c(1, 4:5)]
+colnames(CCG_pop) <- c("code", "CCG", "pop")
+
+#Load the map
+#Make sure you have the right OGR drivers installed by typing "GeoJSON" %in% ogrDrivers()$name
+map <- readOGR("../data/CCG_BSC_Apr2015.geojson", "OGRGeoJSON")
+map$Name <- gsub("&", "and", map$Name)
+map$Name <- gsub("Airedale, Wharfdale and Craven", "Airedale, Wharfedale and Craven", map$Name)
+map$Name <- gsub("South East Staffs and Seisdon Peninsular", "South East Staffordshire and Seisdon Peninsula", map$Name)
+map$Name <- gsub("North, East, West Devon", "Northern, Eastern and Western Devon", map$Name)
+map$Name <- paste("NHS", map$Name)
+map$Name <- toupper(map$Name)
+map[which(map$Name == "NHS WEST LONDON (KANDC AND QPP)"),1] <- "NHS WEST LONDON"
+CCG_pop$CCG <- gsub("&", "and", CCG_pop$CCG)
+CCG_pop$CCG <- toupper(CCG_pop$CCG)
+```
+
+```{r, message=FALSE, warning=FALSE}
+CCG_CC_beds_join <- CCG_CC_beds_join %>% mutate(beds_binned = cut(crit_care_beds_per_pop, c(0,3,5,10,20, Inf)))
+
+table(CCG_CC_beds_join$beds_binned)
+```
+
+This yields a 5 category scale, which should be easier for the human eye to distinguish.
+
+Finally we replot the map.
+
+```{r, message=FALSE, warning=FALSE, dpi=300}
+#We merge our map with the dataframe again, now containing the binned data
+merge.map.f <- merge(map.f, CCG_CC_beds_join, by.x = "id", by.y = "Name", all.x=TRUE) #%>% 
+
+#Reorder otherwise the plot will look weird
+final.plot <- merge.map.f[order(merge.map.f$order), ] 
+
+#Plot!
+ggplot() +
+  geom_polygon(data = final.plot, aes(x = long, y = lat, group = group, fill = beds_binned),
+               color = "black", size = 0.1) +
+  coord_map() +
+  scale_fill_brewer(palette = "Blues") +
+  theme_minimal()
+```
+
+I think this map is much better than the previous ones we had.
+
+```{r}
+sessionInfo()
+```
