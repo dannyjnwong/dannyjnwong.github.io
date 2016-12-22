@@ -1,7 +1,7 @@
 ---
 title: "Geographical variation in Critical Care bed capacity (Part 1)"
 author: "Danny Wong"
-date: "09 December, 2016"
+date: "09 December 2016"
 layout: post
 blog: true
 tag:
