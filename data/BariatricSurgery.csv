@@ -1,0 +1,275 @@
+ONS Code,,"Commissioning Region, Area Team and CCG Code","Commissioning Region, Area Team and Clinical Commissioning Group Name",Admissions,,,,"Admissions per 100,000 of population8",,
+,,,,Total9,Male,Female,,Total9,Male,Female
+,,,,,,,,,,
+E92000001,,,England,"6,384","1,560","4,823",,12,6,18
+,,,,,,,,,,
+,,U,Unknown,1,0,1,,.,.,.
+,,,,,,,,,,
+E40000001,,Y54,North of England,"2,259",557,"1,702",,15,7,22
+,,,,,,,,,,
+E39000001,,Q44,"Cheshire, Warrington and Wirral",95,21,74,,8,4,12
+E38000056,,01C,NHS Eastern Cheshire ,12,*,*,,6,*,*
+E38000151,,01R,NHS South Cheshire ,24,8,16,,14,9,18
+E38000189,,02D,NHS Vale Royal ,12,*,*,,12,*,*
+E38000194,,02E,NHS Warrington ,6,0,6,,3,0,6
+E38000196,,02F,NHS West Cheshire ,29,*,*,,13,*,*
+E38000208,,12F,NHS Wirral ,12,*,*,,4,*,*
+,,,,,,,,,,
+E39000002,,Q45,"Durham, Darlington and Tees",760,169,591,,64,29,98
+E38000042,,00C,NHS Darlington ,61,20,41,,58,39,76
+E38000047,,00D,"NHS Durham Dales, Easington and Sedgefield ",234,50,184,,86,37,132
+E38000075,,00K,NHS Hartlepool and Stockton-on-Tees ,171,34,137,,60,24,94
+E38000116,,00J,NHS North Durham ,121,25,96,,50,21,78
+E38000162,,00M,NHS South Tees ,173,40,133,,63,30,95
+,,,,,,,,,,
+E39000003,,Q46,Greater Manchester,119,47,72,,4,3,5
+E38000016,,00T,NHS Bolton ,9,*,*,,3,*,*
+E38000024,,00V,NHS Bury ,7,*,*,,4,*,*
+E38000032,,00W,NHS Central Manchester ,*,*,*,,*,*,*
+E38000080,,01D,"NHS Heywood, Middleton & Rochdale ",15,7,8,,7,7,7
+E38000123,,01M,NHS North Manchester ,*,*,*,,*,*,*
+E38000135,,00Y,NHS Oldham ,14,*,*,,6,*,*
+E38000143,,01G,NHS Salford ,16,6,10,,7,5,8
+E38000158,,01N,NHS South Manchester ,10,*,*,,6,*,*
+E38000174,,01W,NHS Stockport ,9,*,*,,3,*,*
+E38000182,,01Y,NHS Tameside and Glossop ,8,*,*,,3,*,*
+E38000187,,02A,NHS Trafford ,*,*,*,,*,*,*
+E38000205,,02H,NHS Wigan Borough ,19,10,9,,6,6,6
+,,,,,,,,,,
+E39000004,,Q47,Lancashire,45,11,34,,3,2,5
+E38000014,,00Q,NHS Blackburn with Darwen ,*,*,*,,*,*,*
+E38000015,,00R,NHS Blackpool ,11,*,*,,8,*,*
+E38000034,,00X,NHS Chorley and South Ribble ,*,*,*,,*,*,*
+E38000050,,01A,NHS East Lancashire ,8,*,*,,2,*,*
+E38000060,,02M,NHS Fylde & Wyre ,*,*,*,,*,*,*
+E38000065,,01E,NHS Greater Preston ,8,*,*,,4,*,*
+E38000093,,01K,NHS Lancashire North ,*,*,*,,*,*,*
+E38000200,,02G,NHS West Lancashire ,6,0,6,,5,0,10
+,,,,,,,,,,
+E39000005,,Q48,Merseyside,151,42,109,,13,7,18
+E38000068,,01F,NHS Halton ,18,8,10,,14,13,16
+E38000091,,01J,NHS Knowsley ,24,*,*,,16,*,*
+E38000101,,99A,NHS Liverpool ,64,15,49,,14,6,21
+E38000161,,01T,NHS South Sefton ,18,6,12,,11,8,15
+E38000170,,01V,NHS Southport and Formby ,*,*,*,,*,*,*
+E38000172,,01X,NHS St Helens ,24,9,15,,14,10,17
+,,,,,,,,,,
+E39000006,,Q49,"Cumbria, Northumberland, Tyne and Wear",469,122,347,,24,13,35
+E38000041,,01H,NHS Cumbria ,31,11,20,,6,4,8
+E38000061,,00F,NHS Gateshead ,64,12,52,,32,12,51
+E38000111,,00G,NHS Newcastle North and East ,17,*,*,,12,*,*
+E38000112,,00H,NHS Newcastle West ,24,10,14,,17,14,20
+E38000127,,99C,NHS North Tyneside ,43,9,34,,21,9,33
+E38000130,,00L,NHS Northumberland ,59,25,34,,19,16,21
+E38000163,,00N,NHS South Tyneside ,73,16,57,,49,22,74
+E38000176,,00P,NHS Sunderland ,158,35,123,,57,26,87
+,,,,,,,,,,
+E39000007,,Q50,North Yorkshire and Humber,193,51,142,,12,6,17
+E38000052,,02Y,NHS East Riding of Yorkshire ,24,10,14,,8,6,9
+E38000069,,03D,"NHS Hambleton, Richmondshire and Whitby ",17,*,*,,11,*,*
+E38000073,,03E,NHS Harrogate and Rural District ,10,*,*,,6,*,*
+E38000085,,03F,NHS Hull ,21,*,*,,8,*,*
+E38000119,,03H,NHS North East Lincolnshire ,31,11,20,,19,14,25
+E38000122,,03K,NHS North Lincolnshire ,41,9,32,,24,11,37
+E38000145,,03M,NHS Scarborough and Ryedale ,12,*,*,,11,*,*
+E38000188,,03Q,NHS Vale of York ,37,10,27,,11,6,15
+,,,,,,,,,,
+E39000008,,Q51,South Yorkshire and Bassetlaw,160,35,125,,11,5,17
+E38000006,,02P,NHS Barnsley ,24,8,16,,10,7,13
+E38000008,,02Q,NHS Bassetlaw ,18,*,*,,16,*,*
+E38000044,,02X,NHS Doncaster ,59,13,46,,19,9,30
+E38000141,,03L,NHS Rotherham ,14,*,*,,5,*,*
+E38000146,,03N,NHS Sheffield ,45,8,37,,8,3,13
+,,,,,,,,,,
+E39000009,,Q52,West Yorkshire,267,59,208,,12,5,18
+E38000001,,02N,"NHS Airedale, Wharfedale and Craven ",16,6,10,,10,8,12
+E38000018,,02W,NHS Bradford City ,*,*,*,,*,*,*
+E38000019,,02R,NHS Bradford Districts ,47,10,37,,14,6,22
+E38000025,,02T,NHS Calderdale ,25,*,*,,12,*,*
+E38000064,,03A,NHS Greater Huddersfield ,10,*,*,,4,*,*
+E38000094,,02V,NHS Leeds North ,15,*,*,,8,*,*
+E38000095,,03G,NHS Leeds South and East ,40,*,*,,17,*,*
+E38000096,,03C,NHS Leeds West ,56,13,43,,17,8,26
+E38000121,,03J,NHS North Kirklees ,13,*,*,,7,*,*
+E38000190,,03R,NHS Wakefield ,41,10,31,,12,6,18
+,,,,,,,,,,
+E40000002,,Y55,Midlands and East of England,"1,157",319,838,,7,4,10
+,,,,,,,,,,
+E39000010,,Q53,"Arden, Herefordshire and Worcestershire",95,22,73,,6,3,9
+E38000038,,05A,NHS Coventry and Rugby ,34,11,23,,8,5,11
+E38000078,,05F,NHS Herefordshire ,7,*,*,,4,*,*
+E38000139,,05J,NHS Redditch and Bromsgrove ,9,*,*,,5,*,*
+E38000164,,05R,NHS South Warwickshire ,13,*,*,,5,*,*
+E38000166,,05T,NHS South Worcestershire ,16,*,*,,5,*,*
+E38000195,,05H,NHS Warwickshire North ,12,*,*,,6,*,*
+E38000211,,06D,NHS Wyre Forest ,*,*,*,,*,*,*
+,,,,,,,,,,
+E39000011,,Q54,Birmingham and the Black Country,201,51,150,,8,4,12
+E38000012,,13P,NHS Birmingham CrossCity ,65,14,51,,9,4,14
+E38000013,,04X,NHS Birmingham South and Central ,20,0,20,,10,0,20
+E38000046,,05C,NHS Dudley ,21,12,9,,7,8,6
+E38000144,,05L,NHS Sandwell and West Birmingham ,34,12,22,,7,5,9
+E38000149,,05P,NHS Solihull ,17,*,*,,8,*,*
+E38000191,,05Y,NHS Walsall ,16,*,*,,6,*,*
+E38000210,,06A,NHS Wolverhampton ,28,7,21,,11,6,17
+,,,,,,,,,,
+E39000012,,Q55,Derbyshire and Nottinghamshire,165,39,126,,8,4,13
+E38000058,,03X,NHS Erewash ,*,*,*,,*,*,*
+E38000071,,03Y,NHS Hardwick ,11,*,*,,10,*,*
+E38000103,,04E,NHS Mansfield & Ashfield ,27,*,*,,14,*,*
+E38000109,,04H,NHS Newark & Sherwood ,9,*,*,,8,*,*
+E38000115,,04J,NHS North Derbyshire ,29,7,22,,11,5,16
+E38000132,,04K,NHS Nottingham City ,18,*,*,,6,*,*
+E38000133,,04L,NHS Nottingham North & East ,8,*,*,,5,*,*
+E38000134,,04M,NHS Nottingham West ,8,*,*,,7,*,*
+E38000142,,04N,NHS Rushcliffe ,*,*,*,,*,*,*
+E38000169,,04R,NHS Southern Derbyshire ,48,14,34,,9,5,13
+,,,,,,,,,,
+E39000013,,Q56,East Anglia,83,25,58,,3,2,5
+E38000026,,06H,NHS Cambridgeshire and Peterborough ,27,9,18,,3,2,4
+E38000063,,06M,NHS Great Yarmouth & Waveney ,12,*,*,,6,*,*
+E38000086,,06L,NHS Ipswich and East Suffolk ,12,*,*,,3,*,*
+E38000124,,06V,NHS North Norfolk ,6,*,*,,4,*,*
+E38000131,,06W,NHS Norwich ,*,*,*,,*,*,*
+E38000159,,06Y,NHS South Norfolk ,11,*,*,,5,*,*
+E38000203,,07J,NHS West Norfolk ,9,*,*,,5,*,*
+E38000204,,07K,NHS West Suffolk ,*,*,*,,*,*,*
+,,,,,,,,,,
+E39000014,,Q57,Essex,111,41,70,,6,5,8
+E38000007,,99E,NHS Basildon and Brentwood ,16,9,7,,6,7,5
+E38000030,,99F,"NHS Castle Point, Rayleigh and Rochford ",15,7,8,,9,8,9
+E38000106,,06Q,NHS Mid Essex ,14,6,8,,4,3,4
+E38000117,,06T,NHS North East Essex ,21,6,15,,7,4,9
+E38000168,,99G,NHS Southend ,20,7,13,,11,8,14
+E38000185,,07G,NHS Thurrock ,11,*,*,,7,*,*
+E38000197,,07H,NHS West Essex ,14,*,*,,5,*,*
+,,,,,,,,,,
+E39000015,,Q58,Hertfordshire and the South Midlands,163,56,107,,6,4,8
+E38000010,,06F,NHS Bedfordshire ,27,7,20,,6,3,9
+E38000037,,03V,NHS Corby,*,*,*,,*,*,*
+E38000049,,06K,NHS East and North Hertfordshire ,34,17,17,,6,6,6
+E38000079,,06N,NHS Herts Valleys ,30,10,20,,5,4,7
+E38000102,,06P,NHS Luton ,9,*,*,,4,*,*
+E38000107,,04F,NHS Milton Keynes ,22,*,*,,8,*,*
+E38000108,,04G,NHS Nene ,37,11,26,,6,4,8
+,,,,,,,,,,
+E39000016,,Q59,Leicestershire and Lincolnshire,102,23,79,,6,3,9
+E38000051,,03W,NHS East Leicestershire and Rutland ,20,*,*,,6,*,*
+E38000097,,04C,NHS Leicester City ,9,*,*,,3,*,*
+E38000099,,03T,NHS Lincolnshire East ,13,*,*,,6,*,*
+E38000100,,04D,NHS Lincolnshire West ,22,*,*,,10,*,*
+E38000157,,99D,NHS South Lincolnshire ,12,*,*,,8,*,*
+E38000165,,04Q,NHS South West Lincolnshire ,8,*,*,,7,*,*
+E38000201,,04V,NHS West Leicestershire ,18,6,12,,5,3,6
+,,,,,,,,,,
+E39000017,,Q60,Shropshire and Staffordshire,237,62,175,,15,8,22
+E38000028,,04Y,NHS Cannock Chase ,*,*,*,,*,*,*
+E38000053,,05D,NHS East Staffordshire ,*,*,*,,*,*,*
+E38000126,,05G,NHS North Staffordshire ,24,7,17,,11,7,16
+E38000147,,05N,NHS Shropshire ,32,8,24,,10,5,15
+E38000153,,05Q,NHS South East Staffs and Seisdon and Peninsular ,18,*,*,,8,*,*
+E38000173,,05V,NHS Stafford and Surrounds ,*,*,*,,*,*,*
+E38000175,,05W,NHS Stoke on Trent ,100,34,66,,39,26,51
+E38000183,,05X,NHS Telford & Wrekin ,48,7,41,,28,8,48
+,,,,,,,,,,
+E40000003,,Y56,London,"1,559",359,"1,199",,19,9,28
+,,,,,,,,,,
+E39000018,,Q71,London,"1,559",359,"1,199",,19,9,28
+E38000004,,07L,NHS Barking & Dagenham ,30,*,*,,15,*,*
+E38000005,,07M,NHS Barnet ,91,22,69,,25,12,37
+E38000011,,07N,NHS Bexley ,66,20,46,,28,18,37
+E38000020,,07P,NHS Brent ,71,16,55,,22,10,35
+E38000023,,07Q,NHS Bromley ,52,9,43,,16,6,26
+E38000027,,07R,NHS Camden ,47,12,35,,20,11,30
+E38000031,,09A,NHS Central London (Westminster) ,28,7,21,,17,8,27
+E38000035,,07T,NHS City and Hackney ,38,9,29,,14,7,22
+E38000040,,07V,NHS Croydon ,69,18,51,,19,10,27
+E38000048,,07W,NHS Ealing ,66,14,52,,19,8,30
+E38000057,,07X,NHS Enfield ,40,14,26,,12,9,16
+E38000066,,08A,NHS Greenwich ,67,19,48,,25,14,36
+E38000070,,08C,NHS Hammersmith and Fulham ,37,10,27,,21,11,30
+E38000072,,08D,NHS Haringey ,37,6,31,,14,5,24
+E38000074,,08E,NHS Harrow ,43,10,33,,18,8,27
+E38000077,,08F,NHS Havering ,31,9,22,,13,8,17
+E38000082,,08G,NHS Hillingdon ,71,22,49,,25,15,34
+E38000084,,07Y,NHS Hounslow ,58,11,47,,22,8,36
+E38000088,,08H,NHS Islington ,52,*,*,,24,*,*
+E38000090,,08J,NHS Kingston ,33,7,26,,20,9,31
+E38000092,,08K,NHS Lambeth ,80,12,68,,25,8,43
+E38000098,,08L,NHS Lewisham ,98,19,78,,34,14,54
+E38000105,,08R,NHS Merton ,29,7,22,,14,7,21
+E38000113,,08M,NHS Newham ,29,10,19,,9,6,12
+E38000138,,08N,NHS Redbridge ,17,*,*,,6,*,*
+E38000140,,08P,NHS Richmond ,17,*,*,,9,*,*
+E38000171,,08Q,NHS Southwark ,100,9,91,,34,6,60
+E38000179,,08T,NHS Sutton ,42,13,29,,21,14,29
+E38000186,,08V,NHS Tower Hamlets ,19,7,12,,7,5,9
+E38000192,,08W,NHS Waltham Forest ,19,6,13,,7,5,10
+E38000193,,08X,NHS Wandsworth ,50,17,33,,16,11,20
+E38000202,,08Y,"NHS West London (Kensington and Chelsea, Queen’s Park and Paddington) ",32,7,25,,15,6,23
+,,,,,,,,,,
+E40000004,,Y57,South of England,"1,408",325,"1,083",,10,5,15
+,,,,,,,,,,
+E39000019,,Q64,"Bath, Gloucestershire, Swindon and Wiltshire",107,23,84,,7,3,11
+E38000009,,11E,NHS Bath and North East Somerset ,10,*,*,,6,*,*
+E38000062,,11M,NHS Gloucestershire ,36,10,26,,6,3,8
+E38000181,,12D,NHS Swindon ,13,*,*,,6,*,*
+E38000206,,99N,NHS Wiltshire ,48,11,37,,10,5,15
+,,,,,,,,,,
+E39000020,,Q65,"Bristol, North Somerset, Somerset and South Gloucestershire",83,22,61,,6,3,8
+E38000022,,11H,NHS Bristol ,12,*,*,,3,*,*
+E38000125,,11T,NHS North Somerset ,9,0,9,,4,0,8
+E38000150,,11X,NHS Somerset ,49,12,37,,9,5,13
+E38000155,,12A,NHS South Gloucestershire ,13,*,*,,5,*,*
+,,,,,,,,,,
+E39000021,,Q66,"Devon, Cornwall and Isles of Scilly",327,64,263,,19,8,30
+E38000089,,11N,NHS Kernow ,159,18,141,,29,7,50
+E38000129,,99P,"NHS North, East, West Devon ",140,41,99,,16,10,22
+E38000152,,99Q,NHS South Devon and Torbay ,28,*,*,,10,*,*
+,,,,,,,,,,
+E39000022,,Q67,Kent and Medway,227,55,172,,13,6,19
+E38000002,,09C,NHS Ashford ,11,*,*,,9,*,*
+E38000029,,09E,NHS Canterbury and Coastal ,24,6,18,,12,6,17
+E38000043,,09J,"NHS Dartford, Gravesham and Swanley ",37,12,25,,15,10,20
+E38000104,,09W,NHS Medway ,55,7,48,,20,5,35
+E38000156,,10A,NHS South Kent Coast ,18,*,*,,9,*,*
+E38000180,,10D,NHS Swale ,22,9,13,,20,17,24
+E38000184,,10E,NHS Thanet ,11,*,*,,8,*,*
+E38000199,,99J,NHS West Kent ,49,13,36,,10,6,15
+,,,,,,,,,,
+E39000023,,Q68,Surrey and Sussex,330,74,256,,12,6,18
+E38000021,,09D,NHS Brighton & Hove ,30,6,24,,11,4,17
+E38000036,,09G,NHS Coastal West Sussex ,84,17,67,,17,7,27
+E38000039,,09H,NHS Crawley ,15,*,*,,14,*,*
+E38000054,,09L,NHS East Surrey ,18,*,*,,10,*,*
+E38000055,,09F,"NHS Eastbourne, Hailsham and Seaford ",39,11,28,,21,13,29
+E38000067,,09N,NHS Guildford and Waverley,17,*,*,,8,*,*
+E38000076,,09P,NHS Hastings & Rother ,18,*,*,,10,*,*
+E38000081,,99K,NHS High Weald Lewes Havens ,17,*,*,,10,*,*
+E38000083,,09X,NHS Horsham and Mid Sussex ,19,8,11,,8,7,10
+E38000128,,09Y,NHS North West Surrey ,44,7,37,,13,4,21
+E38000177,,99H,NHS Surrey Downs ,18,*,*,,6,*,*
+E38000178,,10C,NHS Surrey Heath ,11,*,*,,12,*,*
+,,,,,,,,,,
+E39000024,,Q69,Thames Valley,99,26,73,,5,3,7
+E38000003,,10Y,NHS Aylesbury Vale ,6,*,*,,3,*,*
+E38000017,,10G,NHS Bracknell and Ascot ,16,*,*,,12,*,*
+E38000033,,10H,NHS Chiltern,*,*,*,,*,*,*
+E38000110,,10M,NHS Newbury and District ,7,*,*,,7,*,*
+E38000114,,10N,NHS North & West Reading ,10,*,*,,10,*,*
+E38000136,,10Q,NHS Oxfordshire ,17,8,9,,3,2,3
+E38000148,,10T,NHS Slough ,6,*,*,,4,*,*
+E38000160,,10W,NHS South Reading ,9,*,*,,8,*,*
+E38000207,,11C,"NHS Windsor, Ascot and Maidenhead ",15,*,*,,11,*,*
+E38000209,,11D,NHS Wokingham ,10,*,*,,6,*,*
+,,,,,,,,,,
+E39000025,,Q70,Wessex,235,61,174,,9,5,13
+E38000045,,11J,NHS Dorset ,41,10,31,,5,3,8
+E38000059,,10K,NHS Fareham and Gosport ,26,7,19,,13,7,19
+E38000087,,10L,NHS Isle of Wight ,14,6,8,,10,9,11
+E38000118,,99M,NHS North East Hampshire and Farnham ,16,*,*,,8,*,*
+E38000120,,10J,NHS North Hampshire ,15,*,*,,7,*,*
+E38000137,,10R,NHS Portsmouth ,33,7,26,,16,7,25
+E38000154,,10V,NHS South Eastern Hampshire ,31,9,22,,15,9,20
+E38000167,,10X,NHS Southampton ,28,*,*,,12,*,*
+E38000198,,11A,NHS West Hampshire ,31,11,20,,6,4,7

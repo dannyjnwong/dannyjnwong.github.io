@@ -1,0 +1,1 @@
+http://maps.communities.gov.uk:80/geoserver/dclg_inspire/ows?service=WFS&version=2.0.0&request=GetFeature&typeName=dclg_inspire:English%20Ceremonial%20Counties&outputFormat=shape-zip&srsName=EPSG:4326
