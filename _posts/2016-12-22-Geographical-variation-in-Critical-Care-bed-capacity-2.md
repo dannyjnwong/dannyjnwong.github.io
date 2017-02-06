@@ -7,6 +7,7 @@ blog: true
 tag:
 - R
 - Coding
+- GIS
 ---
 
 In my [last post](http://dannyjnwong.github.io/Geographical-variation-in-Critical-Care-bed-capacity/), I started cleaning some openly accessible data to look at whether we can see if there was geographical variation in Critical Care beds. 

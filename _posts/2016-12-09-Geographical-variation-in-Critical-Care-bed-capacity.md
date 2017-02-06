@@ -7,6 +7,7 @@ blog: true
 tag:
 - R
 - Coding
+- GIS
 ---
 
 I've always wondered if there was variation across the UK with regards to Critical Care bed capacity. In other words, are there regions in the UK where there are more Critical Care beds per population than others?
