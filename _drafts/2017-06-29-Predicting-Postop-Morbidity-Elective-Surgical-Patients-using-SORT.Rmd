@@ -68,7 +68,7 @@ par(mfrow=c(1,1))
 
 That code was used to produce a `.pdf` file which was then manipulated in GIMP to produce the final `.tiff` file for submission:
 
-![Figure 2](/figures/2017-06-29-Predicting-Postop-Morbidity-Elective-Surgical-Patients-using-SORT/figure2.tif)
+![Figure 2](/figures/2017-06-29-Predicting-Postop-Morbidity-Elective-Surgical-Patients-using-SORT/figure2.png)
 
 You might wonder why I have commented out one of the graphs (the one labelled "SORT vs. P-POSSUM & SRS"): Essentially that figure existed in one of the earlier versions of the manuscript, but was removed after the first round of peer review, when it became apparent that we did not have enough mortality events in our paper to adequately validate the 3 mortality risk scores in the label.
 
