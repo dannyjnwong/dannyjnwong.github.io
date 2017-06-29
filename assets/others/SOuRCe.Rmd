@@ -1,0 +1,1058 @@
+---
+title: "Extending SORT to Predict Morbidity using the SOuRCe Cohort"
+author: "Danny Wong, Matt Oliver & Ramani Moonesinghe"
+date: "Tuesday, February 16, 2016"
+output: html_document
+---
+
+```{r, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(warning = FALSE)
+knitr::opts_chunk$set(message = FALSE)
+```
+
+## Summary
+
+- After cleaning the data, I fitted regression models with POMS (binary: TRUE or FALSE) as the outcome measure with predictor variables derived from the original SORT model.
+
+- **Regression Model 1**: POMS Day 7 or 8 outcome, Age continuous predictor, no internal validation.
+
+- **Regression Model 2**: POMS Day 7 or 8 outcome, predictor variables exactly as in original SORT model, no internal validation.
+
+- **Regression Model 3**: POMS Day 7 or 8 outcome, predictor variables exactly as in original SORT model, internal validation.
+
+- **Regression Model 4**: POMS Day 7 or 8 outcome, predictor variables pre-weighted with the coefficients used in the original SORT model _before_ fitting model, internal validation.
+
+- **Regression Model 5**: Alternative outcome measure - Readmission within 30 days, predictor variables as in Model 3, internal validation.
+
+- **Regression Model 6**: POMS Day 14 or 15 outcome, predictor variables exactly as in Model 3, internal validation.
+
+- **Regression Model 7**: POMS Day 7 or 8 outcome, restricted predictor variable with only Colorectal surgery as the dummy variable for high-risk surgical specialties, otherwise same as Model 3, internal validation.
+
+- **Regression Model 8**: POMS Day 7 or 8 outcome, Surgical Specialty as factors (6 categories, 5 dummy variables), otherwise same as Model 7, internal validation.
+
+- **Regression Model 9**: POMS Day 7 or 8 outcome, ASA = 2 or 3 or >=4, otherwise same as Model 8, internal validation.
+
+- **Regression Model 10**: POMS Day 7 or 8 outcome, predictor variable for opspecialty is now a factor with 6 categories (5 dummy variables) instead of "high-risk" surgical specialties, and ASA is now a continuous variable, otherwise same as Model 7, internal validation.
+
+- **Regression Model 11**: POMS Day 7 or 8 outcome, predictor variable for opspecialty is now a factor with 6 categories (5 dummy variables) instead of "high-risk" surgical specialties, and ASA and Age are now continuous variables, and added interaction between age and specialty, otherwise same as Model 10, internal validation.
+
+- **NB**: Where the ROC curves were plotted, the dotted lines in red signify the ROC curve for p-POSSUM(morbidity), overlaid for comparison, the solid lines signify the fitted model being tested. For the sake of brevity, I do not show the source code after Model 4.
+
+## Introduction
+
+Matt Oliver has kindly provided some data that he has cleaned from the SOuRCe database of >1900 patients who underwent surgery. The purpose of our project is to calibrate and validate the risk calculation tools. He has already done this with mortality using SORT and with pPOSSUM. We are going to see if we can also do this for morbidity using POMS.
+
+## Data tidying and cleaning
+
+First we load the data that has been cleaned in the SOuRCeDataCleaning.Rmd file
+
+```{r external, message=FALSE, results='hide'}
+library(knitr)
+purl("SOuRCeDataCleaning.Rmd")
+read_chunk("SOuRCeDataCleaning.R")
+unlink("SOuRCeDataCleaning.R")
+```
+
+```{r Data_Clean, echo = TRUE, include = FALSE}
+<<CleanData_InitialClean>>
+<<CleanData_POMSOutcomes>>
+<<CleanData_Join3>>
+<<CleanData_Join5>>  
+<<CleanData_Join7>>
+<<CleanData_Join14>>
+<<CleanData_Join21>>
+<<CleanData_Join28>>
+```
+
+\pagebreak
+
+## Analysis
+
+### Mortality external validation
+
+The first step is to externally validate the SORT model for mortality against the data
+
+```{r Ext_val_SORT, message=FALSE, warning=FALSE}
+#Load the data, this is a workaround because there're problems with running 
+#plotCalibration with using the existing data_clean dataframe, must be something
+#to do with how the data is stored in R (vector or matrix or otherwise)
+data_clean <- read.csv("data/SOuRCedata_clean.csv")
+
+#Test SORT with the dataset
+library(PredictABEL)
+
+HL1 <- plotCalibration(data_clean, 
+                       cOutcome = match("mort30", colnames(data_clean)),
+                       predRisk = data_clean$sort_mort,
+                       rangeaxis = c(0,0.1),
+                       plottitle = "Calibration plot for SORT")
+
+HL2 <- plotCalibration(data_clean, 
+                       cOutcome = match("mort30", colnames(data_clean)),
+                       predRisk = data_clean$p_possmort,
+                       rangeaxis = c(0,0.1),
+                       plottitle = "Calibration plot for p-POSSUM")
+
+HL3 <- plotCalibration(data_clean, 
+                       cOutcome = match("mort30", colnames(data_clean)),
+                       predRisk = data_clean$srs_mort,
+                       rangeaxis = c(0,0.1),
+                       plottitle = "Calibration plot for SRS")
+
+#Let's overlay the ROC curve over the ROC curve for p-POSSUM
+plotROC(data = data_clean, 
+        cOutcome = match("mort30", colnames(data_clean)), 
+        predrisk = cbind(data_clean$sort_mort,
+                         data_clean$p_possmort,
+                         data_clean$srs_mort),
+        plottitle = "SORT vs p-POSSUM & SRS" 
+        #labels = c("SORT", "p-POSSUM", "SRS")
+        )
+legend("bottomright", inset = c(0.02,0.02), legend = c("SORT","p-POSSUM","SRS"),
+       col = c(17,18,19), lty = c(1,2,3),
+       horiz = TRUE, cex = 0.5)
+
+#Let's compare whether the new model is as good as POSSUM in discrimination
+library(pROC)
+
+#Create the ROC objects
+roc_SORT <- roc(data_clean$mort30 ~ data_clean$sort_mort, plot=FALSE, auc=TRUE, ci=TRUE)
+roc_pPOSSUM <- roc(data_clean$mort30 ~ data_clean$p_possmort, plot=FALSE, auc=TRUE, ci=TRUE)
+roc_SRS <- roc(data_clean$mort30 ~ data_clean$srs_mort, plot=FALSE, auc=TRUE, ci=TRUE)
+
+#Test the ROC objects against each other
+roc.test(roc_SORT, roc_pPOSSUM)
+roc.test(roc_SORT, roc_SRS)
+```
+
+### Day 7 or 8 POMS
+
+Now it looks like we are ready to do some analysis looking at Day 7 or 8 POMS as outcome measures. 
+
+```{r PlotData_Day7_8_POMS, message=FALSE, warning=FALSE}
+#Let's get an overview of the data
+describe(join7)
+
+#Let's plot POMS vs the individual predictors add smoothing lines to get a general feel of the data
+
+scatter.smooth(join7$poms ~ join7$age, family = "gaussian", 
+               lpars = list(col = "red"))
+
+scatter.smooth(join7$poms ~ join7$asa, family = "gaussian", 
+               lpars = list(col = "red"))
+
+scatter.smooth(join7$poms ~ join7$opspecialty, family = "gaussian", 
+               lpars = list(col = "red"))
+
+scatter.smooth(join7$poms ~ join7$malignancy, family = "gaussian", 
+               lpars = list(col = "red"))
+
+#Might be easier to understand some of the plots with the points jittered
+scatter.smooth(jitter(as.numeric(join7$poms)) ~ jitter(join7$asa), 
+               family = "gaussian", lpars = list(col = "red"))
+
+scatter.smooth(jitter(as.numeric(join7$poms)) ~ jitter(join7$opspecialty), 
+               family = "gaussian", lpars = list(col = "red"))
+
+scatter.smooth(jitter(as.numeric(join7$poms)) ~ jitter(join7$malignancy), 
+               family = "gaussian", lpars = list(col = "red"))
+```
+
+\pagebreak
+
+#### Regression Models 1 & 2
+
+We will fit some Regression Models. Firstly we will look at the model with age as a continuous variable. In the SORT tool, the risk score binned age into a categorical variable.
+
+```{r RegressionModels1_2, message=FALSE, warning=FALSE}
+#Fit a logistic regression model with the same predictor variables as in SORT, but with any POMS outcome the dependent variable
+lr_poms <- glm(poms ~ age + 
+                 as.factor(asa) + 
+                 as.factor(opspecialty) + 
+                 as.factor(op_severity) + 
+                 as.factor(malignancy), 
+               data = join7, family = binomial)
+
+summary(lr_poms)
+
+#Fit another logistic regression model, but this time with the predictor variables in SORT as the discrete variables, eg specific ASA-PS == 3, High risk specialty TRUE, and so on
+lr_poms2 <- glm(poms ~ (asa == 3) + 
+                  (asa == 4) + 
+                  (asa == 5) + 
+                  (opspecialty >= 2 & opspecialty < 6) + 
+                  (op_severity > 7) + 
+                  malignancy + 
+                  (age >= 65 & age <80) + 
+                  (age >= 80), 
+                data = join7, family = binomial)
+
+summary(lr_poms2)
+```
+
+\pagebreak
+
+#### Regression Model 3
+
+Theoretically we can do a Logistic Regression with POMS as the outcome variable, however all the cases in the SOuRCe dataset are Elective cases, so we lose one of the dependent variables from the original SORT regression equation.
+
+Also, we need to have a way of testing how well our model performs, so we need to refit the model with a training dataset and then test it against a testing dataset. In the Protopapa et al paper describing the method for developing SORT, the dataset was split into approx. 2/3 for training and 1/3 for testing.
+
+Whilst we want to stay as close as possible to the original SORT predictor variables, we need to adjust our regression equation to account for the fact that we only have 1 level of Operative urgency (this is a purely elective cohort), furthermore there are insufficient numbers in some of the categories for there to be useful information to add to the model adjustments, e.g. there is only 1 patient ASA == 5.
+
+```{r RegressionModel3, message=FALSE, warning=FALSE}
+#Split the data set into training and testing
+library(caret)
+#join7$poms <- as.integer(join7$poms) %>% as.factor()
+set.seed(123)
+x <- createDataPartition(join7$poms, p = (2/3), list = FALSE, times = 1)
+training <- join7[x, ]
+testing <- join7[-x, ]
+
+nrow(training)
+nrow(testing)
+
+#Fit a model with the training dataset
+lr_poms3 <- glm(poms ~ (asa == 3) + 
+                  (asa >= 4) + 
+                  (opspecialty >= 2 & opspecialty < 6) + 
+                  (op_severity > 7) + 
+                  malignancy + 
+                  (age >= 65 & age <80) + 
+                  (age >= 80), 
+                data = training, 
+                family = binomial)
+
+summary(lr_poms3)
+
+#I've had to remove NA values from the testing dataset in order for the Hosmer-Lemeshow test to run
+testing <- filter(testing, !is.na(poms))
+
+#Test the model with the testing dataset
+library(PredictABEL)
+
+(HL_lrpoms3 <- plotCalibration(data = testing, 
+                cOutcome = match("poms", colnames(testing)), 
+                predRisk = predict(lr_poms3, newdata = testing, type = "response")))
+
+#Calculate AUROC and plot the ROC curve
+plotROC(data = testing,
+        cOutcome = match("poms", colnames(testing)),
+        predrisk = predict(lr_poms3, newdata = testing, type = "response"))
+
+#Let's overlay the ROC curve over the ROC curve for POSSUM-morbidity
+plotROC(data = testing, 
+        cOutcome = match("poms", colnames(testing)), 
+        predrisk = cbind(predict(lr_poms3, newdata = testing, type = "response"),
+                         testing$morb_poss))
+
+#Let's compare whether the new model is as good as POSSUM in discrimination
+library(pROC)
+
+#Create the ROC objects
+x <- predict(lr_poms3, newdata = testing, type = "response") #Temp variable
+roc_model3 <- roc(testing$poms ~ x, plot=FALSE, auc=TRUE, ci=TRUE)
+roc_POSSUM <- roc(testing$poms ~ testing$morb_poss, plot=FALSE, auc=TRUE, ci=TRUE)
+
+#Test the ROC objects against each other
+roc.test(roc_model3, roc_POSSUM)
+
+#library(rms) #This package contains many functions for regression modelling
+#
+#val.prob(p = predict(lr_poms3, newdata = testing, type = "response"), y = testing$poms, smooth = TRUE)
+```
+
+`r require(ROCR) 
+prob <- predict(lr_poms3, newdata=testing, type="response") 
+pred <- prediction(prob, testing$poms) 
+perf <- performance(pred, measure = "tpr", x.measure = "fpr") 
+auc <- performance(pred, measure = "auc") 
+auc <- auc@y.values[[1]]` 
+
+The AUROC for the Model 3 was **`r signif(auc, 3)`** which implies the model doesn't perform very well. 
+
+\pagebreak
+
+#### Regression Model 4
+
+We can attempt another model by calculating the SORT risk score as a single regression variable.
+
+```{r RegressionModel4, message=FALSE, warning=FALSE}
+#We will use the same training and testing partitions as the previous model but this time create a new column called risk score
+set.seed(123)
+x <- createDataPartition(join7$poms, p = (2/3), list = FALSE, times = 1)
+training <- join7[x, ]
+testing <- join7[-x, ]
+
+#Fit a model with the training dataset
+lr_poms4 <- glm(poms ~ risk_score, 
+                data = training, 
+                family = binomial)
+
+summary(lr_poms4)
+
+#I've had to remove NA values from the testing dataset in order for the Hosmer-Lemeshow test to run
+testing <- filter(testing, !is.na(poms))
+
+#Test the model with the testing dataset
+plotCalibration(data = testing, 
+                cOutcome = match("poms", colnames(testing)), 
+                predRisk = predict(lr_poms4, newdata = testing, type = "response"))
+
+#Calculate AUROC and plot the ROC curve
+plotROC(data = testing, 
+        cOutcome = match("poms", colnames(testing)), 
+        predrisk = predict(lr_poms4, newdata = testing, type = "response"))
+
+#Let's compare whether the new model is as good as POSSUM in discrimination
+library(pROC)
+
+#Create the ROC objects
+x <- predict(lr_poms4, newdata = testing, type = "response") #Temp variable
+roc_model <- roc(testing$poms ~ x, plot=FALSE, auc=TRUE, ci=TRUE)
+roc_POSSUM <- roc(testing$poms ~ testing$morb_poss, plot=FALSE, auc=TRUE, ci=TRUE)
+
+#Test the ROC objects against each other
+roc.test(roc_model, roc_POSSUM)
+```
+
+The AUC doesn't seem much better for this 4th model
+
+\pagebreak
+
+#### Regression Model 5 - An alternative outcome measure
+
+We have thus far been looking at POMS as an outcome measure and seeing how well the SORT variables predict morbidity as defined by that. What if we pick an alternative measure of morbidity. Readmission rates could be one such example
+
+```{r RegressionModel5, message=FALSE, warning=FALSE, echo=FALSE}
+#Split the data set into training and testing as before
+set.seed(123)
+x <- createDataPartition(join7$poms, p = (2/3), list = FALSE, times = 1)
+training <- join7[x, ]
+testing <- join7[-x, ]
+
+#Fit a model with the training dataset
+lr_readmit <- glm(Followup_Readmission_30Days ~ (asa == 3) + 
+                  (asa >= 4) + 
+                  (opspecialty >= 2 & opspecialty < 6) + 
+                  (op_severity > 7) + 
+                  malignancy + 
+                  (age >= 65 & age <80) + 
+                  (age >= 80), 
+                data = training, 
+                family = binomial)
+
+summary(lr_readmit)
+
+#I've had to remove NA values from the testing dataset in order for the Hosmer-Lemeshow test to run
+testing <- filter(testing, !is.na(Followup_Readmission_30Days))
+
+#Test the model with the testing dataset
+library(PredictABEL)
+
+plotCalibration(data = testing, 
+                cOutcome = match("Followup_Readmission_30Days", colnames(testing)), 
+                predRisk = predict(lr_readmit, newdata = testing, type = "response"))
+
+#Calculate AUROC and plot the ROC curve
+plotROC(data = testing,
+        cOutcome = match("Followup_Readmission_30Days", colnames(testing)),
+        predrisk = predict(lr_readmit, newdata = testing, type = "response"))
+
+#Let's overlay the ROC curve over the ROC curve for POSSUM-morbidity
+plotROC(data = testing, 
+        cOutcome = match("Followup_Readmission_30Days", colnames(testing)), 
+        predrisk = cbind(predict(lr_readmit, newdata = testing, type = "response"),
+                         testing$morb_poss))
+
+#Let's compare whether the new model is as good as POSSUM in discrimination
+library(pROC)
+
+#Create the ROC objects
+x <- predict(lr_readmit, newdata = testing, type = "response") #Temp variable
+roc_model <- roc(testing$poms ~ x, plot=FALSE, auc=TRUE, ci=TRUE)
+roc_POSSUM <- roc(testing$poms ~ testing$morb_poss, plot=FALSE, auc=TRUE, ci=TRUE)
+
+#Test the ROC objects against each other
+roc.test(roc_model, roc_POSSUM)
+```
+
+It may be that POMS at Day 7 or 8 may be too sensitive an outcome measure, as suggested by Ramani. We may therefore need to look at Day 14 or 15 POMS instead.
+
+\pagebreak
+
+### Day 14 or 15 POMS
+
+We will repeat what we did for Regression Model 3 above, but this time with Day 14 or 15 POMS as an outcome measure. This time I will not print the code that went into processing the data, to save space.
+
+```{r CleanData_POMS14_15, echo=FALSE, message=FALSE, warning=FALSE, echo=FALSE}
+#To manage the memory in the environment, remove the unused regression models
+rm(lr_poms)
+rm(lr_poms2)
+rm(lr_poms3)
+rm(lr_poms4)
+rm(lr_readmit)
+
+#Let's get an overview of the data
+describe(join14)
+```
+
+\pagebreak
+
+#### Plots - Day 14 or 15 POMS Outcome
+
+```{r PlotData_POMS14_15, message=FALSE, warning=FALSE, echo=FALSE}
+#Let's plot POMS vs the individual predictors add smoothing lines to get a general feel of the data
+
+scatter.smooth(join14$poms ~ join14$age, family = "gaussian", 
+               lpars = list(col = "red"))
+
+scatter.smooth(join14$poms ~ join14$asa, family = "gaussian", 
+               lpars = list(col = "red"))
+
+scatter.smooth(join14$poms ~ join14$opspecialty, family = "gaussian", 
+               lpars = list(col = "red"))
+
+scatter.smooth(join14$poms ~ join14$malignancy, family = "gaussian", 
+               lpars = list(col = "red"))
+
+#Might be easier to understand some of the plots with the points jittered
+scatter.smooth(jitter(as.numeric(join14$poms)) ~ jitter(join14$asa), 
+               family = "gaussian", lpars = list(col = "red"))
+
+scatter.smooth(jitter(as.numeric(join14$poms)) ~ jitter(join14$opspecialty), 
+               family = "gaussian", lpars = list(col = "red"))
+
+scatter.smooth(jitter(as.numeric(join14$poms)) ~ jitter(join14$malignancy), 
+               family = "gaussian", lpars = list(col = "red"))
+```
+
+\pagebreak
+
+#### Regression Model 6
+
+We now want to fit the model used in Regression Model 3, but to the Day 14 or 15 POMS outcomes.
+
+```{r RegressionModel6, message=FALSE, warning=FALSE, echo=FALSE}
+#Split the data set into training and testing
+set.seed(123)
+x <- createDataPartition(join7$poms, p = (2/3), list = FALSE, times = 1)
+training <- join14[x, ]
+testing <- join14[-x, ]
+
+nrow(training)
+nrow(testing)
+
+#Fit a model with the training dataset
+lr_poms6 <- glm(poms ~ (asa == 3) + 
+                  (asa >= 4) + 
+                  (opspecialty >= 2 & opspecialty < 6) + 
+                  (op_severity > 7) + 
+                  malignancy + 
+                  (age >= 65 & age <80) + 
+                  (age >= 80), 
+                data = training, 
+                family = binomial)
+
+summary(lr_poms6)
+
+#I've had to remove NA values from the testing dataset in order for the Hosmer-Lemeshow test to run
+testing <- filter(testing, !is.na(poms))
+
+#Test the model with the testing dataset
+library(PredictABEL)
+
+plotCalibration(data = testing, 
+                cOutcome = match("poms", colnames(testing)), 
+                predRisk = predict(lr_poms6, newdata = testing, type = "response"))
+
+#Calculate AUROC and plot the ROC curve
+plotROC(data = testing,
+        cOutcome = match("poms", colnames(testing)),
+        predrisk = predict(lr_poms6, newdata = testing, type = "response"))
+
+#Let's overlay the ROC curve over the ROC curve for POSSUM-morbidity
+plotROC(data = testing, 
+        cOutcome = match("poms", colnames(testing)), 
+        predrisk = cbind(predict(lr_poms6, newdata = testing, type = "response"),
+                         testing$morb_poss))
+
+#Let's compare whether the new model is as good as POSSUM in discrimination
+library(pROC)
+
+#Create the ROC objects
+x <- predict(lr_poms6, newdata = testing, type = "response") #Temp variable
+roc_model <- roc(testing$poms ~ x, plot=FALSE, auc=TRUE, ci=TRUE)
+roc_POSSUM <- roc(testing$poms ~ testing$morb_poss, plot=FALSE, auc=TRUE, ci=TRUE)
+
+#Test the ROC objects against each other
+roc.test(roc_model, roc_POSSUM)
+```
+
+\pagebreak
+
+### Further refining the Regression Models
+
+If we look at the scatter plots in the earlier parts of the analysis, particularly the one of POMS vs Surgical Specialty, the relationship between POMS and the surgical specialty doesn't seem very strong for the patients who underwent Upper GI, Vascular, Bariatric or Other surgery (`opspecialty 3-6`). The strongest predictor appears to be Colorectal surgery out of those specialties. Therefore it may be better to fit a more restricted model.
+
+#### Regression Model 7
+
+We will fit a more restricted model with Day 7 or 8 POMS as the outcome, and the only surgical specialty that functions as a predictor is Colorectal surgery (`opspecialty == 2`). 
+
+```{r RegressionModel7, message=FALSE, warning=FALSE, echo=FALSE}
+#Split the data set into training and testing
+set.seed(123)
+x <- createDataPartition(join7$poms, p = (2/3), list = FALSE, times = 1)
+training <- join7[x, ]
+testing <- join7[-x, ]
+
+nrow(training)
+nrow(testing)
+
+#Fit a model with the training dataset
+lr_poms7 <- glm(poms ~ (asa == 3) + 
+                  (asa >= 4) + 
+                  (opspecialty == 2 | opspecialty == 3) + 
+                  (op_severity > 7) + 
+                  malignancy + 
+                  (age >= 65 & age <80) + 
+                  (age >= 80), 
+                data = training, 
+                family = binomial)
+
+summary(lr_poms7)
+
+#I've had to remove NA values from the testing dataset in order for the Hosmer-Lemeshow test to run
+testing <- filter(testing, !is.na(poms))
+
+#Test the model with the testing dataset
+library(PredictABEL)
+
+(HL_lrpoms7 <- plotCalibration(data = testing, 
+                cOutcome = match("poms", colnames(testing)), 
+                predRisk = predict(lr_poms7, newdata = testing, type = "response")))
+
+#Calculate AUROC and plot the ROC curve
+plotROC(data = testing,
+        cOutcome = match("poms", colnames(testing)),
+        predrisk = predict(lr_poms7, newdata = testing, type = "response"))
+
+#Let's overlay the ROC curve over the ROC curve for POSSUM-morbidity
+plotROC(data = testing, 
+        cOutcome = match("poms", colnames(testing)), 
+        predrisk = cbind(predict(lr_poms7, newdata = testing, type = "response"),
+                         testing$morb_poss))
+
+#Let's compare whether the new model is as good as POSSUM in discrimination
+library(pROC)
+
+#Create the ROC objects
+x <- predict(lr_poms7, newdata = testing, type = "response") #Temp variable
+roc_model7 <- roc(testing$poms ~ x, plot=FALSE, auc=TRUE, ci=TRUE)
+roc_POSSUM <- roc(testing$poms ~ testing$morb_poss, plot=FALSE, auc=TRUE, ci=TRUE)
+
+#Test the ROC objects against each other
+roc.test(roc_model7, roc_POSSUM)
+```
+
+It seems that the AUROC has improved with this more restricted model.
+
+\pagebreak
+
+#### Regression Model 8
+
+We will now do the same as Regression Model 7, but changing surgical specialty into factor variable
+
+```{r RegressionModel8, message=FALSE, warning=FALSE, echo=FALSE}
+#Split the data set into training and testing
+set.seed(123)
+x <- createDataPartition(join7$poms, p = (2/3), list = FALSE, times = 1)
+training <- join7[x, ]
+testing <- join7[-x, ]
+
+nrow(training)
+nrow(testing)
+
+#Fit a model with the training dataset
+lr_poms8 <- glm(poms ~ (asa == 3) + 
+                  (asa >= 4) + 
+                  factor(opspecialty) + 
+                  (op_severity > 7) + 
+                  malignancy + 
+                  (age >= 65 & age <80) + 
+                  (age >= 80), 
+                data = training, 
+                family = binomial)
+
+summary(lr_poms8)
+
+#I've had to remove NA values from the testing dataset in order for the Hosmer-Lemeshow test to run
+testing <- filter(testing, !is.na(poms))
+
+#Test the model with the testing dataset
+library(PredictABEL)
+
+HL_lrpoms8 <- plotCalibration(data = testing, 
+                cOutcome = match("poms", colnames(testing)), 
+                predRisk = predict(lr_poms8, newdata = testing, type = "response"))
+
+#Calculate AUROC and plot the ROC curve
+plotROC(data = testing,
+        cOutcome = match("poms", colnames(testing)),
+        predrisk = predict(lr_poms8, newdata = testing, type = "response"))
+
+#Let's overlay the ROC curve over the ROC curve for POSSUM-morbidity
+plotROC(data = testing, 
+        cOutcome = match("poms", colnames(testing)), 
+        predrisk = cbind(predict(lr_poms8, newdata = testing, type = "response"),
+                         testing$morb_poss))
+
+#Let's compare whether the new model is as good as POSSUM in discrimination
+library(pROC)
+
+#Create the ROC objects
+x <- predict(lr_poms8, newdata = testing, type = "response") #Temp variable
+roc_model8 <- roc(testing$poms ~ x, plot=FALSE, auc=TRUE, ci=TRUE)
+roc_POSSUM <- roc(testing$poms ~ testing$morb_poss, plot=FALSE, auc=TRUE, ci=TRUE)
+
+#Test the ROC objects against each other
+roc.test(roc_model8, roc_POSSUM)
+```
+
+#### Regression Model 9
+
+Regression Model 8, but change the ASA to dummy variables, ASA == 2, ASA == 3 or ASA >= 4.
+
+```{r RegressionModel9, message=FALSE, warning=FALSE, echo=FALSE}
+#Split the data set into training and testing
+set.seed(123)
+x <- createDataPartition(join7$poms, p = (2/3), list = FALSE, times = 1)
+training <- join7[x, ]
+testing <- join7[-x, ]
+
+nrow(training)
+nrow(testing)
+
+#Fit a model with the training dataset
+lr_poms9 <- glm(poms ~ (asa == 2) +
+                  (asa == 3) + 
+                  (asa >= 4) + 
+                  factor(opspecialty) + 
+                  (op_severity > 7) + 
+                  malignancy + 
+                  (age >= 65 & age <80) + 
+                  (age >= 80), 
+                data = training, 
+                family = binomial)
+
+summary(lr_poms9)
+
+#I've had to remove NA values from the testing dataset in order for the Hosmer-Lemeshow test to run
+testing <- filter(testing, !is.na(poms))
+
+#Test the model with the testing dataset
+library(PredictABEL)
+
+HL_lrpoms9 <- plotCalibration(data = testing, 
+                cOutcome = match("poms", colnames(testing)), 
+                predRisk = predict(lr_poms9, newdata = testing, type = "response"))
+
+#Calculate AUROC and plot the ROC curve
+plotROC(data = testing,
+        cOutcome = match("poms", colnames(testing)),
+        predrisk = predict(lr_poms9, newdata = testing, type = "response"))
+
+#Let's overlay the ROC curve over the ROC curve for POSSUM-morbidity
+plotROC(data = testing, 
+        cOutcome = match("poms", colnames(testing)), 
+        predrisk = cbind(predict(lr_poms9, newdata = testing, type = "response"),
+                         testing$morb_poss))
+
+#Let's compare whether the new model is as good as POSSUM in discrimination
+library(pROC)
+
+#Create the ROC objects
+x <- predict(lr_poms9, newdata = testing, type = "response") #Temp variable
+roc_model9 <- roc(testing$poms ~ x, plot=FALSE, auc=TRUE, ci=TRUE)
+roc_POSSUM <- roc(testing$poms ~ testing$morb_poss, plot=FALSE, auc=TRUE, ci=TRUE)
+
+#Test the ROC objects against each other
+roc.test(roc_model9, roc_POSSUM)
+```
+
+#### Regression Model 10
+
+```{r RegressionModel10, message=FALSE, warning=FALSE, echo=FALSE}
+#Split the data set into training and testing
+set.seed(123)
+x <- createDataPartition(join7$poms, p = (2/3), list = FALSE, times = 1)
+training <- join7[x, ]
+testing <- join7[-x, ]
+
+nrow(training)
+nrow(testing)
+
+#Fit a model with the training dataset
+lr_poms10 <- glm(poms ~ asa +
+                  factor(opspecialty) + 
+                  (op_severity > 7) +
+                  malignancy + 
+                  (age >= 65 & age <80) + 
+                  (age >= 80), 
+                data = training, 
+                family = binomial)
+
+summary(lr_poms10)
+
+#I've had to remove NA values from the testing dataset in order for the Hosmer-Lemeshow test to run
+testing <- filter(testing, !is.na(poms))
+
+#Test the model with the testing dataset
+library(PredictABEL)
+
+HL_lrpoms10 <- plotCalibration(data = testing, 
+                cOutcome = match("poms", colnames(testing)), 
+                predRisk = predict(lr_poms10, newdata = testing, type = "response"),
+                plottitle = "Calibration plot for SORT-morbidity")
+
+#Calculate AUROC and plot the ROC curve
+#plotROC(data = testing,
+#        cOutcome = match("poms", colnames(testing)),
+#        predrisk = predict(lr_poms10, newdata = testing, type = "response"))
+
+#Let's overlay the ROC curve over the ROC curve for POSSUM-morbidity
+plotROC(data = testing, 
+        cOutcome = match("poms", colnames(testing)), 
+        predrisk = cbind(predict(lr_poms10, newdata = testing, type = "response"),
+                         testing$morb_poss),
+        plottitle = "SORT-morbidity vs POSSUM"
+        #labels = c("SORT-morbidity", "POSSUM-morbidity")
+        )
+legend("bottomright", inset = c(0.02,0.02), legend = c("SORT-morbidity","POSSUM"),
+       col = c(17,18), lty = c(1,2),
+       horiz = TRUE, cex = 0.5)
+
+#Let's compare whether the new model is as good as POSSUM in discrimination
+library(pROC)
+
+#Create the ROC objects
+x <- predict(lr_poms10, newdata = testing, type = "response") #Temp variable
+roc_model10 <- roc(testing$poms ~ x, plot=FALSE, auc=TRUE, ci=TRUE)
+roc_POSSUM <- roc(testing$poms ~ testing$morb_poss, plot=FALSE, auc=TRUE, ci=TRUE)
+
+#Test the ROC objects against each other
+roc.test(roc_model10, roc_POSSUM)
+
+#plot(roc_model10, col="blue")
+#plot(roc_POSSUM, col="green", lty = 2, add=TRUE)
+#legend("bottomright", inset = c(0.05,0.05), legend = c("SORT-morbidity","POSSUM"),
+#col = c("blue","green"), lty = c(1,2),
+#horiz = TRUE, cex = 0.5)
+```
+
+```{r DiagnosticsModel10, message=FALSE, warning=FALSE}
+library(car)
+
+#Check for multicollinearity
+vif(lr_poms10)
+
+# Cook's D plot
+# identify D values > 4/(n-k-1) 
+cutoff <- 4/((nrow(training)-length(lr_poms10$coefficients)-2)) 
+plot(lr_poms10, which=4, cook.levels=cutoff)
+# Influence Plot 
+influencePlot(lr_poms10,	id.method="identify", main="Influence Plot", sub="Circle size is proportial to Cook's Distance" )
+```
+
+#### Regression Model 11
+
+Let's introduce some interaction terms.
+
+```{r RegressionModel11, message=FALSE, warning=FALSE, echo=FALSE}
+#Split the data set into training and testing
+set.seed(123)
+x <- createDataPartition(join7$poms, p = (2/3), list = FALSE, times = 1)
+training <- join7[x, ]
+testing <- join7[-x, ]
+
+nrow(training)
+nrow(testing)
+
+#Fit a model with the training dataset
+lr_poms11 <- glm(poms ~ asa +
+                  factor(opspecialty) + 
+                  (op_severity > 7) +
+                  malignancy + 
+                  (age >= 65 & age <80) + 
+                  (age >= 80) + 
+                  (age >= 65 & age <80):factor(opspecialty) +
+                  (age >= 80):factor(opspecialty), 
+                data = training, 
+                family = binomial)
+
+summary(lr_poms11)
+
+#I've had to remove NA values from the testing dataset in order for the Hosmer-Lemeshow test to run
+testing <- filter(testing, !is.na(poms))
+
+#Test the model with the testing dataset
+library(PredictABEL)
+
+HL_lrpoms11 <- plotCalibration(data = testing, 
+                cOutcome = match("poms", colnames(testing)), 
+                predRisk = predict(lr_poms11, newdata = testing, type = "response"),
+                plottitle = "Calibration plot for SORT-morbidity")
+
+#Calculate AUROC and plot the ROC curve
+plotROC(data = testing,
+        cOutcome = match("poms", colnames(testing)),
+        predrisk = predict(lr_poms11, newdata = testing, type = "response"))
+
+#Let's overlay the ROC curve over the ROC curve for POSSUM-morbidity
+plotROC(data = testing, 
+        cOutcome = match("poms", colnames(testing)), 
+        predrisk = cbind(predict(lr_poms11, newdata = testing, type = "response"),
+                         testing$morb_poss))
+
+#Let's compare whether the new model is as good as POSSUM in discrimination
+library(pROC)
+
+#Create the ROC objects
+x <- predict(lr_poms11, newdata = testing, type = "response") #Temp variable
+roc_model11 <- roc(testing$poms ~ x, plot=FALSE, auc=TRUE, ci=TRUE)
+roc_POSSUM <- roc(testing$poms ~ testing$morb_poss, plot=FALSE, auc=TRUE, ci=TRUE)
+
+#Test the ROC objects against each other
+roc.test(roc_model11, roc_POSSUM)
+```
+
+#### Regression Model Cross Validation
+
+```{r RegressionModel_CrossValidation, message=FALSE, warning=FALSE, echo=FALSE, eval=FALSE}
+#Split the data set into training and testing but using the caret package
+set.seed(123)
+x <- createDataPartition(join7$poms, p = (2/3), list = FALSE, times = 1)
+training <- join7[x, ]
+testing <- join7[-x, ]
+
+nrow(training)
+nrow(testing)
+
+Fit a model with the training dataset using 10-fold cross validation
+train_control = trainControl(method="cv", number=10, savePredictions=TRUE, classProbs = TRUE)
+lr_pomsCV <-  train(poms ~ (asa == 3) + 
+                  (asa >= 4) + 
+                  (opspecialty == 2 | opspecialty == 3) + 
+                  (op_severity > 7) + 
+                  malignancy + 
+                  (age >= 65 & age <80) + 
+                  (age >= 80),
+                  data = training, 
+                  method = "glm",
+                  metric = "ROC",
+                  family = binomial, 
+                  trControl = train_control)
+
+summary(lr_pomsCV)
+
+#I've had to remove NA values from the testing dataset in order for the Hosmer-Lemeshow test to run
+testing <- filter(testing, !is.na(poms))
+
+Test the model with the testing dataset
+library(PredictABEL)
+
+x <- predict(lr_pomsCV, newdata = testing, type = "prob")[2] %>% unlist()
+
+plotCalibration(data = testing, 
+                cOutcome = match("poms", colnames(testing)), 
+                predRisk = x)
+
+#Calculate AUROC and plot the ROC curve
+plotROC(data = testing,
+        cOutcome = match("poms", colnames(testing)),
+        predrisk = x)
+
+#Let's overlay the ROC curve over the ROC curve for POSSUM-morbidity
+plotROC(data = testing, 
+        cOutcome = match("poms", colnames(testing)), 
+        predrisk = cbind(x,
+                         predict(lr_pomsCV, newdata = testing, type = "response")))
+
+#Let's compare whether the new model is as good as POSSUM in discrimination
+library(pROC)
+
+Create the ROC objects
+x <- predict(lr_pomsCV newdata = testing, type = "response") #Temp variable
+roc_model <- roc(testing$poms ~ x, plot=FALSE, auc=TRUE, ci=TRUE)
+roc_POSSUM <- roc(testing$poms ~ testing$morb_poss, plot=FALSE, auc=TRUE, ci=TRUE)
+
+#Test the ROC objects against each other
+roc.test(roc_model, roc_POSSUM)
+```
+
+#### Calibration of POSSUM-morbidity
+
+```{r POSSUM_morb, message=FALSE, warning=FALSE, echo=FALSE}
+#Split the data set into training and testing but using the caret package
+library(PredictABEL)
+
+HL_possum_morb <- plotCalibration(testing,
+                                  cOutcome = match("poms", colnames(testing)),
+                                  predRisk = testing$morb_poss,
+                                  plottitle = "Calibration plot for POSSUM-morbidity")
+```
+
+#### POMS as a ordinal outcome with 9 levels?
+
+We may need to consider that POMS as a binary outcome may not be the best measure for "morbidity". Instead the number of POMS domains may provide a better way of scoring morbidity. We can create a scale 0-9 where 0 is no POMS domains positive on the day it is tested, and each domain that is positive increases the score by 1 to a maximum of 9, since POMS has 9 organ-system domains.
+
+```{r ConstructingPOMS_score, message=FALSE, warning=FALSE}
+join7 <- join7 %>% mutate(poms_score = pulm + inf + renal + gastro + cardio + neuro + wound + haem + pain) %>% mutate(poms_score = replace(poms_score, which(los < 7 & is.na(poms_score)), 0))
+
+describe(join7$poms_score)
+
+join14 <- join14 %>% mutate(poms_score = pulm + inf + renal + gastro + cardio + neuro + wound + haem + pain) %>% mutate(poms_score = replace(poms_score, which(los < 14 & is.na(poms_score)), 0))
+
+describe(join14$poms_score)
+```
+
+#### Sensitivity analysis
+
+```{r SensitivityAnalysis, message=FALSE, warning=FALSE}
+library(dplyr)
+library(Hmisc)
+
+#Examine the groups excluded because missing day 7 POMS data
+missing_index <- which(!(data_clean$adm_id %in% join7$adm_id))
+missing <- data_clean[missing_index,]
+describe(missing)
+
+t.test(missing$age, join7$age)
+t.test(missing$morb_poss, join7$morb_poss)
+t.test(missing$p_possmort, join7$p_possmort)
+t.test(missing$srs_mort, join7$srs_mort)
+t.test(missing$sort_mort, join7$sort_mort)
+
+wilcox.test(missing$asa, join7$asa)
+wilcox.test(missing$los, join7$los)
+
+plotCalibration(data = join14, 
+                cOutcome = match("poms", colnames(join14)), 
+                predRisk = predict(lr_poms10, newdata = join14, type = "response"),
+                plottitle = "Calibration plot for SORT-morbidity using Day 14 POMS")
+
+x <- predict(lr_poms10, newdata = join14, type = "response") #Temp variable
+roc_join14model10 <- roc(join14$poms ~ x, plot=FALSE, auc=TRUE, ci=TRUE)
+roc_join14POSSUM <- roc(join14$poms ~ join14$morb_poss, plot=FALSE, auc=TRUE, ci=TRUE)
+
+#Test the ROC objects against each other
+roc.test(roc_join14model10, roc_join14POSSUM)
+plot(roc_join14model10)
+```
+
+The sensitivity analysis also shows that the SORT-morbidity model has superior discrimination compared to POSSUM when used to predict the presence of POMS-defined morbidity at Day 14 or 15 postoperatively (AUROC = **`r roc_join14model10$auc`**, **`r roc_join14model10$ci`** vs. **`r roc_join14POSSUM$auc`**, **`r roc_join14POSSUM$ci`**; z = **`r roc.test(roc_join14model10, roc_join14POSSUM)$statistic`**, p = **`r roc.test(roc_join14model10, roc_join14POSSUM)$p.value`**).
+
+The BJA Manuscript reviewers have returned with some comments about a sensitivity analysis. This report is an attempt to conduct this.
+
+```{r, message=FALSE, results='hide'}
+library(rms)
+```
+
+We will use Frank Harrell's `rms` package to do easily plot calibration curves and obtain AUROCS. The model we will examine is:
+
+```{r}
+summary(lr_poms9)
+```
+
+##POMS_lo
+
+We have identified some low-grade complications for POMS (e.g. urinary catheter, pain).
+
+```{r Sens_pomslo}
+val.prob(y = join7$poms_lo, logit = predict(lr_poms9, newdata = join7))
+
+HL_pomslo <- plotCalibration(join7, 
+                       cOutcome = match("poms_lo", colnames(join7)),
+                       predRisk = predict(lr_poms9, newdata = join7, "response"))
+roc_pomslo <- roc(join7$poms_lo ~ predict(lr_poms9, newdata = join7, "response"), plot=FALSE, auc=TRUE, ci=TRUE)
+```
+
+##POMS_hi
+
+Conversely, there are some high-grade complications (e.g. cardiac ischaemia).
+
+```{r Sens_pomshi}
+val.prob(y = join7$poms_hi, logit = predict(lr_poms9, newdata = join7))
+
+HL_pomshi <- plotCalibration(join7, 
+                       cOutcome = match("poms_hi", colnames(join7)),
+                       predRisk = predict(lr_poms9, newdata = join7, "response"))
+roc_pomshi <- roc(join7$poms_hi ~ predict(lr_poms9, newdata = join7, "response"), plot=FALSE, auc=TRUE, ci=TRUE)
+```
+
+##POMS14
+
+We can also see how well the model predicts POMS outcomes 2 weeks postoperatively.
+
+```{r Sens_poms14}
+val.prob(y = join14$poms, logit = predict(lr_poms9, newdata = join14))
+
+HL_poms14 <- plotCalibration(join14, 
+                       cOutcome = match("poms", colnames(join14)),
+                       predRisk = predict(lr_poms9, newdata = join14, "response"))
+roc_poms14 <- roc(join14$poms ~ predict(lr_poms9, newdata = join14, "response"), plot=FALSE, auc=TRUE, ci=TRUE)
+```
+
+##POMS21
+
+Now we see how well the model predicts POMS outcomes 3 weeks postoperatively.
+
+```{r Sens_poms21}
+val.prob(y = join21$poms, logit = predict(lr_poms9, newdata = join21))
+
+HL_poms21 <- plotCalibration(join21, 
+                       cOutcome = match("poms", colnames(join21)),
+                       predRisk = predict(lr_poms9, newdata = join21, "response"))
+roc_poms21 <- roc(join21$poms ~ predict(lr_poms9, newdata = join21, "response"), plot=FALSE, auc=TRUE, ci=TRUE)
+```
+
+##POMS28
+
+Lastly, we see how well the model predicts POMS outcomes 4 weeks postoperatively.
+
+```{r Sens_poms28}
+val.prob(y = join28$poms, logit = predict(lr_poms9, newdata = join28))
+
+HL_poms28 <- plotCalibration(join28, 
+                       cOutcome = match("poms", colnames(join28)),
+                       predRisk = predict(lr_poms9, newdata = join28, "response"))
+roc_poms28 <- roc(join28$poms ~ predict(lr_poms9, newdata = join28, "response"), plot=FALSE, auc=TRUE, ci=TRUE)
+```
+
+##Interpretation
+
+It looks as though the model is well-calibrated for POMS_lo but mis-calibrated for all the outcomes. However it still remains good at discriminating all the outcomes. Therefore the sensible thing would be to fit another model for the high-grade morbidity outcomes:
+
+```{r}
+#Split the data set into training and testing
+set.seed(123)
+x <- createDataPartition(join7$poms, p = (2/3), list = FALSE, times = 1)
+training <- join7[x, ]
+testing <- join7[-x, ]
+
+#Fit a model with the training dataset
+lr_poms_hi <- glm(poms_hi ~ (asa == 2) +
+                  (asa == 3) + 
+                  (asa >= 4) + 
+                  factor(opspecialty) + 
+                  (op_severity > 7) + 
+                  malignancy + 
+                  (age >= 65 & age <80) + 
+                  (age >= 80), 
+                data = training, 
+                family = binomial)
+
+summary(lr_poms9)
+
+val.prob(y = testing$poms_hi, logit = predict(lr_poms_hi, newdata = testing))
+```

@@ -11,7 +11,7 @@ tag:
 - Perioperative Medicine
 ---
 
-I recently had a [paper published](https://academic.oup.com/bja/article-abstract/119/1/95/3897057/Predicting-postoperative-morbidity-in-adult) in the British Journal of Anaesthesia, with the same title as this post. Unfortunately it exists behind a paywall as we could not afford the open access charges, but I thought I'd post the source code for the manuscript [here](https://dannyjnwong.github.io/assets/others/SORT_Manuscript.Rmd). To see the accepted manuscript version of the paper in the UCL Discovery repository, click [here](http://discovery.ucl.ac.uk/id/eprint/1544971). 
+I recently had a [paper published](https://academic.oup.com/bja/article-abstract/119/1/95/3897057/Predicting-postoperative-morbidity-in-adult) in the British Journal of Anaesthesia, with the same title as this post. Unfortunately it exists behind a paywall as we could not afford the open access charges, but I thought I'd post the source code for the manuscript [here](/assets/others/SORT_Manuscript.Rmd). To see the accepted manuscript version of the paper in the UCL Discovery repository, click [here](http://discovery.ucl.ac.uk/id/eprint/1544971). 
 
 Like I did for one of my previous papers, I prepared the manuscript in R Markdown. Today I'll highlight 2 things about the code in the manuscript. 
 
@@ -82,7 +82,7 @@ read_chunk("SOuRCe.R")
 unlink("SOuRCe.R")
 ```
 
-What is happening here is, I have written a separate R Markdown document, which I used to clean the original data and save it as an `.Rdata` file, which I can then load in to this document. I also have a separate `SOuRCe.Rmd` file which I used to perform all my analysis work. This was essentially my analysis for the study, where I conduct all the model development and computing. That document was knitted into either `.html` or `.docx` to facilitate analysis discussions with my co-authors during the early days of the study. I then use the `purl()` function to convert the `.Rmd` file into `.R` and I read that code using `read_chunk()` in my document. Later in the document, I then call parts of the analysis I want to refer to in my manuscript, which are named code chunks. To do so, I include a chunk in my manuscript document like so:
+What is happening here is, I have written a separate R Markdown document, which I used to clean the original data and save it as an `.Rdata` file, which I can then load in to this document. I also have a separate `SOuRCe.Rmd` file which I used to perform all my analysis work, you can look at the code contained within that R Markdown file [here](/assets/others/SOuRCe.Rmd), as well as the `.html` output from that [here](/assets/others/SOuRCe.html). This was essentially my analysis for the study, where I conduct all the model development and computing. That document was knitted into either `.html` or `.docx` to facilitate analysis discussions with my co-authors during the early days of the study. I then use the `purl()` function to convert the `.Rmd` file into `.R` and I read that code using `read_chunk()` in my document. Later in the document, I then call parts of the analysis I want to refer to in my manuscript, which are named code chunks. To do so, I include a chunk in my manuscript document like so:
 
 ```
 {r, echo=FALSE, message=FALSE, warning=FALSE, results="hide", fig.show='hide'}
