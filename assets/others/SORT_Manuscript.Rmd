@@ -1,0 +1,810 @@
+---
+title: 'Manuscript: Predicting Postoperative Morbidity in Adult Elective Surgical Patients using the Surgical Outcome Risk Tool (SORT)'
+author: "Danny Wong, Matt Oliver & Ramani Moonesinghe"
+date: "20 April 2016"
+output: word_document
+csl: ../../References/bib/british-journal-of-anaesthesia.csl
+bibliography: ../../References/bib/SNAP2_protocol.bib
+---
+
+```{r Load_Data, echo = FALSE, message=FALSE, results="hide", include=FALSE}
+#knitr::opts_chunk$set(echo = TRUE)
+
+library(dplyr)
+library(knitr)
+library(pander)
+library(caret)
+
+options(digits = 2)
+
+# Data tidying and cleaning
+#First we load the data that has been cleaned in the SOuRCe.Rmd file
+
+#purl("SOuRCeDataCleaning.Rmd")
+#read_chunk("SOuRCeDataCleaning.R")
+#unlink("SOuRCeDataCleaning.R")
+
+#<<CleanData_InitialClean>>
+#<<CleanData_POMSOutcomes>>
+#<<CleanData_Join3>>
+#<<CleanData_Join7>>
+#<<CleanData_Join14>>
+#<<CleanData_Join21>>
+
+load("data/SOuRCeDataCleaning.RData")
+
+purl("SOuRCe.Rmd")
+read_chunk("SOuRCe.R")
+unlink("SOuRCe.R")
+```
+
+## Title page 
+
+```{r, eval=FALSE, echo=FALSE}
+> A separate page which includes the title of the paper. Titles should provide a reasonable indication of the contents of the paper. This is important as some search engines use the title for searches. Therefore, it is best to avoid enigmatic or vague titles such as 'An unusual cause of hypotension'. Titles in the form of a question, such as 'Is propofol epileptogenic?' may be acceptable.
+>
+> The title page should include the name(s) and address(es) of all author(s). It should be made clear which address refers to which author. Details of the authors’ qualifications and post (e.g., consultant, senior lecturer) are not required. An author's present address, if it differs from that at which the work was carried out, or special instructions concerning the address for correspondence, should be given as a footnote on the title page and referenced at the appropriate place in the author list by superscript numbers (1 2 3 etc.) If the address to which proofs should be sent is not that of the first author, clear instructions should be given in a covering note, not on the title page.
+>
+> All authors should follow the criteria for ‘authorship’ as determined by International Committee of Medical Journal Editors. For details, please refer to section on British Journal of Anaesthesia Policies. 
+>
+> A short running title containing not more than 50 characters (including spaces) should be included
+```
+
+### Title: Predicting Postoperative Morbidity in Adult Elective Surgical Patients using the Surgical Outcome Risk Tool (SORT)
+
+### Authors:
+
+**Dr D. J. N. Wong** [^1] [^2] [^3]
+
+**Dr C. M. Oliver** [^1] [^2]
+
+**Dr S. R. Moonesinghe** [^1] [^2] [^3]
+
+[^1] UCL/UCLH Surgical Outcomes Research Centre (SOuRCe), 3rd Floor, Maple Link Corridor, University College Hospital, 235 Euston Road, London NW1 2BU, UK 
+
+[^2] National Institute of Academic Anaesthesia Health Services Research Centre, Royal College of Anaesthetists, Churchill House, 35 Red Lion Square, London WC1R 4SG, UK 
+
+[^3] Department of Applied Health Research, University College London, 1&ndash;19 Torrington Place, London WC1E 7HB, UK
+
+## Summary, including Keywords 
+
+```{r, eval=FALSE, echo=FALSE}
+> The Summary (Abstract) will be printed at the beginning of the paper. It should be on a separate sheet, in structured format (Background; Methods; Results; and Conclusions) for all Clinical Investigations and Laboratory Investigations. For Reviews and Case Reports, the Abstract should not be structured. 
+>
+> The Abstract should give a succinct account of the study or contents, in up to 250 words. The Results section should contain data. It is important that the results and conclusion given in the Abstract are the same as in the whole article, as the Abstract may be used, as it stands, by abstracting journals. References are not included in this section.
+>
+> Three to five keywords should be included on the summary page under the heading Keywords. They should be in alphabetical order and must be classified according to MESH keywords. These can be found here. Please note that UK English spelling will be used for these. Please do not simply list words you think are key. For example, propofol should be listed as: anaesthetics i.v., propofol;
+```
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE, results="hide", fig.show='hide'}
+<<Ext_val_SORT>>
+<<RegressionModel9>>
+```
+
+### Background
+
+The Surgical Outcome Risk Tool (SORT) is a risk stratification tool that predicts perioperative mortality. We construct a new recalibrated model based on SORT to predict the risk of developing postoperative morbidity, and compare the performance of our new model against the Physiological and Operative Severity Score for the enUmeration of Mortality and morbidity (POSSUM).
+
+### Methods
+
+We analysed prospectively collected data from a single-centre cohort of adult patients undergoing major elective surgery. The data set was split randomly into derivation and validation samples. We used logistic regression to construct a model in the derivation sample to predict postoperative morbidity as defined using the validated Postoperative Morbidity Survey (POMS) assessed at one week after surgery. Performance of this "SORT-morbidity" model was then tested in the validation sample.
+
+### Results
+
+The SORT-morbidity model was constructed using a derivation sample of **`r nrow(training)`** patients, and validated in **`r nrow(testing)`** patients. SORT-morbidity was well-calibrated in the validation sample, as assessed using calibration plots and the Hosmer-Lemeshow Test (&chi;&#178; = **`r HL_lrpoms9$Chi_square`**, p = **`r HL_lrpoms9$p_value`**). It showed acceptable discrimination by Receiver Operator Characteristic (ROC) curve analysis (Area Under the ROC curve, AUROC = **`r roc_model9$auc`**, 95% CI **`r roc_model9$ci[1]`**&ndash;**`r roc_model9$ci[3]`**). This compared favourably with POSSUM (AUROC = **`r roc_POSSUM$auc`**, 95% CI **`r roc_POSSUM$ci[1]`**&ndash;**`r roc_POSSUM$ci[3]`**), while remaining simpler to use. Additionally, we estimated shrinkage factors for recalibrating SORT-morbidity to predict other outcome measures, including modified POMS outcomes without lower-grade morbidity, and POMS at later time-points.
+
+### Conclusions
+
+SORT-morbidity can be used preoperatively, in conjunction with clinical judgement, to predict postoperative morbidity risk in major elective surgery.
+
+### Keywords
+
+Morbidity, Mortality, Perioperative Care, Postoperative Complications, Risk Assessment 
+
+##	Introduction (not headed) 
+
+```{r, eval=FALSE, echo=FALSE}
+> The recommended structure for this section is:
+>
+> •	Background to the subject
+> •	What is known / unknown about it
+> •	What bit you are interested in / hypothesis
+> •	Aim of your study
+>
+> As a rule, the introduction to a paper should not require more than about 200 words and have a maximum of 1.5 pages double-spaced. The introduction should give a concise account of the background of the problem and the object of the investigation. It should state what is known of the problem to be studied at the time the study was started. Previous work should be quoted here but only if it has direct bearing on the present problem. For example, a description and evaluation of an analgesic infusion as part of an intravenous anaesthesia regimen need not include an exhaustive account of the previous literature addressing the problems of intravenous anaesthesia and the many studies of different analgesics, etc. 
+>
+> The final paragraph should clearly state the primary and, if applicable, secondary aims of the study. 
+> 
+> If a preliminary account of the results has been given in a published abstract, it is customary to refer to this.
+```
+
+Accurate perioperative risk assessment at an individual patient level supports clinical decision-making and clear communication of risks when consenting for surgery. Additionally, at a hospital or provider level, adjustment for patient case-mix enables surgical outcomes to be meaningfully compared between institutions for health service evaluation or within institutions for clinical audit. A number of risk stratification tools currently exist in clinical practice for both these purposes.[@moonesinghe_risk_2013]
+
+While there are many tools to predict or assess risk based on mortality, for example the Portsmouth modification of the Physiological and Operative Severity Score for the enUmeration of Mortality and morbidity (P-POSSUM)[@prytherch_possum_1998] and Surgical Risk Scale (SRS)[@sutton_surgical_2002], there are fewer tools available to predict morbidity outcomes. This is despite morbidity being an important outcome of concern to both patients and clinicians. Morbidity following major surgery is firstly a more common outcome than death making it a potentially more sensitive measure by which to compare individual, team or provider performance.[@walker_public_2013] Secondly, morbidity can impact significantly on quality of life and long-term survival, making it an important target for quality improvement.[@davies_measuring_2013] Indeed the P-POSSUM was a variation of an earlier tool, the Physiological and Operative Severity Score for the enUmeration of Mortality and morbidity (POSSUM), which was originally developed in the 1990s to address the lack of tools for predicting morbidity outcomes at the time.[@copeland_possum:_1991; @moonesinghe_risk_2013] POSSUM remains one of the most frequently used tools for predicting morbidity risk.
+
+The Surgical Outcome Risk Tool (SORT) was developed following the 2011 National Confidential Enquiry into Patient Outcome and Death (NCEPOD) report *Knowing the Risk*, to enable better identification of patients at high risk of postoperative morbidity and mortality, clearer documentation of risks and better discussions about risks with patients before surgery.[@protopapa_development_2014; @findlay_knowing_2011] SORT is a parsimonious model using six routinely collected data items, designed to preoperatively predict an individual's probability of 30-day mortality. It compared favourably with other previously validated risk stratification tools, namely the American Society of Anesthesiologists Physical Status (ASA-PS) grade and SRS and has been externally validated recently in a cohort of patients undergoing hip fracture surgery.[@marufu_prediction_2016]
+
+Therefore, our aims in this paper are to develop and validate a new model to predict the likelihood of postoperative morbidity using predictor variables found in SORT, and then compare its performance against POSSUM.
+
+##	Methods 
+
+```{r, eval=FALSE, echo=FALSE}
+> The Methods section should give a clear but concise description of the process of the study. Subjects covered in this should include:
+> •	Ethics approval / licence 
+> •	Patient population
+> •	Inclusion / exclusion criteria
+> •	Conduct of the study
+> •	Data handling
+> •	Statistics 
+> •	(CTA)
+>
+> Ethics approval / licence 
+> Regardless of the country of origin, all clinical investigators describing human research must abide by the Ethical Principles for Medical Research Involving Human Subjects outlined in the Declaration of Helsinki, and adopted in October 2000 by the World Medical Association. This document can be found at http://www.wma.net/en/30publications/10policies/b3/. Investigators are encouraged to read and follow the Declaration of Helsinki. Clinical studies that do not meet the Declaration of Helsinki criteria will be denied peer review. If published research is subsequently found to be non-compliant it will be withdrawn or retracted.
+>
+> On the basis of the Declaration of Helsinki, the British Journal of Anaesthesia requires that all manuscripts reporting clinical research state in the first paragraph of the Methods section that: 
+> •	The study was approved by the appropriate Ethics authority.
+> •	Written informed consent was obtained from all subjects, a legal surrogate, or the parents or legal guardians for minor subjects, or that the requirement for written informed consent was waived by the ethics committee. 
+>
+> Human subjects should not be identifiable. Do not disclose patients’ names, initials, hospital numbers, dates of birth, or other protected healthcare information. Keep copies of ethics approval and written informed consents. In unusual circumstances the editors may request blinded copies of these documents to address questions about ethics approval and study conduct.
+>
+> This section must include the Clinical Trials Authorization as all studies must be registered, as per the EU directive on clinical trials which came into force on 1st May 2004. There are a number of trial registration sites including EudraCT (http://eudract.emea.europa.eu ) From January 2009 studies published in the British Journal of Anaesthesia must include the trial registration number in the Methods.
+>
+> Example; The study was approved by the X regional research ethics committee (Ref: 07/A123/456) and registered with EudraCT (ref: 2007:123456:AA).
+>
+> For more details about Clinical Trials, please see section below.
+>
+> The title of this section should be 'Methods'. 'Materials and methods' or 'Patients and methods' should not be used. While brevity is essential, the methods must be described in sufficient detail to allow the experiment to be interpreted, and repeated if necessary, by the reader. Previously documented standard methods need not be recounted in detail, but appropriate reference to the original should be cited. Where the programme of research is complex such as might occur in a cardiovascular study in animals, it may be preferable to provide a table or figure to illustrate the plan of the experiment, thus avoiding a lengthy explanation.
+>
+> Sometimes detailed laboratory techniques may be filed separately in a recognized library and a note to this effect given in the manuscript. Where measurements are made, an indication of the error of the method in the hands of the author should be given. The name of the manufacturer of instruments used for measurement should be given with an appropriate catalogue number or instrument identification (e.g. Radiometer PHM 7). The manufacturer's town and country must be provided. In the case of solutions for laboratory use, the methods of preparation and precise concentration should be stated.
+```
+
+### Patient population
+
+Data were prospectively collected from **`r nrow(data_original)`** consecutive adult patients who had undergone a variety of elective major inpatient operations at University College London Hospital between June 2009 and May 2012. Ethics approval was not required as the routine collection of this data was approved as service evaluation by the local research and development office. 
+
+Demographic and perioperative data collection was conducted by trained research staff, independent of the clinical care teams treating the patients. Risk variable, co-morbidity, hospital length of stay (LOS) and mortality data were obtained from case note/electronic record review. POMS outcomes were measured by research staff visiting the patients at the bedside, and reviewing case notes. Baseline co-morbidities were recorded for each patient, and, as with the original development and validation of SORT, free-text surgical procedure descriptions were categorised by surgical specialty, and by surgical severity, based on the reference manual for AXA PPP Healthcare Specialist Procedure Codes (examples of AXA PPP procedure coding for surgical severity can be found in Supplementary Data, Table 1).[@protopapa_development_2014; @_axa_2016] 
+
+### Postoperative Morbidity Survey as the morbidity outcome
+
+The Postoperative Morbidity Survey (POMS) was prospectively administered yo patients in the cohort who remained in hospital at the following six time-points: postoperative Day 3, Day 5, Day 7 or 8, Day 14 or 15, Day 21 and Day 28. POMS at the 1-week and 2-week time-points were pragmatically allowed to be recorded at either Day 7or 8, and Day 14 or 15, respectively, in order to reduce the administrative burden placed on research staff.
+
+POMS is an 18-item survey of short-term postoperative morbidity encompassing nine organ-system domains (Supplementary Data, Table 2) and has been multiply validated.[@bennett-guerrero_use_1999; @grocott_postoperative_2007; @davies_measuring_2013; @goodman_validity_2015] It was developed to identify morbidity of the nature that would prolong hospital length of stay (LOS), in other words, patients were unlikely to be able to return home if they exhibit POMS-defined morbidity.
+
+Previous studies suggest that POMS-defined morbidity is a measure of "true" morbidity when measured beyond postoperative Day 5.[@grocott_postoperative_2007; @moonesinghe_survival_2014] Early exploration of the data showed that the median LOS in our cohort was 6 days (Table 1). We assumed that this LOS represented an uncomplicated postoperative course—-i.e. even if patients experienced POMS-defined morbidity on Days 3 or 5, this might be expected as part of the usual postoperative course for their surgery. Hence, POMS at either Day 7 or 8 had face validity in this cohort for representing a postoperative course that met with complication(s). We therefore chose the presence of any POMS-defined morbidity, recorded at the third time-point (postoperative Day 7 or 8), as our morbidity outcome measure. 
+
+### Treatment of cases for analysis
+
+Cases with erroneously duplicated or missing data were excluded, and only cases with complete predictor variable and POMS outcome data were included for analysis. No imputation of missing data was performed. Patients who remained in hospital longer than 7 days but did not have POMS outcomes recorded on Day 7 were then excluded from the data set used to derive a new SORT model for predicting morbidity (SORT-morbidity). Patient characteristics of the excluded cases were compared to the original data set to look for differences between the groups.
+
+### Model derivation and internal validation for a new SORT-morbidity model
+
+The data set was split randomly into two samples: a model derivation sample of approximately two-thirds of the cohort, and a validation sample consisting of the remaining one-third, similar to methods described previously.[@protopapa_development_2014] Based on the six data items from the original SORT model for mortality, multivariable logistic regression models were fitted on the derivation sample with a binary composite outcome variable of POMS-defined morbidity (i.e. if any one of the nine organ-system domains was positive, the patient was considered positive for POMS-defined morbidity) on postoperative Day 7 or 8. Patients who were discharged before postoperative Day 7 were assumed to have no POMS-defined morbidity.
+
+The following logit formula was used for model-fitting:  $$ ln(R∕(1−R)) = \beta_0 + \beta_1 x_1 + \beta_2 x_2 + ... + \beta_n x_n , $$ where $R$ is the probability of a patient having POMS-defined morbidity 1 week following surgery, $\beta_0, \beta_1, ... , \beta_n$ are the model coefficients and $x_1, ... , x_n$ are the predictor variables.
+
+For ease of reference, Protopapa’s original SORT-mortality model takes the following form:   $$ ln(R/(1−R)) = $$  $$ -7.366 $$  $$ + 1.411\times \text{(ASA-PS III)} $$  $$ + 2.388\times \text{(ASA-PS IV)} $$  $$ + 4.081\times \text{(ASA-PS V)} $$  $$ + 1.236\times \text{(Surgical Urgency = Expedited)} $$  $$ + 1.657\times \text{(Surgical Urgency = Urgent)} $$  $$ + 2.452\times \text{(Surgical Urgency = Immediate)} $$  $$ + 0.712\times \text{(High Risk Surgical Specialty)} $$  $$ + 0.381\times \text{(Surgical Severity = Xmajor/complex)} $$  $$ + 0.667\times \text{(Malignancy)} $$  $$ + 0.777\times \text{(Age 65-79 years)} $$  $$ + 1.591\times \text{(Age 80 years or more)} , $$  where High Risk Surgical Specialties include Gastrointestinal, Thoracic or Vascular Surgery, and R in this model is the risk of 30-day mortality.
+
+The original SORT model used the following predictor variables: ASA-PS Grade (III, IV or V); Surgical Urgency (Expedited, Urgent or Immediate); High-risk Specialties (Gastrointestinal, Thoracic or Vascular surgery); Surgical Severity (Xmajor/Complex); Malignancy; and Age (65&ndash;79 or &ge;80 years). More detailed definitions of the variables included in the SORT-mortality model are included in Supplementary Data (Supplementary Table 1). We did not include Surgical Urgency in our model-fitting as the patients in this cohort underwent elective procedures only. 
+
+Based on the original SORT model, sequential adjustments were manually made to the predictor variables, and new model coefficients were obtained by fitting against the model derivation sample of the cohort to obtain a number of candidate models (Supplementary Data, Table 3). Goodness-of-fit was then assessed between models by comparing their Akaike Information Criteria (AIC) and Bayesian Information Criteria (BIC).[@posada_model_2004; @akaike_new_1974; @akaike_information_1998; @schwarz_estimating_1978] 
+
+To perform internal validation, each candidate SORT-morbidity model was then tested in the validation data set by assessing model calibration and discrimination, using calibration plots and the Hosmer-Lemeshow Test for the former, and Receiver Operator Characteristic (ROC) analysis for the latter.[@moonesinghe_risk_2013; @hosmer_comparison_1997; @metz_statistical_1998; @delong_comparing_1988; @swets_measuring_1988] Areas Under the ROC curve (AUROC) were calculated, and DeLong's method was applied to calculate confidence intervals. The Hosmer–Lemeshow test compares observed and predicted risk across the range of predicted risk, with non-significant Chi-squared test results (p > 0.05) indicating a well-calibrated model. The AUROC takes values between 0.5 and 1.0, where less than 0.7 identifies a model with poor performance, 0.7&ndash;0.9 indicates acceptable or moderate performance, and over 0.9 indicates high performance.
+
+A final parsimonious model (the simplest model that makes an accurate prediction with as few predictor variables as possible) was then chosen from this process. We selected our final model based on a balanced assessment of the goodness-of-fit measures (low AIC and BIC values), calibration (non-significant p-value for Hosmer-Lemeshow test and visual inspection of calibration plots in the validation sample), and discrimination (high values of AUROC in the validation sample). We then compared the performance of our final model to POSSUM.
+
+### Sensitivity analyses and model recalibration for predicting alternative morbidity outcomes
+
+We conducted a sensitivity analysis to test the performance of SORT-morbidity for predicting different outcomes, due to concerns that POMS-defined morbidity outcomes may be too sensitive. These concerns arose because of some less severe and relatively transient morbidity contained within the POMS outcome definitions, such as the presence of a urinary catheter and the use of anti-emetics.
+
+Sensitivity analyses for regression models are typically performed by assessing the accuracy of the outcome prediction based on changes in the variability of the predictor variables. However, in this study we decided to test the accuracy of our model’s outcome prediction if the definition used for outcome changed, in order to give the reader an understanding of the limitations of our model. This was done by assessing the calibration and discrimination of SORT-morbidity for predicting: 1) a modified POMS outcome in our patient cohort with lower- and higher-grade morbidity; and 2) POMS outcomes at time-points beyond 1 week after surgery.
+
+For the first step, we mapped the individual POMS organ-system sub-domain items against Clavien-Dindo definitions of postoperative complications_[@dindo_classification_2004; @clavien_clavien-dindo_2009]_, and assigned Clavien-Dindo grades to each POMS sub-domain. This process yielded a list of transient, low-grade POMS morbidity (equivalent to Clavien-Dindo Grade 1), which comprise: the presence of a urinary catheter (renal), presence of a fever (infectious), inability to tolerate oral diet (gastrointestinal), vomiting and abdominal distension (gastrointestinal),and pain requiring opioid analgesia (pain). All other POMS-defined morbidity sub-domains were considered high-grade (Clavien-Dindo Grade 2 or more). There was a consensus among the authors as to what were considered low-grade and high-grade POMS outcomes. We then assessed SORT-morbidity performance in predicting the modified low-grade and high-grade POMS outcomes. Details of the POMS organ-system sub-domains and how they mapped against Clavien-Dindo grades can be found in Supplementary Data (Supplementary Table 4).
+
+For the second step, we assessed SORT-morbidity performance in predicting more delayed POMS-defined morbidity on Day 14 or 15, Day 21, and Day 28.
+
+Lastly, using methods described by Harrell[@harrell_regression_2001], we obtained estimates of uniform linear shrinkage factors for miscalibrations identified in steps 1) and 2) by fitting the following logit formula:  $$ \text {logit(P(Y))} = \alpha + \beta \times \text{logit(p)} , $$  where $\text {P(Y)}$ is the probability of the modified outcomes either of low- or high-grade POMS, or POMS outcomes at later time-points, $\text {logit(p)}$ is the SORT-morbidity formula as derived earlier, $\alpha$ is the recalibrated intercept and $\beta$ is the recalibrated slope. By applying the shrinkage factors, calibration would then be improved, and the accuracy of SORT-morbidity for predicting these other outcomes would also be improved.
+
+The linear shrinkage factors estimated by this method can then applied directly onto the SORT-morbidity equation to uniformly modify all the coefficients, $\beta_0, \beta_1, ... , \beta_n$. This technique therefore accomplishes two objectives in our study: firstly, the shrinkage factors quantify the degree to which SORT-morbidity is mis-calibrated when predicting other outcomes of different severity; and secondly, the shrinkage factors can then be used for adjustments to the SORT-morbidity equation to arrive at a better accuracy for predicting these other outcomes.
+
+### Statistical analysis
+
+Statistical analyses were performed using R version 3.3.1 (R Foundation for Statistical Computing, Vienna, Austria), with the following external packages enabled: caret, PredictABEL, pROC, rms. For normally distributed data, means and standard deviations are reported. For non-normally distributed data, medians and interquartile ranges (IQR) are reported. A p-value of &le; 0.05 was considered statistically significant. Logistic regression models were fitted using the glm function and shrinkage factors were estimated using the val.prob function from the rms package in R.
+
+##	Results 
+
+```{r, eval=FALSE, echo=FALSE}
+> Guidance for this section includes;
+> •	Must be factual
+> •	Relate to aims
+> •	Logical order
+> •	State significances
+> •	Negative findings
+> From January 2009, all randomized control trials (RCTs) must adhere to the Consort guidelines and present a flow diagram which details the conduct of the study (http://www.consort-statement.org/)
+> Description of experimental results should be concise. They should be presented in a factual manner and related to the aim of the study. It is often useful to present the results in the order described in the Methods section. Data should not be repeated unnecessarily in text, tables and figures (see below), and unwarranted numbers of digits should be avoided (Example: the mean dose of propofol was 2.1 mg kg-1 rather than 2.0897 mg kg-1 ). It may not be necessary to provide all the data from a complex study: only those values which are essential to the communication should be given. However, results should be presented in a manner so that the reader can check the statistical inferences. If the data are so numerous that this is not possible, the editor must be sent a full set with the submission of the original manuscript and the readers should be informed as to where they can obtain a similar full set of results. Where appropriate, for example in a pharmacokinetic study, more extensive sets of data can be included as an appendix with the on-line version of the article. If authors wish to make use of this facility, they should state this in the submission letter and upload the data as a separate file. The editor has the right to request the original data collected. In the results section there should be no attempt at a discussion of the findings.
+```
+
+### Baseline patient characteristics and outcomes
+
+Following exclusions **`r nrow(join7)`** patients were used to perform model derivation and internal validation for morbidity prediction. Figure 1 shows the numbers of patients excluded from the study at each stage of analysis. Baseline patient characteristics of the study cohort and patients excluded from model derivation and validation are summarised in Table **1**. The mean age of the study patients was **`r signif(median(data_original$age, na.rm = TRUE),3)`**, with a range of **`r signif(range(data_original$age, na.rm = TRUE),3)[1]`** to **`r signif(range(data_original$age, na.rm = TRUE),3)[2]`** years. The majority of patients (**`r signif(table(data_original$sex)[2]/nrow(data_original)*100,3)`**%) were female. The majority of the patients in the study sample underwent Orthopaedic procedures (n = **`r table(data_original$opspecialty)[1]`**, **`r signif(table(data_original$opspecialty)[1]/nrow(data_original)*100,3)`**%), with a substantial proportion undergoing Abdominal (either Colorectal or Upper GI) procedures (n = **`r sum(table(data_original$opspecialty)[c(2,3,5)])`**, **`r signif(sum(table(data_original$opspecialty)[c(2,3)])/nrow(data_original)*100,3)`**%). Mortality in this patient sample was low, with only **`r table(data_original$mort30)[2]`** deaths within 30 days of surgery recorded (**`r signif(table(data_original$mort30)[2]/nrow(data_original)*100,3)`**%). Median length of stay was **`r median(data_original$los, na.rm = TRUE)`** days (interquartile range: **`r quantile(data_original$los,1/4, na.rm = TRUE)`**&ndash;**`r quantile(data_original$los,3/4, na.rm = TRUE)`**). Compared with the total patient cohort, patients with missing data had a higher age, longer average length of stay, and a different distribution of ASA-PS grades. Table **2** shows the proportion of patients with POMS-defined morbidity at each time point that POMS was administered, as a percentage of the total patient cohort.
+
+### Model derivation and internal validation for a new SORT-morbidity model
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE, results="hide", fig.show='hide'}
+<<RegressionModel9>>
+<<POSSUM_morb>>
+```
+
+After randomly splitting the patient cohort, multivariable logistic regression models were fitted with predictor variables based on the original SORT model in a derivation sample of **`r nrow(training)`** patients, with the outcome variable set as the presence of POMS-defined morbidity on postoperative Day 7 or 8. 
+
+The coefficients for the final SORT-morbidity model are summarised in Table 3, where the original SORT model formula is displayed in the table caption for comparison. Intermediate models fitted during the step-wise manual adjustments of model variables are summarised in Supplementary Data (Supplementary Table 3), along with their corresponding performance statistics. Details of the Hosmer-Lemeshow tests, and the tables of predicted and observed morbidity outcomes by risk quantile for SORT-morbidity and POSSUM are also included in Supplementary Data.
+
+The novel SORT-morbidity model demonstrated good calibration in the validation sample (n = **`r nrow(testing)`**) as shown by the calibration plot (Figure **2(A)**) and the Hosmer-Lemeshow test (&chi;&#178; = **`r HL_lrpoms9$Chi_square`**, p = **`r HL_lrpoms9$p_value`**), and acceptable discrimination (AUROC = **`r roc_model9$auc`**, 95% CI **`r roc_model9$ci[1]`**&ndash;**`r roc_model9$ci[3]`**, Figure 2(B)). SORT-morbidity compared favourably with POSSUM, which showed poorer calibration (Hosmer-Lemeshow &chi;&#178; = **`r HL_possum_morb$Chi_square`**, p < 0.001, Figure **2**) and poor discrimination (AUROC = **`r roc_POSSUM$auc`**, 95% CI **`r roc_POSSUM$ci[1]`**&ndash;**`r roc_POSSUM$ci[3]`**). However, DeLong's test for two correlated ROC curves did not show a statistically significant difference in discrimination between SORT-morbidity and POSSUM (z = **`r roc.test(roc_model9, roc_POSSUM)$statistic`**, p = **`r roc.test(roc_model9, roc_POSSUM)$p.value`**). 
+
+### Sensitivity analyses and model recalibration for predicting alternative morbidity outcomes
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE, results="hide", fig.show='hide'}
+library(rms)
+<<Sens_pomslo>>
+<<Sens_pomshi>>
+<<Sens_poms14>>
+<<Sens_poms21>>
+<<Sens_poms28>>
+```
+
+In assessing the performance of SORT-morbidity for modified POMS outcomes, our model showed poor calibration (Hosmer-Lemeshow test results for both were statistically significant, both **p <0.01**) and acceptable discrimination for predicting both low-grade and high-grade POMS morbidity (AUROC = **`r roc_pomslo$auc`**, 95% CI **`r roc_pomslo$ci[1]`**&ndash;**`r roc_pomslo$ci[3]`**; and AUROC = **`r roc_pomshi$auc`**, 95% CI **`r roc_pomshi$ci[1]`**&ndash;**`r roc_pomshi$ci[3]`**, respectively). 
+
+Similar to our findings for predicting high-grade POMS morbidity, SORT-morbidity was good-to-acceptable at discrimination but poorly calibrated for Day 14 or 15, Day 21 and Day 28 POMS outcomes (Figure 3). The AUROC for these outcomes ranged from **`r roc_poms14$auc`** for Day 14 or 15 morbidity to **`r roc_poms28$auc`** for Day 28 morbidity.
+
+We estimated linear shrinkage factors to be applied to the SORT-morbidity model in order to improve its accuracy when predicting low- and  high-grade POMS morbidity, and morbidity at alternative time-points. Table 4 shows the recalibration intercepts, $\alpha$, and slopes, $\beta$, that can be applied to the SORT-morbidity formula, as well as the corresponding AUROCs for the recalibrated formulae.
+
+##	Discussion 
+
+```{r, eval=FALSE, echo=FALSE}
+> This is an important part of the manuscript but it should not be too long, perhaps one third of the total length of the paper. This requires discipline by the author for two reasons: first, they may feel that the task is nearly completed and that they are subject to fewer constraints; second, many authors seem to wish to read into their data more than is actually there.
+
+> It is suggested that the discussion should normally follow the pattern below:
+>
+> •	State main findings
+> •	How do they fit in with previous studies 
+> •	Why are they different / same
+> •	What it adds to knowledge of subject
+> •	Weaknesses in study
+> •	Future studies
+> •	Conclusions 
+>
+> State main findings 
+> This does not mean a repetition of all the results with their statistics. It should provide a concise overview of the study. For example, 'Drug X produced a greater haemodynamic change on induction of anaesthesia than occurred with drug Y, resulting in a greater fall in arterial pressure and a higher incidence of tachycardia'.
+> 
+> How do they fit in with previous studies 
+> This section should relate directly to the statements made in the Introduction and qualify you finding in relation to the previous studies of the subject. For example, mention any important uncertainties in the methods of measurement. In laboratory studies, try to relate the concentrations used to those encountered clinically. 
+
+> Why are they different / same
+> Deductions which may explain important differences between the data of the present study, and the data of previous studies. The author should avoid excessive speculation in this section. It is quite reasonable to suggest possible explanations for your findings and any differences from previous studies but the 'missing parts' of such reasoning must be acknowledged.
+
+> What it adds to knowledge of subject
+> This can summarise the previous sections by pulling together the implications of your main findings, studies by other workers and their combined contribution to our knowledge of the subject. This should not be just another repetition of the results and preceding discussion but more of an expanded conclusion.
+
+> Weaknesses in study
+> It is appropriate to briefly acknowledge any limitations of your study at this point. Examples here could include the patient population, limitations of analytical tests, patients lost to follow-up. Authors are advised to be honest but succinct in this section.
+>
+> Future studies
+> A logical follow on to the two previous sections is to identify future studies that would address some of the potential explanations and limitations discussed earlier. This should again be concise. An extensive list of future studies undermines you own study: i.e. has it answered anything if there are still so many questions?
+>
+> Conclusions 
+> Conclusions from the present study. The original contribution to knowledge from the present study is stated. A common fault here is to overstate the findings from a study. For example, if you have studied the effect of a new drug in an animal model you cannot draw any conclusions at all about its effect in humans and likewise if you studied ASA 1 and 2 patients you cannot comment on its use in critically ill patients.
+>
+> It may be appropriate to give the implications of the conclusions for anaesthetic practice and the indications for further enquiry in this area of interest. 
+> 
+> Authors should remember at all times, but especially in writing the discussion, that they will spoil their manuscript by excessive length. A discussion of more than three pages is often too long.
+```
+
+### Principal findings
+
+We have developed and internally validated the SORT-morbidity model, a new refitted multivariable logistic regression model using the original SORT data items as predictors for POMS-defined morbidity one week after surgery. Our new model compares favourably with POSSUM and can be used in conjunction with the original SORT mortality model to inform clinical decisions and the consent process in major surgery.
+
+Additionally, we have estimated linear shrinkage factors which can be applied to SORT-morbidity to improve its prediction for a range of other morbidity outcomes, including higher-grades of morbidity and POMS-defined morbidity at later time-points.
+
+### Strengths and limitations of the study
+
+In this study, we demonstrate that the performance of the new SORT-morbidity model is at least comparable with POSSUM, which is currently one of the most widely used risk prediction models for morbidity.[@moonesinghe_risk_2013] SORT-morbidity requires substantially fewer predictor variables than POSSUM, making it easier to use in routine clinical practice. Furthermore, we rigorously test the prediction performance of SORT-morbidity against a number of different morbidity outcome definitions, and estimate shrinkage factors which can be applied to the model to improve its performance for predicting these alternative outcomes.
+
+The biggest limitation of our study is that it was conducted in a single-centre cohort of patients undergoing elective surgery which had only **`r paste0(table(data_clean$mort30)[2],"(",round(table(data_clean$mort30)[2]/nrow(data_clean)*100,2),"%)")`** deaths within 30 days of surgery. This is a low-mortality cohort compared with the 0.36&ndash;0.67% 30-day mortality for elective surgical cohorts reported elsewhere in the literature.[@pearse_identification_2006; @findlay_knowing_2011; @aylin_day_2013] We were therefore unable to perform an external validation of SORT for the prediction of 30-day mortality.
+
+In addition, our cohort exhibited some missing data, in both predictor and outcome variables. We opted for complete-case analysis instead of imputation of missing data. We considered the number cases with missing predictor variables to be small: no single predictor variable had more than 5% of data missing. The underlying distribution of predictor variables was thought to not fulfil the assumption that missing data were normally distributed. Although 12.6% of cases were missing POMS outcomes, we decided against imputing this data because the logistic regression we were constructing was to be used as a prediction model. The process of imputation itself may therefore have introduced unknown assumptions of the relationship between the outcome and other non-missing predictor variables, giving rise to unknown biases when making predictions with the model.
+
+### Defining morbidity according to POMS
+
+We chose to define morbidity using POMS at one week following surgery in our analysis. The strengths and weaknesses of POMS therefore merit discussion. 
+
+There is currently no consensus on the best way to measure postoperative morbidity and surgical complications.[@myles_standardizing_2016; @boney_standardizing_2016] In their seminal paper describing the development of POSSUM, Copeland *et al* defined morbidity as any recorded occurrence of a list of complications appearing within 6-weeks follow-up after surgery.[@copeland_possum:_1991] When reporting their development of P-POSSUM, Prytherch *et al* cited difficulties over defining morbidity and uncertainty over accuracy in recording complications as the reasons for not including morbidity prediction in their model.[@prytherch_possum_1998] 
+
+POMS is one of the only validated measures of short-term morbidity, and allows for a binary outcome to be modelled (presence or absence of morbidity).[@bennett-guerrero_use_1999, @grocott_postoperative_2007] It is a highly sensitive measure, and detects associated morbidity of a magnitude which requires the patient to remain in hospital. POMS criteria are prescriptive, and have previously been shown to have very high inter-rater agreement.[@grocott_postoperative_2007] Although POMS domains include some relatively minor morbidity (such as the presence of a urinary catheter) &mdash;which, particularly in the first few days after surgery, may be indicative of normal processes and pathways after major surgery rather than reflecting the occurrence of complications. In our study population, the median length of stay was `r median(data_clean$los)` days, suggesting that any morbidity observed after this time point may be as a consequence of morbidity leading to a deviation from the usual patient pathway. Previous research has shown the presence of prolonged POMS-defined morbidity to be correlated with poorer long-term outcomes.[@moonesinghe_survival_2014] 
+
+We propose that POMS offers a more reliable and repeatable means of measuring morbidity than the original Copeland criteria, and one which is suitable for the modern-day evaluation of postoperative outcomes for the purposes of quality improvement and comparative audit. However, we acknowledge that POMS at Day 7 or 8 may be perceived as being too sensitive an outcome measure for some clinicians. The findings from our sensitivity analysis mitigate against this shortcoming by providing estimates of how mis-calibrated SORT-morbidity is for predicting alternative morbidity outcomes, through the calculation of shrinkage factors (intercept and slope corrections).
+
+### Our results in relation to existing literature
+
+In the original SORT development study by Protopapa *et al*, SORT performance was compared against ASA-PS and a modified version of SRS, and was found to be more accurate than either of the comparators.[@protopapa_development_2014] 
+
+Marufu *et al* recently reported an AUROC of 0.70 when validating SORT against an emergency hip fracture population.[@marufu_prediction_2016] They compared SORT in their study against the Nottingham Hip Fracture Score (NHFS), which showed equivalent discrimination but better calibration. This suggests that SORT is better used as a risk stratification tool for heterogeneous surgical patient groups, and that other tools may be more appropriate for more homogeneous or surgery-specific case-mixes.[@kehlet_predicting_2014] 
+
+### Clinical Implications
+
+P-POSSUM and POSSUM are the most frequently and widely-validated risk stratification model for heterogeneous populations in the literature.[@moonesinghe_risk_2013] It therefore has widespread familiarity amongst anaesthetists and surgeons internationally. However, their value in preoperative prognostication is reduced by three factors: firstly, the large number (18) of variables required by their models; secondly, a number of their required variables are only available after surgery; and thirdly, some of the predictor variables are blood test results, which not all patients may have available preoperatively.[@moonesinghe_risk_2013; @protopapa_development_2014] 
+
+SORT and SORT-morbidity are both more parsimonious models compared to P-POSSUM and POSSUM, requiring fewer data items to make a morbidity prediction than POSSUM. Furthermore, SORT and SORT-morbidity require only preoperative data variables in order to make risk predictions for mortality and morbidity respectively, and in particular, variables which are all known at the time of preoperative assessment in the outpatient clinic, when laboratory variables may not yet be available. These factors therefore make them simpler and more practical to use for preoperative morbidity risk prediction than POSSUM. Risk stratification tools may be more likely to be adopted if they are simple, and when the performance of two or more models are similar, the simplest (most parsimonious) model would be preferable for clinical use. 
+
+SORT has been made available for bedside use as an online risk prediction calculator accessible via an internet browser and more recently via smartphone applications developed for both iOS and Android devices.[@ncepod_surgical_2015; @_ncepod_2016] Although SORT-morbidity differs from SORT in how some of the data variables are used in the model &mdash;for example, SORT-morbidity uses ASA-PS as a categorical variable with 4 categories (ASA I, ASA II, ASA III, or ASA &ge;IV) as opposed to 3 categories as in the original SORT model (ASA I&ndash;II, ASA III, or ASA &ge;IV)&mdash; it does not require any new data to be collected. It would therefore be straightforward to incorporate the new SORT-morbidity prediction model into these electronic tools, and they can easily be used at the bedside in conjunction with careful clinical assessment to support decision-making and promote informed patient consent preoperatively.
+
+SORT-morbidity when used together with linear shrinkage factors, therefore provides a potentially powerful tool for perioperative shared decision-making by predicting the risk of developing a range of postoperative morbidity outcomes, over a number of time-points.
+
+There is much added benefit in being able to predict morbidity rather than just mortality, both from an institutional-level and patient-level perspective. At the institutional-level, hospital resource utilisation increases with increased patient morbidity following surgery. The ability to accurately predict those patients who might experience prolonged lengths of stay and more interventions as a result of complications allows for better planning and resource allocation. At the patient-level, morbidity risk prediction allows for more informed discussions between patients and clinicians when deciding to undergo surgery. During these discussions, the risk of suffering morbidity and mortality can thus be better weighed up against the potential benefit surgery in improving quality and duration of life.
+
+### Unanswered questions and future research
+
+External validation of the new SORT-morbidity model is needed to assess its generalisability in other patient populations. There would also be scope in refitting the SORT-morbidity model to include surgical urgency as a predictor variable. SORT-morbidity could also be recalibrated predict morbidity outcomes according to other definition systems, for example the Clavien-Dindo classification of surgical complications, which produces an ordinal outcome variable, ranging from Grade 1 (least severe complications) to Grade 5 (most severe).[@dindo_classification_2004; @clavien_clavien-dindo_2009] 
+
+In the future, consistent measurement of postoperative morbidity and mortality outcomes and comparing performance between institutions is likely to be increasingly important as healthcare costs increase with an ageing population. SORT and SORT-morbidity can therefore be used together for local departmental audits of practice to assess how well patients recover from surgery against predicted mortality and morbidity. They would also have value in case-mix risk-adjustment and benchmarking in national registries for tracking institutional quality and perioperative outcomes. Examples of such registries include the American College of Surgeons National Surgical Quality Improvement Program (ACS-NSQIP) in the U.S.A., and the Perioperative Quality Improvement Programme (PQIP) currently under development in the U.K.[@_acs_2016; @moonesinghe_towards_2015] Both tools would need periodic recalibration when used within such contexts to ensure they remain valid for surgical populations over time.
+
+### Conclusion
+
+We show that SORT-morbidity can be used preoperatively to predict postoperative morbidity risk. Risk stratification tools offer clinicians a means of providing more accurate information to patients, help to guide perioperative care decisions, and allow for case-mix adjustments between institutions for audit and research purposes. As mobile digital devices become more widely available, accurate, simple and parsimonious risk stratification tools such as SORT and SORT-morbidity will become increasingly accessible to clinicians for use at the bedside.
+
+##	Details of authors contributions 
+
+The study was conceived by C.M.O. and S.R.M. Study data were prospectively collected by UCLH clinical staff and research nurses as part of routine service evaluation. Data linkage and cleaning was performed by D.J.N.W. and C.M.O. Analysis was performed by D.J.N.W. and C.M.O., with input to analysis from S.R.M. The manuscript was drafted by D.J.N.W. and subsequently revised after critical review by all authors.
+
+##	Acknowledgements
+
+The authors thank the UCL/UCLH SOuRCe research nurses, Denise Wyndham and Ernesto Bettini, for all data collected.
+
+##	Declaration of interests
+
+S.R.M. was senior author on the original SORT development and validation manuscript. She is Director of the NIAA Health Services Research Centre and the UCLH Surgical Outcomes Research Centre and Associate National Clinical Director for elective care at NHS England. 
+
+##	Funding
+
+The UCLH Surgical Outcomes Research Centre is funded by the University College Hospitals Foundation Trust/University College London National Institute for Health Research (NIHR) Comprehensive Biomedical Research Centre, which received a portion of its funding from the UK Department of Health Biomedical Research Centre's funding scheme; S.R.M. receives funding from the BRC and is a member of the faculty. S.R.M. is also an Improvement Science Fellow funded by the Health Foundation and supported for her role as Director of the NIAA Health Services Research Centre by funding from the Royal College of Anaesthetists. D.J.N.W. receives a clinical salary from The London Clinic hospital.
+
+##	Tables (including legends to tables) 
+
+```{r, message=FALSE, warning=FALSE, include=FALSE}
+excluded <- data_original %>% filter(!(adm_id %in% join7$adm_id))
+data_original <- data_original %>% mutate(exclude = !(adm_id %in% join7$adm_id))
+
+#Test if the excluded sample differs from the entire data set
+c(wilcox.test(data_original$age, excluded$age)$p.value, 
+table(data_original$exclude, data_original$sex) %>% chisq.test() %>% .$p.value, 
+table(data_original$exclude, data_original$asa) %>% chisq.test() %>% .$p.value, 
+table(data_original$exclude, data_original$opspecialty) %>% chisq.test() %>% .$p.value, 
+table(data_original$exclude, data_original$op_severity) %>% chisq.test() %>% .$p.value,
+table(data_original$exclude, data_original$charlsoncomorb==0) %>% chisq.test() %>% .$p.value,
+table(data_original$exclude, data_original$mort30) %>% chisq.test() %>% .$p.value, 
+wilcox.test(data_original$los, excluded$los)$p.value) %>% p.adjust(method = "bonferroni")
+```
+
+
+### Table 1
+
+|Variable|Total Patient Cohort,<br>No. of patients (%)|Derivation Sample for new Morbidity model,<br>No. of patients (%)|Validation Sample,<br>No. of patients (%)|Patients excluded due to missing data,<br>No. of patients (%)|
+|:-------|:---------------------------------:|:--------------------------------------------------------------:|:--------------------------------------:|:--------------------------------------:|
+|**Total**|`r paste0(nrow(data_original),"(100)")`| `r paste0(nrow(training),"(100)")`                            | `r paste0(nrow(testing),"(100)")`      |`r paste0(nrow(excluded),"(100)")`      |
+|**Age**|                                   |                                                                |                                        |                                        |
+|[Median Age, IQR]|[`r paste0(round(median(data_original$age,na.rm=TRUE),1),", IQR:",round(quantile(data_original$age,na.rm=TRUE,1/4),1),"&ndash;",round(quantile(data_original$age,na.rm=TRUE,3/4),1))`]|[`r paste0(round(median(training$age,na.rm=TRUE),1),", IQR:",round(quantile(training$age,na.rm=TRUE,1/4),1),"&ndash;",round(quantile(training$age,na.rm=TRUE,3/4),1))`]|[`r paste0(round(median(testing$age,na.rm=TRUE),1),", IQR:",round(quantile(testing$age,na.rm=TRUE,1/4),1),"&ndash;",round(quantile(testing$age,na.rm=TRUE,3/4),1))`]|[`r paste0(round(median(excluded$age,na.rm=TRUE),1),", IQR:",round(quantile(excluded$age,na.rm=TRUE,1/4),1),"&ndash;",round(quantile(excluded$age,na.rm=TRUE,3/4),1))`]|
+|<65|`r paste0(sum(data_original$age<65,na.rm=TRUE),"(", round(sum(data_original$age<65,na.rm=TRUE)/nrow(data_original)*100,1),")")`|`r paste0(sum(training$age<65),"(", round(sum(training$age<65)/nrow(training)*100,1),")")`|`r paste0(sum(testing$age<65),"(", round(sum(testing$age<65)/nrow(testing)*100,1),")")`|`r paste0(sum(excluded$age<65, na.rm = TRUE),"(", round(sum(excluded$age<65, na.rm = TRUE)/nrow(excluded)*100,1),")")`|
+|&ge;65 and <80|`r paste0(sum(data_original$age>=65 & data_original$age<80,na.rm=TRUE),"(", round(sum(data_original$age>=65 & data_original$age<80,na.rm=TRUE)/nrow(data_original)*100,1),")")`|`r paste0(sum(training$age>=65 & training$age<80),"(", round(sum(training$age>=65 & training$age<80)/nrow(training)*100,1),")")`|`r paste0(sum(testing$age>=65 & testing$age<80),"(", round(sum(testing$age>=65 & testing$age<80)/nrow(testing)*100,1),")")`|`r paste0(sum(excluded$age>=65 & excluded$age<80, na.rm = TRUE),"(", round(sum(excluded$age>=65 & excluded$age<80, na.rm = TRUE)/nrow(excluded)*100,1),")")`|
+|&ge;80|`r paste0(sum(data_original$age>=80,na.rm=TRUE),"(", round(sum(data_original$age>=80,na.rm=TRUE)/nrow(data_original)*100,1),")")`|`r paste0(sum(training$age>=80),"(", round(sum(training$age>=80)/nrow(training)*100,1),")")`|`r paste0(sum(testing$age>=80),"(", round(sum(testing$age>=80)/nrow(testing)*100,1),")")`|`r paste0(sum(excluded$age>=80, na.rm = TRUE),"(", round(sum(excluded$age>=80, na.rm = TRUE)/nrow(excluded)*100,1),")")`|
+|**Sex**|                           |                                                               |                                         |                                        |
+|Female|`r paste0(table(data_original$sex)[2],"(", round(table(data_original$sex)[2]/nrow(data_original)*100,1),")")`|`r paste0(table(training$sex)[1],"(", round(table(training$sex)[1]/nrow(training)*100,1),")")`|`r paste0(table(testing$sex)[1],"(",round(table(testing$sex)[1]/nrow(testing)*100,1),")")`|`r paste0(table(excluded$sex)[2],"(",round(table(excluded$sex)[2]/nrow(excluded)*100,1),")")`|
+|**ASA-PS Grade**|                           |                                                               |                                         |                                         |
+|1|`r paste0(table(data_original$asa)[1],"(", round(table(data_original$asa)[1]/nrow(data_original)*100,1),")")`|`r paste0(table(training$asa)[1],"(", round(table(training$asa)[1]/nrow(training)*100,1),")")`|`r paste0(table(testing$asa)[1],"(", round(table(testing$asa)[1]/nrow(testing)*100,1),")")`|`r paste0(table(excluded$asa)[1],"(", round(table(excluded$asa)[1]/nrow(excluded)*100,1),")")`|
+|2|`r paste0(table(data_original$asa)[2],"(", round(table(data_original$asa)[2]/nrow(data_original)*100,1),")")`|`r paste0(table(training$asa)[2],"(", round(table(training$asa)[2]/nrow(training)*100,1),")")`|`r paste0(table(testing$asa)[2],"(", round(table(testing$asa)[2]/nrow(testing)*100,1),")")`|`r paste0(table(excluded$asa)[2],"(", round(table(excluded$asa)[2]/nrow(excluded)*100,1),")")`|
+|3|`r paste0(table(data_original$asa)[3],"(", round(table(data_original$asa)[3]/nrow(data_original)*100,1),")")`|`r paste0(table(training$asa)[3],"(", round(table(training$asa)[3]/nrow(training)*100,1),")")`|`r paste0(table(testing$asa)[3],"(", round(table(testing$asa)[3]/nrow(testing)*100,1),")")`|`r paste0(table(excluded$asa)[3],"(", round(table(excluded$asa)[3]/nrow(excluded)*100,1),")")`|
+|4|`r paste0(table(data_original$asa)[4],"(", round(table(data_original$asa)[4]/nrow(data_original)*100,1),")")`|`r paste0(table(training$asa)[4],"(", round(table(training$asa)[4]/nrow(training)*100,1),")")`|`r paste0(table(testing$asa)[4],"(", round(table(testing$asa)[4]/nrow(testing)*100,1),")")`|`r paste0(table(excluded$asa)[4],"(", round(table(excluded$asa)[4]/nrow(excluded)*100,1),")")`|
+|5|`r paste0(table(data_original$asa)[5],"(", round(table(data_original$asa)[5]/nrow(data_original)*100,1),")")`|`r paste0(table(training$asa)[5],"(", round(table(training$asa)[5]/nrow(training)*100,1),")")`|`r paste0(table(testing$asa)[5],"(", round(table(testing$asa)[5]/nrow(testing)*100,1),")")`|`r paste0(table(excluded$asa)[5],"(", round(table(excluded$asa)[5]/nrow(excluded)*100,1),")")`|
+|**Surgical Specialty**|||||
+|Orthopaedic|`r paste0(table(data_original$opspecialty)[1],"(", round(table(data_original$opspecialty)[1]/nrow(data_original)*100,1),")")`|`r paste0(table(training$opspecialty)[1],"(", round(table(training$opspecialty)[1]/nrow(training)*100,1),")")`|`r paste0(table(testing$opspecialty)[1],"(", round(table(testing$opspecialty)[1]/nrow(testing)*100,1),")")`|`r paste0(table(excluded$opspecialty)[1],"(", round(table(excluded$opspecialty)[1]/nrow(excluded)*100,1),")")`|
+|Colorectal|`r paste0(table(data_original$opspecialty)[2],"(", round(table(data_original$opspecialty)[2]/nrow(data_original)*100,1),")")`|`r paste0(table(training$opspecialty)[2],"(", round(table(training$opspecialty)[2]/nrow(training)*100,1),")")`|`r paste0(table(testing$opspecialty)[2],"(", round(table(testing$opspecialty)[2]/nrow(testing)*100,1),")")`|`r paste0(table(excluded$opspecialty)[2],"(", round(table(excluded$opspecialty)[2]/nrow(excluded)*100,1),")")`|
+|Upper GI|`r paste0(table(data_original$opspecialty)[3],"(", round(table(data_original$opspecialty)[3]/nrow(data_original)*100,1),")")`|`r paste0(table(training$opspecialty)[3],"(", round(table(training$opspecialty)[3]/nrow(training)*100,1),")")`|`r paste0(table(testing$opspecialty)[3],"(", round(table(testing$opspecialty)[3]/nrow(testing)*100,1),")")`|`r paste0(table(excluded$opspecialty)[3],"(", round(table(excluded$opspecialty)[3]/nrow(excluded)*100,1),")")`|
+|Vascular|`r paste0(table(data_original$opspecialty)[4],"(", round(table(data_original$opspecialty)[4]/nrow(data_original)*100,1),")")`|`r paste0(table(training$opspecialty)[4],"(", round(table(training$opspecialty)[4]/nrow(training)*100,1),")")`|`r paste0(table(testing$opspecialty)[4],"(", round(table(testing$opspecialty)[4]/nrow(testing)*100,1),")")`|`r paste0(table(excluded$opspecialty)[4],"(", round(table(excluded$opspecialty)[4]/nrow(excluded)*100,1),")")`|
+|Bariatric|`r paste0(table(data_original$opspecialty)[5],"(", round(table(data_original$opspecialty)[5]/nrow(data_original)*100,1),")")`|`r paste0(table(training$opspecialty)[5],"(", round(table(training$opspecialty)[5]/nrow(training)*100,1),")")`|`r paste0(table(testing$opspecialty)[5],"(", round(table(testing$opspecialty)[5]/nrow(testing)*100,1),")")`|`r paste0(table(excluded$opspecialty)[5],"(", round(table(excluded$opspecialty)[5]/nrow(excluded)*100,1),")")`|
+|Other|`r paste0(table(data_original$opspecialty)[6],"(", round(table(data_original$opspecialty)[6]/nrow(data_original)*100,1),")")`|`r paste0(table(training$opspecialty)[6],"(", round(table(training$opspecialty)[6]/nrow(training)*100,1),")")`|`r paste0(table(testing$opspecialty)[6],"(", round(table(testing$opspecialty)[6]/nrow(testing)*100,1),")")`|`r paste0(table(excluded$opspecialty)[6],"(", round(table(excluded$opspecialty)[6]/nrow(excluded)*100,1),")")`|
+|**Severity**|                               |                                                               |                                         |                                         |
+|Minor|`r paste0(table(data_original$op_severity)[1],"(", round(table(data_original$op_severity)[1]/nrow(data_original)*100,1),")")`|`r paste0(table(training$op_severity)[1],"(", round(table(training$op_severity)[1]/nrow(training)*100,1),")")`|`r paste0(table(testing$op_severity)[1],"(", round(table(testing$op_severity)[1]/nrow(testing)*100,1),")")`|`r paste0(table(excluded$op_severity)[1],"(", round(table(excluded$op_severity)[1]/nrow(excluded)*100,1),")")`|
+|Intermediate|`r paste0(table(data_original$op_severity)[2],"(", round(table(data_original$op_severity)[2]/nrow(data_original)*100,1),")")`|`r paste0(table(training$op_severity)[2],"(", round(table(training$op_severity)[2]/nrow(training)*100,1),")")`|`r paste0(table(testing$op_severity)[2],"(", round(table(testing$op_severity)[2]/nrow(testing)*100,1),")")`|`r paste0(table(excluded$op_severity)[2],"(", round(table(excluded$op_severity)[2]/nrow(excluded)*100,1),")")`|
+|Major|`r paste0(table(data_original$op_severity)[3],"(", round(table(data_original$op_severity)[3]/nrow(data_original)*100,1),")")`|`r paste0(table(training$op_severity)[3],"(", round(table(training$op_severity)[3]/nrow(training)*100,1),")")`|`r paste0(table(testing$op_severity)[3],"(", round(table(testing$op_severity)[3]/nrow(testing)*100,1),")")`|`r paste0(table(excluded$op_severity)[3],"(", round(table(excluded$op_severity)[3]/nrow(excluded)*100,1),")")`|
+|Xmajor/complex|`r paste0(table(data_original$op_severity)[4],"(", round(table(data_original$op_severity)[4]/nrow(data_original)*100,1),")")`|`r paste0(table(training$op_severity)[4],"(", round(table(training$op_severity)[4]/nrow(training)*100,1),")")`|`r paste0(table(testing$op_severity)[4],"(", round(table(testing$op_severity)[4]/nrow(testing)*100,1),")")`|`r paste0(table(excluded$op_severity)[4],"(", round(table(excluded$op_severity)[4]/nrow(excluded)*100,1),")")`|
+|**Co-morbidities**||                                                                |                                       |                                       |
+|None Documented|`r paste0(table(data_original$charlsoncomorb)[1],"(", round(table(data_original$charlsoncomorb)[1]/nrow(data_original)*100,1),")")`|`r paste0(table(training$charlsoncomorb)[1],"(", round(table(training$charlsoncomorb)[1]/nrow(training)*100,1),")")`|`r paste0(table(testing$charlsoncomorb)[1],"(", round(table(testing$charlsoncomorb)[1]/nrow(testing)*100,1),")")`|`r paste0(table(excluded$charlsoncomorb)[1],"(", round(table(excluded$charlsoncomorb)[1]/nrow(excluded)*100,1),")")`|
+|Arrhythmia|`r paste0(table(data_original$ecgposs>1)[2],"(", round(table(data_original$ecgposs>1)[2]/nrow(data_original)*100,1),")")`|`r paste0(table(training$ecgposs>1)[2],"(", round(table(training$ecgposs>1)[2]/nrow(training)*100,1),")")`|`r paste0(table(testing$ecgposs>1)[2],"(", round(table(testing$ecgposs>1)[2]/nrow(testing)*100,1),")")`|`r paste0(table(excluded$ecgposs>1)[2],"(", round(table(excluded$ecgposs>1)[2]/nrow(excluded)*100,1),")")`|
+|Prev. Myocardial Infarct|`r paste0(table(data_original$micharls)[2],"(", round(table(data_original$micharls)[2]/nrow(data_original)*100,1),")")`|`r paste0(table(training$micharls)[2],"(", round(table(training$micharls)[2]/nrow(training)*100,1),")")`|`r paste0(table(testing$micharls)[2],"(", round(table(testing$micharls)[2]/nrow(testing)*100,1),")")`|`r paste0(table(excluded$micharls)[2],"(", round(table(excluded$micharls)[2]/nrow(excluded)*100,1),")")`|
+|Congestive Cardiac Failure|`r paste0(table(data_original$ccfcharls)[2],"(", round(table(data_original$ccfcharls)[2]/nrow(data_original)*100,1),")")`|`r paste0(table(training$ccfcharls)[2],"(", round(table(training$ccfcharls)[2]/nrow(training)*100,1),")")`|`r paste0(table(testing$ccfcharls)[2],"(", round(table(testing$ccfcharls)[2]/nrow(testing)*100,1),")")`|`r paste0(table(excluded$ccfcharls)[2],"(", round(table(excluded$ccfcharls)[2]/nrow(excluded)*100,1),")")`|
+|Peripheral Vascular Disease|`r paste0(table(data_original$pvdcharls)[2],"(", round(table(data_original$pvdcharls)[2]/nrow(data_original)*100,1),")")`|`r paste0(table(training$pvdcharls)[2],"(", round(table(training$pvdcharls)[2]/nrow(training)*100,1),")")`|`r paste0(table(testing$pvdcharls)[2],"(", round(table(testing$pvdcharls)[2]/nrow(testing)*100,1),")")`|`r paste0(table(excluded$pvdcharls)[2],"(", round(table(excluded$pvdcharls)[2]/nrow(excluded)*100,1),")")`|
+|Cerebrovascular Disease|`r paste0(table(data_original$cvdcharls)[2],"(", round(table(data_original$cvdcharls)[2]/nrow(data_original)*100,1),")")`|`r paste0(table(training$cvdcharls)[2],"(", round(table(training$cvdcharls)[2]/nrow(training)*100,1),")")`|`r paste0(table(testing$cvdcharls)[2],"(", round(table(testing$cvdcharls)[2]/nrow(testing)*100,1),")")`|`r paste0(table(excluded$cvdcharls)[2],"(", round(table(excluded$cvdcharls)[2]/nrow(excluded)*100,1),")")`|
+|Chronic Obstructive Pulmonary Disease|`r paste0(table(data_original$copdcharls)[2],"(", round(table(data_original$copdcharls)[2]/nrow(data_original)*100,1),")")`|`r paste0(table(training$copdcharls)[2],"(", round(table(training$copdcharls)[2]/nrow(training)*100,1),")")`|`r paste0(table(testing$copdcharls)[2],"(", round(table(testing$copdcharls)[2]/nrow(testing)*100,1),")")`|`r paste0(table(excluded$copdcharls)[2],"(", round(table(excluded$copdcharls)[2]/nrow(excluded)*100,1),")")`|
+|Connective Tissue Disease|`r paste0(table(data_original$ctdcharls)[2],"(", round(table(data_original$ctdcharls)[2]/nrow(data_original)*100,1),")")`|`r paste0(table(training$ctdcharls)[2],"(", round(table(training$ctdcharls)[2]/nrow(training)*100,1),")")`|`r paste0(table(testing$ctdcharls)[2],"(", round(table(testing$ctdcharls)[2]/nrow(testing)*100,1),")")`|`r paste0(table(excluded$ctdcharls)[2],"(", round(table(excluded$ctdcharls)[2]/nrow(excluded)*100,1),")")`|
+|Peptic Ulcer Disease|`r paste0(table(data_original$pudcharls)[2],"(", round(table(data_original$pudcharls)[2]/nrow(data_original)*100,1),")")`|`r paste0(table(training$pudcharls)[2],"(", round(table(training$pudcharls)[2]/nrow(training)*100,1),")")`|`r paste0(table(testing$pudcharls)[2],"(", round(table(testing$pudcharls)[2]/nrow(testing)*100,1),")")`|`r paste0(table(excluded$pudcharls)[2],"(", round(table(excluded$pudcharls)[2]/nrow(excluded)*100,1),")")`|
+|Diabetes Mellitus (uncomplicated)|`r paste0(table(data_original$dmcharls)[2],"(", round(table(data_original$dmcharls)[2]/nrow(data_original)*100,1),")")`|`r paste0(table(training$dmcharls)[2],"(", round(table(training$dmcharls)[2]/nrow(training)*100,1),")")`|`r paste0(table(testing$dmcharls)[2],"(", round(table(testing$dmcharls)[2]/nrow(testing)*100,1),")")`|`r paste0(table(excluded$dmcharls)[2],"(", round(table(excluded$dmcharls)[2]/nrow(excluded)*100,1),")")`|
+|Diabetes Mellitus (with end-organ involvement)|`r paste0(table(data_original$dmendorgancharls)[2],"(", round(table(data_original$dmendorgancharls)[2]/nrow(data_original)*100,1),")")`|`r paste0(table(training$dmendorgancharls)[2],"(", round(table(training$dmendorgancharls)[2]/nrow(training)*100,1),")")`|`r paste0(table(testing$dmendorgancharls)[2],"(", round(table(testing$dmendorgancharls)[2]/nrow(testing)*100,1),")")`|`r paste0(table(excluded$dmendorgancharls)[2],"(", round(table(excluded$dmendorgancharls)[2]/nrow(excluded)*100,1),")")`|
+|Chronic Kidney Disease (moderate to severe)|`r paste0(table(data_original$renalcharls)[2],"(", round(table(data_original$renalcharls)[2]/nrow(data_original)*100,1),")")`|`r paste0(table(training$renalcharls)[2],"(", round(table(training$renalcharls)[2]/nrow(training)*100,1),")")`|`r paste0(table(testing$renalcharls)[2],"(", round(table(testing$renalcharls)[2]/nrow(testing)*100,1),")")`|`r paste0(table(excluded$renalcharls)[2],"(", round(table(excluded$renalcharls)[2]/nrow(excluded)*100,1),")")`|
+|Hemiplegia|`r paste0(table(data_original$hemiplegiacharls)[2],"(", round(table(data_original$hemiplegiacharls)[2]/nrow(data_original)*100,1),")")`|`r paste0(table(training$hemiplegiacharls)[2],"(", round(table(training$hemiplegiacharls)[2]/nrow(training)*100,1),")")`|`r paste0(table(testing$hemiplegiacharls)[2],"(", round(table(testing$hemiplegiacharls)[2]/nrow(testing)*100,1),")")`|`r paste0(table(excluded$hemiplegiacharls)[2],"(", round(table(excluded$hemiplegiacharls)[2]/nrow(excluded)*100,1),")")`|
+|Malignancy|`r paste0(table(data_original$malignancy)[2],"(", round(table(data_original$malignancy)[2]/nrow(data_original)*100,1),")")`|`r paste0(table(training$malignancy)[2],"(", round(table(training$malignancy)[2]/nrow(training)*100,1),")")`|`r paste0(table(testing$malignancy)[2],"(", round(table(testing$malignancy)[2]/nrow(testing)*100,1),")")`|`r paste0(table(excluded$malignancy)[2],"(", round(table(excluded$malignancy)[2]/nrow(excluded)*100,1),")")`|
+|Liver Disease|`r paste0(table(data_original$hepdxcharls)[2],"(", round(table(data_original$hepdxcharls)[2]/nrow(data_original)*100,1),")")`|`r paste0(table(training$hepdxcharls)[2],"(", round(table(training$hepdxcharls)[2]/nrow(training)*100,1),")")`|`r paste0(table(testing$hepdxcharls)[2],"(", round(table(testing$hepdxcharls)[2]/nrow(testing)*100,1),")")`|`r paste0(table(excluded$hepdxcharls)[2],"(", round(table(excluded$hepdxcharls)[2]/nrow(excluded)*100,1),")")`|
+|Smoking (active)|`r paste0(table(data_original$smoking)[3],"(", round(table(data_original$smoking)[3]/nrow(data_original)*100,1),")")`|`r paste0(table(training$smoking)[3],"(", round(table(training$smoking)[3]/nrow(training)*100,1),")")`|`r paste0(table(testing$smoking)[3],"(", round(table(testing$smoking)[3]/nrow(testing)*100,1),")")`|`r paste0(table(excluded$smoking)[3],"(", round(table(excluded$smoking)[3]/nrow(excluded)*100,1),")")`|
+|Smoking (previously)|`r paste0(table(data_original$smoking)[2],"(", round(table(data_original$smoking)[2]/nrow(data_original)*100,1),")")`|`r paste0(table(training$smoking)[2],"(", round(table(training$smoking)[2]/nrow(training)*100,1),")")`|`r paste0(table(testing$smoking)[2],"(", round(table(testing$smoking)[2]/nrow(testing)*100,1),")")`|`r paste0(table(excluded$smoking)[2],"(", round(table(excluded$smoking)[2]/nrow(excluded)*100,1),")")`|
+|**30-day Mortality**|`r paste0(table(data_original$mort30)[2],"(", round(table(data_original$mort30)[2]/nrow(data_original)*100,1),")")`|`r paste0(table(training$mort30)[2],"(", round(table(training$mort30)[2]/nrow(training)*100,1),")")`|`r paste0(table(testing$mort30)[2],"(", round(table(testing$mort30)[2]/nrow(testing)*100,1),")")`|`r paste0(table(excluded$mort30)[2],"(", round(table(excluded$mort30)[2]/nrow(excluded)*100,1),")")`|
+|**Length of Hospital Stay**|||||
+|[Median days, IQR]|[`r paste0(median(data_original$los),", IQR:",quantile(data_original$los,1/4),"&ndash;",quantile(data_original$los,3/4))`]|[`r paste0(median(training$los),", IQR:",quantile(training$los,1/4),"&ndash;",quantile(training$los,3/4))`]|[`r paste0(median(testing$los),", IQR:",quantile(testing$los,1/4),"&ndash;",quantile(testing$los,3/4))`]|[`r paste0(median(excluded$los),", IQR:",quantile(excluded$los,1/4),"&ndash;",quantile(excluded$los,3/4))`]|
+|0&ndash;3 days|`r paste0(sum(data_original$los<=3),"(",round(sum(data_original$los<=3)/nrow(data_original)*100,1),")")`|`r paste0(sum(training$los<=3),"(",round(sum(training$los<=3)/nrow(training)*100,1),")")`|`r paste0(sum(testing$los<=3),"(",round(sum(testing$los<=3)/nrow(testing)*100,1),")")`|`r paste0(sum(excluded$los<=3),"(",round(sum(excluded$los<=3)/nrow(excluded)*100,1),")")`|
+|4&ndash;6 days|`r paste0(sum(data_original$los>=4&data_original$los<=6),"(",round(sum(data_original$los>=4&data_original$los<=6)/nrow(data_original)*100,1),")")`|`r paste0(sum(training$los>=4&training$los<=6),"(",round(sum(training$los>=4&training$los<=6)/nrow(training)*100,1),")")`|`r paste0(sum(testing$los>=4&testing$los<=6),"(",round(sum(testing$los>=4&testing$los<=6)/nrow(testing)*100,1),")")`|`r paste0(sum(excluded$los>=4&excluded$los<=6),"(",round(sum(excluded$los>=4&excluded$los<=6)/nrow(excluded)*100,1),")")`|
+|7&ndash;13 days|`r paste0(sum(data_original$los>=7&data_original$los<=13),"(",round(sum(data_original$los>=7&data_original$los<=13)/nrow(data_original)*100,1),")")`|`r paste0(sum(training$los>=7&training$los<=13),"(",round(sum(training$los>=7&training$los<=13)/nrow(training)*100,1),")")`|`r paste0(sum(testing$los>=7&testing$los<=13),"(",round(sum(testing$los>=7&testing$los<=13)/nrow(testing)*100,1),")")`|`r paste0(sum(excluded$los>=7&excluded$los<=13),"(",round(sum(excluded$los>=7&excluded$los<=13)/nrow(excluded)*100,1),")")`|
+|14&ndash;20 days|`r paste0(sum(data_original$los>=14&data_original$los<=20),"(",round(sum(data_original$los>=14&data_original$los<=20)/nrow(data_original)*100,1),")")`|`r paste0(sum(training$los>=14&training$los<=20),"(",round(sum(training$los>=14&training$los<=20)/nrow(training)*100,1),")")`|`r paste0(sum(testing$los>=14&testing$los<=20),"(",round(sum(testing$los>=14&testing$los<=20)/nrow(testing)*100,1),")")`|`r paste0(sum(excluded$los>=14&excluded$los<=20),"(",round(sum(excluded$los>=14&excluded$los<=20)/nrow(excluded)*100,1),")")`|
+|21&ndash;27 days|`r paste0(sum(data_original$los>=21&data_original$los<=27),"(",round(sum(data_original$los>=21&data_original$los<=27)/nrow(data_original)*100,1),")")`|`r paste0(sum(training$los>=21&training$los<=27),"(",round(sum(training$los>=21&training$los<=27)/nrow(training)*100,1),")")`|`r paste0(sum(testing$los>=21&testing$los<=27),"(",round(sum(testing$los>=21&testing$los<=27)/nrow(testing)*100,1),")")`|`r paste0(sum(excluded$los>=21&excluded$los<=27),"(",round(sum(excluded$los>=21&excluded$los<=27)/nrow(excluded)*100,1),")")`|
+|&ge;28 days|`r paste0(sum(data_original$los>=28),"(",round(sum(data_original$los>=28)/nrow(data_original)*100,1),")")`|`r paste0(sum(training$los>=28),"(",round(sum(training$los>=28)/nrow(training)*100,1),")")`|`r paste0(sum(testing$los>=28),"(",round(sum(testing$los>=28)/nrow(testing)*100,1),")")`|`r paste0(sum(excluded$los>=28),"(",round(sum(excluded$los>=28)/nrow(excluded)*100,1),")")`|
+
+  Table: Table 1 Caption: Descriptive data for the total study population, derivation and validation samples, and patients excluded from analysis due to missing data, including 30-day mortality and length of hospital stay. Numbers in parentheses represent sample percentages. Numbers in square brackets represent either median ages or median lengths of hospital stay with interquartile ranges (IQR) for each sample. 
+
+### Table 2
+
+|     |Day 3|Day 5|Day 7 or 8|Day 14 or 15|Day 21|Day 28|
+|:---:|:---:|:---:|:--------:|:----------:|:----:|:----:|
+|Total number of patients still in hospital, Day 0 = `r paste0(nrow(data_original)," (" , round(nrow(data_original)/nrow(data_original)*100,1),"%)")`|`r paste0(table(data_original$los >=3)[2]," (" , round(table(data_original$los >=3)[2]/nrow(data_original)*100,1),"%)")`|`r paste0(table(data_original$los >=5)[2]," (" , round(table(data_original$los >=5)[2]/nrow(data_original)*100,1),"%)")`|`r paste0(table(data_original$los >=7)[2]," (" , round(table(data_original$los >=7)[2]/nrow(data_original)*100,1),"%)")`|`r paste0(table(data_original$los >=14)[2]," (" , round(table(data_original$los >=14)[2]/nrow(data_original)*100,1),"%)")`|`r paste0(table(data_original$los >=21)[2]," (" , round(table(data_original$los >=21)[2]/nrow(data_original)*100,1),"%)")`|`r paste0(table(data_original$los >=28)[2]," (" , round(table(data_original$los >=28)[2]/nrow(data_original)*100,1),"%)")`|
+|Patients with POMS-defined morbidity (%)|`r paste0(table(join3$poms)[2]," (", round(table(join3$poms)[2]/nrow(data_original)*100,1),"%)")`|`r paste0(table(join5$poms)[2]," (", round(table(join5$poms)[2]/nrow(data_original)*100,1),"%)")`|`r paste0(table(join7$poms)[2]," (", round(table(join7$poms)[2]/nrow(data_original)*100,1),"%)")`|`r paste0(table(join14$poms)[2]," (", round(table(join14$poms)[2]/nrow(data_original)*100,1),"%)")`|`r paste0(table(join21$poms)[2]," (", round(table(join21$poms)[2]/nrow(data_original)*100,1),"%)")`|`r paste0(table(join28$poms)[2]," (", round(table(join28$poms)[2]/nrow(data_original)*100,1),"%)")`| 
+|Pulmonary (%)|`r paste0(table(join3$pulm)[2]," (", round(table(join3$pulm)[2]/nrow(data_original)*100,1),"%)")`|`r paste0(table(join5$pulm)[2]," (", round(table(join5$pulm)[2]/nrow(data_original)*100,1),"%)")`|`r paste0(table(join7$pulm)[2]," (", round(table(join7$pulm)[2]/nrow(data_original)*100,1),"%)")`|`r paste0(table(join14$pulm)[2]," (", round(table(join14$pulm)[2]/nrow(data_original)*100,1),"%)")`|`r paste0(table(join21$pulm)[2]," (", round(table(join21$pulm)[2]/nrow(data_original)*100,1),"%)")`|`r paste0(table(join28$pulm)[2]," (", round(table(join28$pulm)[2]/nrow(data_original)*100,1),"%)")`| 
+|Infectious (%)|`r paste0(table(join3$inf)[2]," (", round(table(join3$inf)[2]/nrow(data_original)*100,1),"%)")`|`r paste0(table(join5$inf)[2]," (", round(table(join5$inf)[2]/nrow(data_original)*100,1),"%)")`|`r paste0(table(join7$inf)[2]," (", round(table(join7$inf)[2]/nrow(data_original)*100,1),"%)")`|`r paste0(table(join14$inf)[2]," (", round(table(join14$inf)[2]/nrow(data_original)*100,1),"%)")`|`r paste0(table(join21$inf)[2]," (", round(table(join21$inf)[2]/nrow(data_original)*100,1),"%)")`|`r paste0(table(join28$inf)[2]," (", round(table(join28$inf)[2]/nrow(data_original)*100,1),"%)")`| 
+|Renal (%)|`r paste0(table(join3$renal)[2]," (", round(table(join3$renal)[2]/nrow(data_original)*100,1),"%)")`|`r paste0(table(join5$renal)[2]," (", round(table(join5$renal)[2]/nrow(data_original)*100,1),"%)")`|`r paste0(table(join7$renal)[2]," (", round(table(join7$renal)[2]/nrow(data_original)*100,1),"%)")`|`r paste0(table(join14$renal)[2]," (", round(table(join14$renal)[2]/nrow(data_original)*100,1),"%)")`|`r paste0(table(join21$renal)[2]," (", round(table(join21$renal)[2]/nrow(data_original)*100,1),"%)")`|`r paste0(table(join28$renal)[2]," (", round(table(join28$renal)[2]/nrow(data_original)*100,1),"%)")`| 
+|Gastrointestinal (%)|`r paste0(table(join3$gastro)[2]," (", round(table(join3$gastro)[2]/nrow(data_original)*100,1),"%)")`|`r paste0(table(join5$gastro)[2]," (", round(table(join5$gastro)[2]/nrow(data_original)*100,1),"%)")`|`r paste0(table(join7$gastro)[2]," (", round(table(join7$gastro)[2]/nrow(data_original)*100,1),"%)")`|`r paste0(table(join14$gastro)[2]," (", round(table(join14$gastro)[2]/nrow(data_original)*100,1),"%)")`|`r paste0(table(join21$gastro)[2]," (", round(table(join21$gastro)[2]/nrow(data_original)*100,1),"%)")`|`r paste0(table(join28$gastro)[2]," (", round(table(join28$gastro)[2]/nrow(data_original)*100,1),"%)")`| 
+|Cardiovascular (%)|`r paste0(table(join3$cardio)[2]," (", round(table(join3$cardio)[2]/nrow(data_original)*100,1),"%)")`|`r paste0(table(join5$cardio)[2]," (", round(table(join5$cardio)[2]/nrow(data_original)*100,1),"%)")`|`r paste0(table(join7$cardio)[2]," (", round(table(join7$cardio)[2]/nrow(data_original)*100,1),"%)")`|`r paste0(table(join14$cardio)[2]," (", round(table(join14$cardio)[2]/nrow(data_original)*100,1),"%)")`|`r paste0(table(join21$cardio)[2]," (", round(table(join21$cardio)[2]/nrow(data_original)*100,1),"%)")`|`r paste0(table(join28$cardio)[2]," (", round(table(join28$cardio)[2]/nrow(data_original)*100,1),"%)")`| 
+|Neurological (%)|`r paste0(table(join3$neuro)[2]," (", round(table(join3$neuro)[2]/nrow(data_original)*100,1),"%)")`|`r paste0(table(join5$neuro)[2]," (", round(table(join5$neuro)[2]/nrow(data_original)*100,1),"%)")`|`r paste0(table(join7$neuro)[2]," (", round(table(join7$neuro)[2]/nrow(data_original)*100,1),"%)")`|`r paste0(table(join14$neuro)[2]," (", round(table(join14$neuro)[2]/nrow(data_original)*100,1),"%)")`|`r paste0(table(join21$neuro)[2]," (", round(table(join21$neuro)[2]/nrow(data_original)*100,1),"%)")`|`r paste0(table(join28$neuro)[2]," (", round(table(join28$neuro)[2]/nrow(data_original)*100,1),"%)")`| 
+|Haematological (%)|`r paste0(table(join3$haem)[2]," (", round(table(join3$haem)[2]/nrow(data_original)*100,1),"%)")`|`r paste0(table(join5$haem)[2]," (", round(table(join5$haem)[2]/nrow(data_original)*100,1),"%)")`|`r paste0(table(join7$haem)[2]," (", round(table(join7$haem)[2]/nrow(data_original)*100,1),"%)")`|`r paste0(table(join14$haem)[2]," (", round(table(join14$haem)[2]/nrow(data_original)*100,1),"%)")`|`r paste0(table(join21$haem)[2]," (", round(table(join21$haem)[2]/nrow(data_original)*100,1),"%)")`|`r paste0(table(join28$haem)[2]," (", round(table(join28$haem)[2]/nrow(data_original)*100,1),"%)")`| 
+|Wound (%)|`r paste0(table(join3$wound)[2]," (", round(table(join3$wound)[2]/nrow(data_original)*100,1),"%)")`|`r paste0(table(join5$wound)[2]," (", round(table(join5$wound)[2]/nrow(data_original)*100,1),"%)")`|`r paste0(table(join7$wound)[2]," (", round(table(join7$wound)[2]/nrow(data_original)*100,1),"%)")`|`r paste0(table(join14$wound)[2]," (", round(table(join14$wound)[2]/nrow(data_original)*100,1),"%)")`|`r paste0(table(join21$wound)[2]," (", round(table(join21$wound)[2]/nrow(data_original)*100,1),"%)")`|`r paste0(table(join28$wound)[2]," (", round(table(join28$wound)[2]/nrow(data_original)*100,1),"%)")`| 
+|Pain (%)|`r paste0(table(join3$pain)[2]," (", round(table(join3$pain)[2]/nrow(data_original)*100,1),"%)")`|`r paste0(table(join5$pain)[2]," (", round(table(join5$pain)[2]/nrow(data_original)*100,1),"%)")`|`r paste0(table(join7$pain)[2]," (", round(table(join7$pain)[2]/nrow(data_original)*100,1),"%)")`|`r paste0(table(join14$pain)[2]," (", round(table(join14$pain)[2]/nrow(data_original)*100,1),"%)")`|`r paste0(table(join21$pain)[2]," (", round(table(join21$pain)[2]/nrow(data_original)*100,1),"%)")`|`r paste0(table(join28$pain)[2]," (", round(table(join28$pain)[2]/nrow(data_original)*100,1),"%)")`| 
+|Missing POMS outcomes (%)|`r paste0(nrow(data_clean)-nrow(join3)," (" , round((nrow(data_clean)-nrow(join3))/nrow(data_clean)*100,1),"%)")`|`r paste0(nrow(data_clean)-nrow(join5)," (" , round((nrow(data_clean)-nrow(join5))/nrow(data_clean)*100,1),"%)")`|`r paste0(nrow(data_clean)-nrow(join7)," (" , round((nrow(data_clean)-nrow(join7))/nrow(data_clean)*100,1),"%)")`|`r paste0(nrow(data_clean)-nrow(join14)," (" , round((nrow(data_clean)-nrow(join14))/nrow(data_clean)*100,1),"%)")`|`r paste0(nrow(data_clean)-nrow(join21)," (" , round((nrow(data_clean)-nrow(join21))/nrow(data_clean)*100,1),"%)")`|`r paste0(nrow(data_clean)-nrow(join28)," (" , round((nrow(data_clean)-nrow(join28))/nrow(data_clean)*100,1),"%)")`|
+
+  Table: Table 2 Caption: Breakdown of POMS outcomes at different time-points and by organ-system domains. _Percentages in parentheses represent the number of patients remaining in hospital at a particular time-point suffering from POMS-defined morbidity as a proportion of the total number of patients in the whole cohort (total n = 1934)._
+
+### Table 3
+
+```{r, echo=FALSE, message=FALSE, results='asis', fig.show='hide', eval=FALSE}
+library(stargazer)
+stargazer(lr_poms10, 
+          type = "html", 
+          title = "Table 3: Coefficients for the SORT-morbidity Prediction Model",
+          single.row = TRUE,
+          column.labels = c("Final SORT-morbidity Model"),
+          style = "qje",
+          notes = "Original SORT formula: ln(R/1-R) = -7.366 + 1.411 x (ASA−PS III) + 2.388 x (ASA−PS IV) + 4.081 x (ASA−PS V) + 1.236 x (Urgency ‘expedited’) + 1.657 x (Urgency ‘urgent’) + 2.452 x (Urgency ‘immediate’) + 0.712 x (High-risk Specialty) + 0.381 x (Severity ‘Xmajor/Complex’) + 0.667 x (Malignancy) + 0.777 x (Age 65&ndash;79 years) + 1.591 x (Age 80+ years)",
+          covariate.labels = c("ASA-PS Grade (discrete numerical)", "Colorectal Surgery", "Upper GI Surgery", "Vascular Surgery", "Bariatric Surgery", "Other Surgical Specialty", "Xmajor/Complex Surgery", "Malignancy", "Age 65 to 79 years", "Age 80 years or more"))
+```
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+set.caption("Table 3: Coefficients for the final SORT-morbidity Prediction Model.")
+panderOptions("round", 3)
+panderOptions("keep.trailing.zeros", TRUE)
+pander(lr_poms9, covariate.labels = c("ASA = II", "ASA = III", "ASA &ge; IV","Surgical Specialty (Colorectal)", "Surgical Specialty (Upper GI)", "Surgical Specialty (Vascular)", "Surgical Specialty (Bariatric)", "Surgical Specialty (Other)", "Surgical Severity (Xmajor/Complex)", "Malignancy", "Age 65 to 79 years", "Age 80 years or more", "Constant"))
+```
+
+### Table 4
+
+```{r, message=FALSE, warning=FALSE, include=FALSE}
+rocx1 <- roc(join7$poms_lo ~ arm::invlogit(1.008 * predict(lr_poms9, newdata = join7) - 0.316), plot=FALSE, auc=TRUE, ci=TRUE)
+rocx2 <- roc(join7$poms_hi ~ arm::invlogit(0.827 * predict(lr_poms9, newdata = join7) - 0.874), plot=FALSE, auc=TRUE, ci=TRUE)
+rocx3 <- roc(join14$poms ~ arm::invlogit(0.894 * predict(lr_poms9, newdata = join14) - 1.478), plot=FALSE, auc=TRUE, ci=TRUE)
+rocx4 <- roc(join21$poms ~ arm::invlogit(1.081 * predict(lr_poms9, newdata = join21) - 2.327), plot=FALSE, auc=TRUE, ci=TRUE)
+rocx5 <- roc(join28$poms ~ arm::invlogit(1.048 * predict(lr_poms9, newdata = join28) - 2.770), plot=FALSE, auc=TRUE, ci=TRUE)
+
+```
+
+|Outcome|Intercept, $\alpha$|Slope, $\beta$|AUROC (95% CI)|
+|:-----:|:-----------------:|:------------:|:-------------|
+|**Low-grade POMS morbidity**|-0.316|1.008|`r rocx1$auc` (`r rocx1$ci[1]`&ndash;`r rocx1$ci[3]`)|
+|**High-grade POMS morbidity**|-0.874|0.827|`r rocx2$auc` (`r rocx2$ci[1]`&ndash;`r rocx2$ci[3]`)|
+|**Day 14/15 POMS**|-1.478|0.894|`r rocx3$auc` (`r rocx3$ci[1]`&ndash;`r rocx3$ci[3]`)|
+|**Day 21 POMS**|-2.327|1.081|`r rocx4$auc` (`r rocx4$ci[1]`&ndash;`r rocx4$ci[3]`)|
+|**Day 28 POMS**|-2.770|1.048|`r rocx5$auc` (`r rocx5$ci[1]`&ndash;`r rocx5$ci[3]`)|
+
+  Table: Table 4 Caption: Shrinkage factors to be applied to SORT-morbidity formula in order to improve the accuracy for predicting alternative morbidity outcomes. AUROC for the recalibrated formulae are also displayed.  An example of how to use the shrinkage factors follows: if applying the SORT-morbidity formula yields a probability (p) of having POMS-defined morbidity on Day 7 or 8 of 50%; then logit(p) = 0, and logit(P(Y)) = -1.478 + 0.894(0), where P(Y) is the probability of having POMS-defined morbidity on Day 14 or 15. P(Y) in this example would therefore be 18.6%. 
+
+##	Illustrations and legends
+
+### Figure 1
+
+![Flow Diagram depicting the cases included and excluded from analysis](figures/STROBEDiagram.png)
+
+Figure 1: Flow diagram summarising cases included and excluded from analysis.
+
+### Figure 2
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE, results="hide", fig.show='hide'}
+<<Ext_val_SORT>>
+<<RegressionModel9>>
+<<POSSUM_morb>>
+```
+
+```{r Fig2, echo=FALSE, message=FALSE, warning=FALSE, results='hide', fig.height=4, fig.width=8}
+#pdf("figures/figure2.pdf", colormodel="cmyk", width = 8, height = 4)
+#postscript("figures/figure2.eps", horizontal = FALSE, onefile = FALSE, colormodel="cmyk", paper = "special", height = 4, width = 8)
+HL_lrpoms9df <- HL_lrpoms9$Table_HLtest %>% as.data.frame()
+HL_possum_morbdf <- HL_possum_morb$Table_HLtest %>% as.data.frame()
+
+par(mar=c(4, 4, 2, 2)+.1,
+    mgp=c(2.5, 1, 0))
+par(mfrow=c(1,2))
+#plot(roc_SORT, col="blue", main="A. SORT vs. P-POSSUM & SRS", 
+#     ylim=c(0,1),
+#     legacy.axes=TRUE)
+#plot(roc_pPOSSUM, col="green", lty = 2, add=TRUE)
+#plot(roc_SRS, col="magenta", lty = 4, add=TRUE)
+#legend("bottomright", inset = c(0.05,0.05), legend = c("SORT","P-POSSUM","SRS"),
+#       col = c("blue","green","magenta"), lty = c(1,2,4),
+#       cex = 0.5)
+
+plot(NULL,main="A. Calibration plots",
+     asp=1, 
+     xlim = c(0,1),
+     ylim = c(0,1),
+     ylab = "Observed Risk",
+     xlab = "Predicted Risk")
+abline(a = 0, b = 1, col = "grey", add = TRUE)
+points(meanobs ~ meanpred, data = HL_lrpoms9df,
+      col = "blue",
+      pch = 3, add = TRUE)
+#lines(lowess(HL_lrpoms9df$meanpred, HL_lrpoms9df$meanobs, iter = 0), col = "blue", lty = 2)
+points(meanobs ~ meanpred, data = HL_possum_morbdf,
+      col = "green",
+      pch = 2, add = TRUE)
+#lines(lowess(HL_possum_morbdf$meanpred, HL_possum_morbdf$meanobs, iter = 0), col = "green", lty = 2)
+legend("bottomright", inset = c(0.05,0.05), legend = c("SORT-morbidity","POSSUM"),
+       col = c("blue","green"), pch = c(3,2),
+       cex = 0.5)
+       
+plot(roc_model9, col="blue", main="B. ROC curves", 
+     ylim=c(0,1),
+     legacy.axes=TRUE)
+plot(roc_POSSUM, col="green", lty = 2, add=TRUE)
+legend("bottomright", inset = c(0.05,0.05), legend = c("SORT-morbidity","POSSUM"),
+       col = c("blue","green"), lty = c(1,2),
+       cex = 0.5)
+par(mfrow=c(1,1))
+
+#dev.off()
+```
+Figure 2: (A) Calibration plot of SORT-morbidity compared to POSSUM: Observed versus predicted occurrence of Day 7 or 8 morbidity at varying levels of risk in the validation cohort of `r nrow(testing)` patients; (B) ROC curve plot of SORT-morbidity compared against POSSUM (AUROC = **`r roc_model9$auc`**, and **`r roc_POSSUM$auc`** respectively) tested in the validation cohort. ROC: Receiver Operator Characteristic; AUROC: Area Under the ROC curve.
+
+### Figure 3
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE, results="hide", fig.show='hide'}
+<<Sens_pomslo>>
+<<Sens_pomshi>>
+<<Sens_poms14>>
+<<Sens_poms21>>
+<<Sens_poms28>>
+```
+
+```{r Fig3, echo=FALSE, message=FALSE, warning=FALSE, results='hide', fig.height=8, fig.width=8}
+#cairo_pdf(filename = "figures/figure3.pdf", width = 8, height = 8, pointsize = 12, onefile = FALSE, family = "sans", bg = "white", antialias = "default", fallback_resolution = 600)
+#pdf("figures/figure3.pdf", colormodel="cmyk", width = 8, height = 8)
+#postscript("figures/figure2.eps", horizontal = FALSE, onefile = FALSE, colormodel="cmyk", paper = "special", height = 8, width = 8)
+
+par(mar=c(4, 4, 2, 2)+.1,
+    mgp=c(2.5, 1, 0))
+par(mfrow=c(2,2))
+
+plot(NULL,main="A. Modified POMS calibration plots",
+     asp=1, 
+     xlim = c(0,1),
+     ylim = c(0,1),
+     ylab = "Observed Risk",
+     xlab = "Predicted Risk")
+abline(a = 0, b = 1, col = "grey", add = TRUE)
+points(meanobs ~ meanpred, data = HL_pomslo$Table_HLtest%>%as.data.frame(),
+      col = "blue",
+      pch = 3, add = TRUE)
+points(meanobs ~ meanpred, data = HL_pomshi$Table_HLtest%>%as.data.frame(),
+      col = "green",
+      pch = 2, add = TRUE)
+legend("bottomright", inset = c(0.05,0.05), legend = c("Low-grade POMS","High-grade POMS"),
+       col = c("blue","green"), pch = c(3,2),
+       cex = 0.5)
+       
+plot(roc_pomslo, col="blue", main="B. Modified POMS ROC curves", 
+     ylim=c(0,1),
+     legacy.axes=TRUE)
+plot(roc_pomshi, col="green", lty = 2, add=TRUE)
+legend("bottomright", inset = c(0.05,0.05), legend = c("Low-grade POMS","High-grade POMS"),
+       col = c("blue","green"), lty = c(1,2),
+       cex = 0.5)
+
+plot(NULL,main="C. Prolonged POMS calibration plots",
+     asp=1, 
+     xlim = c(0,1),
+     ylim = c(0,1),
+     ylab = "Observed Risk",
+     xlab = "Predicted Risk")
+abline(a = 0, b = 1, col = "grey", add = TRUE)
+points(meanobs ~ meanpred, data = HL_poms14$Table_HLtest%>%as.data.frame(),
+      col = "blue",
+      pch = 3, add = TRUE)
+points(meanobs ~ meanpred, data = HL_poms21$Table_HLtest%>%as.data.frame(),
+      col = "green",
+      pch = 2, add = TRUE)
+points(meanobs ~ meanpred, data = HL_poms28$Table_HLtest%>%as.data.frame(),
+      col = "magenta",
+      pch = 6, add = TRUE)
+legend("bottomright", inset = c(0.05,0.05), legend = c("Day 14/15 POMS", "Day 21 POMS", "Day 28 POMS"),
+       col = c("blue","green","magenta"), pch = c(3,2,6),
+       cex = 0.5)
+       
+plot(roc_poms14, col="blue", main="D. Prolonged POMS ROC curves", 
+     ylim=c(0,1),
+     legacy.axes=TRUE)
+plot(roc_poms21, col="green", lty = 2, add=TRUE)
+plot(roc_poms28, col="magenta", lty = 3, add=TRUE)
+legend("bottomright", inset = c(0.05,0.05), legend = c("Day 14/15 POMS", "Day 21 POMS", "Day 28 POMS"),
+       col = c("blue","green","magenta"), lty = c(1,2,3),
+       cex = 0.5)
+par(mfrow=c(1,1))
+
+#dev.off()
+```
+Figure 3: Sensitivity Analyses. (A) Calibration plot of SORT-morbidity for predicting modified POMS, comparing low-grade and high-grade POMS morbidity outcomes; (B) ROC curve plot showing SORT-morbidity discrimination performance for predicting low-grade and high-grade POMS morbidity outcomes (AUROC = **`r roc_pomslo$auc`**, and **`r roc_pomshi$auc`**, respectively);(C) Calibration plot of SORT-morbidity for predicting Day 14/15, Day 21, and Day 28 POMS outcomes; (D) ROC curve plot showing SORT-morbidity discrimination performance for predicting Day 14/15, Day 21, and Day 28 POMS outcomes (AUROC = **`r roc_poms14$auc`**, **`r roc_poms21$auc`** and **`r roc_poms28$auc`**, respectively). ROC: Receiver Operator Characteristic; AUROC: Area Under the ROC curve.
+
+## Supplementary Data
+
+### Supplementary Table 1
+
+| Morbidity Domain | Criteria                               | Source of Data  |
+|:-----------------|:---------------------------------------|:----------------|
+|Pulmonary         |New requirement for oxygen or respiratory support.| Patient observation or Treatment chart|
+|Infectious        |Currently on antibiotics or temperature >38°C in the last 24hr. | Treatment chart or Observation chart|
+|Renal             |Presence of oliguria <500 mL/24hr, increased serum creatinine (>30% from preoperative level) or urinary catheter in situ.| Fluid balance chart or Biochemistry result|
+|Gastrointestinal  |Unable to tolerate an enteral diet for any reason, including nausea, vomiting, and abdominal distension, or use of antiemetic.| Patient questioning, Fluid balance chart or Treatment chart|
+|Cardiovascular    |Diagnostic tests or therapy within the last 24 hr for any of the following: new myocardial infarction or ischaemia, hypotension (requiring pharmacological or fluid therapy >200 mL/hr), atrial or ventricular arrhythmias, cardiogenic pulmonary oedema, or thrombotic event requiring anticoagulation.| Treatment chart or Note review|
+|Neurological      |New focal neurological deficit, confusion, delirium, or coma.| Note review or Patient questioning|
+|Haematological    |Requirement for any of the following within the last 24 hr: packed erythrocytes, platelets, fresh-frozen plasma, or cryoprecipitate.| Treatment chart or Fluid balance chart|
+|Wound             |Wound dehiscence requiring surgical exploration or drainage of pus from the operation wound with or without isolation of organisms.| Note review or Pathology result|
+|Pain              |New postoperative pain significant enough to require parenteral opioids or regional analgesia.| Treatment chart or Patient questioning|
+
+  Table: Supplementary Table 1: Postoperative Morbidity Survey (POMS) Domains, adapted from Grocott *et al*.[@grocott_postoperative_2007]
+  
+### Supplementary Table 2
+
+| SORT Variable    | Definition                             |Further Detail   |
+|:-----------------|:---------------------------------------|:----------------|
+|ASA-PS Grade      |**Grade I**: A normal healthy patient|From the American Society of Anesthesiologists Physical Status Classification System| 
+|                  |**Grade II**: A patient with mild systemic disease||
+|                  |**Grade III**: A patient with severe systemic disease||
+|                  |**Grade IV**: A patient with severe systemic disease that is a constant threat to life||
+|                  |**Grade V**: A moribund patient who is not expected to survive without the operation.||
+|Surgical Urgency  |**Immediate**: Immediate life, limb or organ-saving intervention – resuscitation simultaneous with intervention. Normally within minutes of decision to operate.|From the National Confidential Enquiry into Patient Outcome and Death Classification of Intervention, http://www.ncepod.org.uk/classification.html|
+|                  |**Urgent**: Intervention for acute onset or clinical deterioration of potentially life-threatening conditions, for those conditions that may threaten the survival of limb or organ, for fixation of many fractures and for relief of pain or other distressing symptoms. Normally within hours of decision to operate.||
+|                  |**Expedited**: Patient requiring early treatment where the condition is not an immediate threat to life, limb or organ survival. Normally within days of decision to operate.||
+|                  |**Elective**: Intervention planned or booked in advance of routine admission to hospital. Timing to suit patient, hospital and staff.||
+|High Risk Surgical Specialty|Any of the following specialties: Gastrointestinal, Thoracic or Vascular Surgery||
+|Surgical Severity |Taken from a list of over 2000 procedure severity codes with the following categories: **Minor**: e.g. Dilation of stricture of rectum, Change of cast under general anaesthetic , **Intermediate**: e.g. Laparoscopic repair of incisional or ventral hernia requiring mesh, Closed reduction of fracture of short bone (including cast or percutaneous K-wires), **Major**: e.g. Laparoscopic appendicectomy, Closed reduction of fracture of long bone with external fixation (excluding fixation by cast or percutaneous K-wires), **Xmajor**: e.g. Right hemicolectomy, Locked intramedullary nailing of fractured long bone and **Complex**: e.g. Total excision of colon and ileorectal anastomosis, Revision of uncemented or cemented total hip replacement without adjunctive procedures.|Full list of procedures can be found on AXA-PPP Healthcare website, https://online.axappphealthcare.co.uk/SpecialistForms/SpecialistCode.mvc/Print?source=contracted|
+|Malignancy        |Presence or absence of active malignancy within past 5 years||
+|Age               |Three age categories: **<65 years**, **65&ndash;79 years**, **&ge;80**.|| 
+
+  Table: Supplementary Table 2: Surgical Outcome Risk Tool variable definitions, adapted from Protopapa *et al*.[@protopapa_development_2014]
+  
+### Supplementary Table 3
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE, results="hide", fig.show='hide'}
+<<RegressionModel3>>
+<<RegressionModel7>>
+<<RegressionModel8>>
+<<RegressionModel9>>
+<<RegressionModel10>>
+<<RegressionModel11>>  
+```
+
+|Model Number|Model Variables|Akaike Information Criterion (AIC)|Bayesian Information Criterion (BIC)|Hosmer-Lemeshow &chi;&#178; statistic (p-value)|AUROC (95% CI)|
+|:----------:|:--------------|:--------------------------------:|:----------------------------------:|:---------------------------------------------:|:------------:|
+| 1          |ASA = 3;<br> ASA &ge; 4;<br> "High-risk" Surgical Specialty;<br> Xmajor/Complex Surgical Severity;<br> Malignancy;<br> Age 65&ndash;79 yrs;<br> Age &ge; 80 yrs|`r AIC(lr_poms3)`|`r BIC(lr_poms3)`|`r HL_lrpoms3$Chi_square` (`r HL_lrpoms3$p_value`)|`r roc_model3$auc` (`r roc_model3$ci[1]`&ndash;`r roc_model3$ci[3]`)|
+| 2          |ASA = 3;<br> ASA &ge; 4;<br> Colorectal or Upper GI Surgery;<br> Xmajor/Complex Surgical Severity;<br> Malignancy;<br> Age 65&ndash;79 yrs;<br> Age &ge; 80 yrs|`r AIC(lr_poms7)`|`r BIC(lr_poms7)`|`r HL_lrpoms7$Chi_square` (`r HL_lrpoms7$p_value`)|`r roc_model7$auc` (`r roc_model7$ci[1]`&ndash;`r roc_model7$ci[3]`)|
+| 3          |ASA = 3;<br> ASA &ge; 4;<br> Surgical Specialty (as a categorical variable with 6 categories);<br> Xmajor/Complex Surgical Severity;<br> Malignancy;<br> Age 65&ndash;79 yrs;<br> Age &ge; 80 yrs|`r AIC(lr_poms8)`|`r BIC(lr_poms8)`|`r HL_lrpoms8$Chi_square` (`r HL_lrpoms8$p_value`)|`r roc_model8$auc` (`r roc_model8$ci[1]`&ndash;`r roc_model8$ci[3]`)|
+| **4**          |**ASA = 2;<br> ASA = 3;<br> ASA &ge; 4;<br> Surgical Specialty (as a categorical variable with 6 categories);<br> Xmajor/Complex Surgical Severity;<br> Malignancy;<br> Age 65&ndash;79 yrs;<br> Age &ge; 80 yrs**|**`r AIC(lr_poms9)`**|**`r BIC(lr_poms9)`**|**`r HL_lrpoms9$Chi_square` (`r HL_lrpoms9$p_value`)**|**`r roc_model9$auc` (`r roc_model9$ci[1]`&ndash;`r roc_model9$ci[3]`)**|
+| 5      |ASA (as a discrete numerical variable);<br> Surgical Specialty (as a categorical variable with 6 categories);<br> Xmajor/Complex Surgical Severity;<br> Malignancy;<br> Age 65&ndash;79 yrs;<br> Age &ge; 80 yrs|`r AIC(lr_poms10)`|`r BIC(lr_poms10)`|`r HL_lrpoms10$Chi_square` (`r HL_lrpoms10$p_value`)|`r roc_model10$auc` (`r roc_model10$ci[1]`&ndash;`r roc_model10$ci[3]`)|
+| 6          |ASA (as a discrete numerical variable);<br> Surgical Specialty (as a categorical variable with 6 categories);<br> Xmajor/Complex Surgical Severity;<br> Malignancy;<br> Age 65&ndash;79 yrs;<br> Age &ge; 80 yrs;<br> Age x Surgical Specialty Interaction|`r AIC(lr_poms11)`|`r BIC(lr_poms11)`|`r HL_lrpoms11$Chi_square` (`r HL_lrpoms11$p_value`)|`r roc_model11$auc` (`r roc_model11$ci[1]`&ndash;`r roc_model11$ci[3]`)|
+
+  Table: Supplementary Table 3: Summary of the Multivariable Logistic Regression models derived in the study. Final model chosen is in **bold**. In constructing our 6 candidate models, we started with a model closest to the original SORT-mortality model (Model 1), deriving empirically-weighted coefficients for this. We then made serial adjustments to the representations of the different predictor variables, one variable at a time, recording the performance measures for each step-wise change to the model. We selected our final model based on a balance of the following performance measures: goodness-of-fit measures (AIC and BIC), calibration (as judged by Hosmer-Lemeshow and calibration plots) and discrimination (as assessed by AUROC). The permutations chosen for the different representations is exhaustive within the constraints of scientific plausibility, as well as within the arbitrary constraints imposed upon model-development with the aim of working with the data variables found in the SORT-mortality model. ASA 1 and 2 could plausibly be combined into one category because the mortality rates associated with the two grades does not differ greatly (0.0% vs 0.5% in a UK population, data from the paper by Protopapa et al), whereas ASA 3 and >4 conferred a 3.2% mortality and >16.5% mortality respectively.[@protopapa_development_2014] We chose to combine ASA 4 and 5 because our study cohort only had 1 patient with ASA 5, which would be in keeping with an elective surgical cohort. With regards to different representations of age: The SORT-mortality calculator (http://www.sortsurgery.com/index.php?) asks for patients ages in the specific range categories which we tested in our models, and we did not want to significantly depart from this range in order to maintain compatibility with the data items collected for SORT-mortality predictions. We tried one first order interaction and found that it only resulted in a minor improvement in AIC at the cost of a significant worsening in BIC, with no improvement in discrimination, and therefore stopped at that point in our model construction, satisfied that further interaction terms would similarly penalise the model. This interaction was tested as it was posited that patients may undergo different types of operation at different age groups, for example bariatric surgery would be rarer at higher age, while colorectal and orthopaedic surgery rates would be increased at the middle age range.
+
+
+### Supplementary Table 4
+
+|POMS Organ-system|POMS Sub-domain| Clavien-Dindo Grade|
+|:----------------|:--------------|:------------------:|
+|Pulmonary        |New requirement for oxygen|	2|
+|Pulmonary        |New requirement for respiratory support|	2|
+|Infectious       |Currently on antibiotics|	2|
+|Infectious       |Temperature >38°C in the last 24hr|	1|
+|Renal            |Urinary catheter in situ|	1|
+|Renal            |Increased serum creatinine (>30% from preoperative level)|	2|
+|Renal            |Presence of oliguria <500 mL/24hr|	2|
+|Gastrointestinal |Unable to tolerate an enteral diet for any reason|	1|
+|Gastrointestinal |Vomiting or abdominal distension, or use of anti-emetics|	1|
+|Cardiovascular   |Thrombotic event requiring anticoagulation (new)|	2|
+|Cardiovascular   |Atrial or ventricular arrhythmias (new)| 2|
+|Cardiovascular   |Hypotension (requiring pharmacological or fluid therapy >200 mL/hr)|	2|
+|Cardiovascular   |New myocardial infarction or ischaemia|	2|
+|Cardiovascular   |Cardiogenic pulmonary oedema|	2|
+|Neurological     |New coma|	3|
+|Neurological     |New confusion or delirium|	2|
+|Neurological     |New focal neurological deficit|	2|
+|Haematological   |Platelet, fresh-frozen plasma, or cryoprecipitate transfusion in last 24hrs| 2|
+|Haematological   |Packed erythrocyte transfusion in the last 24hrs|	2|
+|Wound            |Wound dehiscence requiring surgical exploration or drainage of pus from the operation wound with or without isolation of organisms|	2|
+|Pain             |New pain significant enough to require parenteral opioids or regional analgesia|	1|
+|Pain             |New pain significant enough to require regional analgesia|	2|
+
+  Table: Supplementary Table 4: Details of how the POMS organ-system sub-domains were mapped against Clavien-Dindo grades.
+
+### Supplementary Table 5
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+pander(HL_lrpoms9$Table_HLtest, caption = attr(HL_lrpoms9$Table_HLtest, "Observed and predicted 30-day mortality table for SORT-morbidity"))
+
+plotCalibration(data = testing, 
+                cOutcome = match("poms", colnames(testing)), 
+                predRisk = predict(lr_poms9, newdata = testing, type = "response"),
+                plottitle = "Calibration plot for SORT-morbidity")
+```
+  Table: Supplementary Table 5: Hosmer-Lemeshow Test Results for SORT-morbidity.  
+
+### Supplementary Table 6
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+pander(HL_possum_morb$Table_HLtest, caption = attr(HL_possum_morb$Table_HLtest, "Observed and predicted 30-day mortality table for POSSUM"))
+
+plotCalibration(testing,
+                cOutcome = match("poms", colnames(testing)),
+                predRisk = testing$morb_poss,
+                plottitle = "Calibration plot for POSSUM")
+```
+  Table: Supplementary Table 6: Hosmer-Lemeshow Test Results for POSSUM.
+
+### Supplementary Table 7
+  
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+pander(HL1$Table_HLtest, caption = attr(HL1$Table_HLtest, "Observed and predicted 30-day mortality table for SORT"))
+
+plotCalibration(data_clean, 
+                       cOutcome = match("mort30", colnames(data_clean)),
+                       predRisk = data_clean$sort_mort,
+                       rangeaxis = c(0,0.1),
+                       plottitle = "Calibration plot for SORT-mortality")
+```
+  Table: Supplementary Table 7: Hosmer-Lemeshow Test Results for SORT-mortality.
+
+### Supplementary Table 8
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+pander(HL2$Table_HLtest, caption = attr(HL2$Table_HLtest, "Observed and predicted 30-day mortality table for P-POSSUM"))
+
+plotCalibration(data_clean, 
+                       cOutcome = match("mort30", colnames(data_clean)),
+                       predRisk = data_clean$p_possmort,
+                       rangeaxis = c(0,0.1),
+                       plottitle = "Calibration plot for P-POSSUM")
+```
+  Table: Supplementary Table 8: Hosmer-Lemeshow Test Results for P-POSSUM.
+
+### Supplementary Table 9
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+pander(HL3$Table_HLtest, caption = attr(HL3$Table_HLtest, "Observed and predicted 30-day mortality table for SRS"))
+
+plotCalibration(data_clean, 
+                       cOutcome = match("mort30", colnames(data_clean)),
+                       predRisk = data_clean$srs_mort,
+                       rangeaxis = c(0,0.1),
+                       plottitle = "Calibration plot for SRS")
+```
+  Table: Supplementary Table 9: Hosmer-Lemeshow Test Results for SRS.
+
+
+```{r}
+sessionInfo()
+```
+
+## References
