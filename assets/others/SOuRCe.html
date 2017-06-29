@@ -141,17 +141,6 @@ $(document).ready(function () {
 </ul>
 <p></p>
 </div>
-<div id="some-questions-to-discuss" class="section level2">
-<h2>Some questions to discuss</h2>
-<p>[x] Should we also look at other measures of morbidity? I have done one logistic regression with Re-admission within 30 days as an outcome as well (Regression Model 5), but that doesn’t seem to improve the AUROC. <em>We will stick to POMS = TRUE vs FALSE as our outcome, because at the moment that is what we will be basing future analysis of SNAPs on</em></p>
-<p>[x] POSSUM used a different set of criteria to count “morbidity”. <em>After discussion with Ramani, it is concluded that there is scope for another paper recalibrating POMS as a 9-point scale.</em></p>
-<p>[x] Are we using Day 7 POMS? <em>Ramani’s response: I would do exploratory analyses using Day7/8 and Day14/15 POMS as outcome measures. We changed from D8/15 to D7/8 measurement during collection on this cohort (which has now been adopted very widely)- the best we can do is look at 7/8 and 14/15 as individual outcomes. It doesn’t surprise me that SORT predicts poorly for all-POMS as POMS is such a sensitive outcome measure.</em></p>
-<p>[x] Do we analyse all of the 9 POMS subdomains or do we count POMS any +ve as the outcome? <em>Ramani’s response: most logical would be to look at binary outcome for any POMS at whichever endpoint.</em></p>
-<p>[x] Not all the patients had POMS performed, even the LOS &gt;= 7 days patients did not all have Day 7 POMS performed, it may be that some had their 1 week POMS performed on Day 8. At the moment the NA values for those whose LOS &lt; 7 days have been changed to FALSE. <em>Ramani’s response: see above.</em></p>
-<p>[x] What’s our missing value policy? Drop list-wise? Or Imputation? At the moment the Logistic Regression models are dropping observations listwise due to missing values. <em>Ramani’s response: depends on the number of missing data - I didn’t think that there would be that much, therefore dropping list-wise reasonable, but let me know what sorts of numbers of missing data there are.</em></p>
-<p>[x] All the SOuRCe cases are elective, and hence we don’t have all the SORT variables. <em>Ramani’s response: don’t understand this, sorry; all it means is that we are validating on a purely elective cohort (which is fine) or have I missed something?</em></p>
-<p></p>
-</div>
 <div id="introduction" class="section level2">
 <h2>Introduction</h2>
 <p>Matt Oliver has kindly provided some data that he has cleaned from the SOuRCe database of &gt;1900 patients who underwent surgery. The purpose of our project is to calibrate and validate the risk calculation tools. He has already done this with mortality using SORT and with pPOSSUM. We are going to see if we can also do this for morbidity using POMS.</p>
