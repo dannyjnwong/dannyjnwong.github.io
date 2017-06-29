@@ -11,7 +11,7 @@ tag:
 - Perioperative Medicine
 ---
 
-I recently had a [paper published](https://academic.oup.com/bja/article-abstract/119/1/95/3897057/Predicting-postoperative-morbidity-in-adult) in the British Journal of Anaesthesia, with the same title as this post. Unfortunately it exists behind a paywall as we could not afford the open access charges, but I thought I'd post the source code for the manuscript [here]((https://dannyjnwong.github.io/assets/others/SORT_Manuscript.Rmd). To see the accepted manuscript version of the paper in the UCL Discovery repository, click [here](http://discovery.ucl.ac.uk/id/eprint/1544971). 
+I recently had a [paper published](https://academic.oup.com/bja/article-abstract/119/1/95/3897057/Predicting-postoperative-morbidity-in-adult) in the British Journal of Anaesthesia, with the same title as this post. Unfortunately it exists behind a paywall as we could not afford the open access charges, but I thought I'd post the source code for the manuscript [here](https://dannyjnwong.github.io/assets/others/SORT_Manuscript.Rmd). To see the accepted manuscript version of the paper in the UCL Discovery repository, click [here](http://discovery.ucl.ac.uk/id/eprint/1544971). 
 
 Like I did for one of my previous papers, I prepared the manuscript in R Markdown. Today I'll highlight 2 things about the code in the manuscript. 
 
