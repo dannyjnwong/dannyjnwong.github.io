@@ -1,0 +1,19 @@
+---
+title: "SORT-morbidity Web Calculator"
+author: "Danny Wong"
+date: "04 August 2017"
+layout: post
+blog: true
+tag:
+- R
+- coding
+- shiny
+---
+
+I have produced a new `R` Shiny implementation of the [paper](https://doi.org/10.1093/bja/aex117) I had published last month in the British Journal of Anaesthesia.
+
+Go try it out [here](https://dannyjnwong.shinyapps.io/SORTMorbidityWebCalc/)! You can see the source code [here](https://github.com/dannyjnwong/SORTMorbidityWebCalc).
+
+```{r}
+sessionInfo()
+```
