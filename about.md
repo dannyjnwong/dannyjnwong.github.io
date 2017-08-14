@@ -19,11 +19,11 @@ My research interests include anaesthesia, perioperative medicine, reproducible 
 
 ### Recent Publications
 
-<script type="text/javascript" src="https://d1bxh8uas1mnw7.cloudfront.net/assets/embed.js"></script><div class="altmetric-embed" data-badge-type="donut" data-altmetric-id="23578375" />
+  - Gan H-W, Wong DJN, Dean BJF, Hall AS. Do expanded seven-day NHS services improve clinical outcomes? Analysis of comparative institutional performance from the “NHS Services, Seven Days a Week” project 2013–2016. BMC Health Services Research. 2017 Aug 10;17:552. <script type="text/javascript" src="https://d1bxh8uas1mnw7.cloudfront.net/assets/embed.js"></script><div class="altmetric-embed" data-badge-type="donut" data-altmetric-id="23578375" />
 
-<script type="text/javascript" src="https://d1bxh8uas1mnw7.cloudfront.net/assets/embed.js"></script><div class="altmetric-embed" data-badge-type="donut" data-altmetric-id="21399068" />
+  - Wong DJN, Oliver CM, Moonesinghe SR. Predicting postoperative morbidity in adult elective surgical patients using the Surgical Outcome Risk Tool (SORT). BJA: British Journal of Anaesthesia. 2017;119(1):95–105. <script type="text/javascript" src="https://d1bxh8uas1mnw7.cloudfront.net/assets/embed.js"></script><div class="altmetric-embed" data-badge-type="donut" data-altmetric-id="21399068" />
 
-<script type="text/javascript" src="https://d1bxh8uas1mnw7.cloudfront.net/assets/embed.js"></script><div class="altmetric-embed" data-badge-type="donut" data-altmetric-id="15458787" />
+  - Wong DJN, Bedford JR, Luck S, Bloomer R. Evaluating Services at a Major Trauma Center Before Helipad Construction. Air Medical Journal. 2017 Jan;36(1):34–6. <script type="text/javascript" src="https://d1bxh8uas1mnw7.cloudfront.net/assets/embed.js"></script><div class="altmetric-embed" data-badge-type="donut" data-altmetric-id="15458787" />
 
 ### Contact me
 
