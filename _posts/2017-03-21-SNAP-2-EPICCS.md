@@ -6,7 +6,7 @@ layout: post
 blog: false
 projects: true
 hidden: true # don't count this post in blog pagination
-description: "This is a simple and minimalist template for Jekyll for those who likes to eat noodles."
+description: "This is a project page for the SNAP-2: EPICCS study"
 category: project
 tag:
 - "Projects"

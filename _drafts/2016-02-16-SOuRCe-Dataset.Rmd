@@ -1,0 +1,23 @@
+---
+title: "SOuRCe Dataset"
+author: "Danny Wong"
+date: "16 February 2016"
+layout: post
+blog: false
+projects: true
+hidden: true # don't count this post in blog pagination
+description: "This is a project page for the studies related to the SOuRCe Dataset"
+category: project
+tag:
+- "Projects"
+---
+
+The Surgical Outcomes Research Centre (SOuRCe) collected perioperative data on almost 2,000 patients undergoing high-risk surgery. I used this to construct a [new model](http://dannyjnwong.github.io/Predicting-Postop-Morbidity-Elective-Surgical-Patients-using-SORT/) to predict postoperative morbidity as defined by the Post-Operative Morbidity Survey (POMS), based on the [Surgical Outcome Risk Tool](http://www.sortsurgery.com/).
+
+This has now been [published](https://doi.org/10.1093/bja/aex117) and I provide an online tool to calculate morbidity risks [here](https://dannyjnwong.shinyapps.io/SORTMorbidityWebCalc/).
+
+Further work on the dataset is currently being undertaken to share it as anonymised open data in order to facilitate reproducible research and answer other research questions.
+
+```{r}
+sessionInfo()
+```
