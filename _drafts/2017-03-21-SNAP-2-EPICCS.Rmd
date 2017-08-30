@@ -1,0 +1,27 @@
+---
+title: "SNAP-2: EPICCS"
+author: "Danny Wong"
+date: "21 March 2017"
+layout: post
+blog: false
+projects: true
+hidden: true # don't count this post in blog pagination
+description: "This is a simple and minimalist template for Jekyll for those who likes to eat noodles."
+category: project
+tag:
+- "Projects"
+---
+
+![SNAP-2: EPICCS Logo](https://dannyjnwong.github.io/assets/images/Vector2.png)
+
+I am the Trainee Lead for the Second Sprint National Anaesthesia Project: EPIdemiology of Critical Care provision after Surgery ([SNAP-2: EPICCS](http://www.niaa-hsrc.org.uk/SNAP-2-EpiCCS)).
+
+SNAP-2: EpiCCS is a prospective observational cohort study which will describe the epidemiology of perioperative risk and outcome, and critical care referral and admission after inpatient surgery in the UK. It also aims to examine whether planned postoperative critical care admission is effective as an intervention to reduce postoperative morbidity.
+
+Over 22,000 patients have been enrolled onto our study from 240 hospital sites across the UK. A map of our coverage can be found below.
+
+<iframe width='100%' height='520' frameborder='0' src='https://dannyjnwong.carto.com/viz/07788968-d28d-11e6-94b3-0ef24382571b/embed_map' allowfullscreen webkitallowfullscreen mozallowfullscreen oallowfullscreen msallowfullscreen></iframe>
+
+```{r}
+sessionInfo()
+```
