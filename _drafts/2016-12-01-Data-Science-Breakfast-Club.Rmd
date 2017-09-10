@@ -1,0 +1,21 @@
+---
+title: "Data Science Breakfast Club"
+author: "Danny Wong"
+date: "01 December 2016"
+layout: post
+blog: false
+projects: true
+hidden: true # don't count this post in blog pagination
+description: "This is a project page for the Data Science for Doctors course"
+category: project
+tag:
+- "Projects"
+---
+
+I am part of the [Data Science Breakfast Club](http://datascibc.org/) which meets every fortnight to chat about research, data science, statistics, and computer programming over a coffee, usually in and around UCL. 
+
+Our group delivers the [Data Science for Doctors](http://datascibc.org/Data-Science-for-Docs/) course, which has taught the basics of data analysis using the `R` programming language to about 50 people over the last 2 years. We have written about our experiences in delivering the course [here](https://www.rcoa.ac.uk/system/files/Bulletin104.pdf) and [here](https://www.software.ac.uk/blog/2017-06-07-data-science-docs).
+
+```{r}
+sessionInfo()
+```
