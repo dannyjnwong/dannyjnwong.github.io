@@ -12,7 +12,7 @@ tag:
 
 What do you get when you have a roomful of anaesthetists and software developers? Something geekier than just the two separately!
 
-I recently had the pleasure of being part of exactly the scenario above, and I must say it was extremely enjoyable! The [Royal College os Anaesthetists](rcoa.ac.uk) and the [Society for Computing and Technology in Anaesthesia (SCATA)](scata.org.uk) jointly hosted the [#gashack](http://gashack.rcoa.it/index.html) event at the RCoA, over a weekend (21-22 October 2017), and quite a few people turned up to pitch their ideas and work on possible solutions.
+I recently had the pleasure of being part of exactly the scenario above, and I must say it was extremely enjoyable! The [Royal College of Anaesthetists](rcoa.ac.uk) and the [Society for Computing and Technology in Anaesthesia (SCATA)](scata.org.uk) jointly hosted the [#gashack](http://gashack.rcoa.it/index.html) event at the RCoA, over a weekend (21-22 October 2017), and quite a few people turned up to pitch their ideas and work on possible solutions.
 
 From the pitches that were presented, I joined a group of 4 people to work on an app that could be used to provide customisable preoperative medication advice for patients who present to preoperative assessment clinics, so that they can modify their drug regimens in preparation for their surgery.
 
