@@ -13,7 +13,7 @@ When I tell people about the [SNAP-2: EPICCS](http://dannyjnwong.github.io/SNAP-
 
 The reason they ask this is we managed achieve something very special with SNAP-2: 
 
-- We recruited just under 23,000 patients for our main study and survey about 10,000 clinicians over the course of only a week
+- We recruited just under 23,000 patients for our main study and surveyed about 10,000 clinicians over the course of only a week
 
 - We coordinated over 2,800 collaborators across about 250 hospital sites in the 4 devolved nations of the UK
 
@@ -21,7 +21,7 @@ The reason they ask this is we managed achieve something very special with SNAP-
 
 - We did this all with a budget of less than £65,000
 
-All these things were remarkable achievements in their own right, but all of them in concert was truly spectacular. So how did we do it?
+All these things were remarkable achievements in their own right, but in concert it was truly spectacular. So how did we do it?
 
 I believe that a number of elements were in place which enabled us to deliver SNAP-2: EPICCS, and it can serve as a case study for anyone planning on conducting a similar large national study in the future. We must capitalise on the vast research infrastructure that has been developed and commit it to the UK Anaesthesia community's institutional memory, so that we do not have to constantly start from scratch and rethink how to do things.
 
@@ -47,7 +47,7 @@ The [NIHR CRN](https://www.nihr.ac.uk/about-us/how-we-are-managed/managing-centr
 
 ## Royal College support: Authority
 
-The [Royal College of Anaesthetists](https://www.rcoa.ac.uk/) is central body for Anaesthetists in the UK. Membership and fellowship of the college is compulsory for trainees and consultants, and therefore almost all anaesthetists in the UK receive the communications issued by the college, in the form of: 1) the [Bulletin](https://www.rcoa.ac.uk/bulletin), a printed publication that is delivered to all members; 2) college emails; 3) communications through various sub-committees and working parties within the college, such as the College Tutors network. In effect, the college communications machinery can be mobilised to help encourage participation in big national studies of interests to all anaesthetists.
+The [Royal College of Anaesthetists](https://www.rcoa.ac.uk/) is the central body for Anaesthetists in the UK. Membership and fellowship of the college is compulsory for trainees and consultants, and therefore almost all anaesthetists in the UK receive the communications issued by the college, in the form of: 1) the [Bulletin](https://www.rcoa.ac.uk/bulletin), a printed publication that is delivered to all members; 2) college emails; 3) communications through various sub-committees and working parties within the college, such as the College Tutors network. In effect, the college communications machinery can be mobilised to help encourage participation in big national studies of interests to all anaesthetists.
 
 ## Social Media: Personal Influence
 
@@ -96,8 +96,6 @@ sessionInfo()
 ## [1] knitr_1.17
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] backports_1.0.5 magrittr_1.5    rsconnect_0.7   rprojroot_1.2  
-##  [5] htmltools_0.3.5 tools_3.3.3     yaml_2.1.13     Rcpp_0.12.13   
-##  [9] stringi_1.1.1   rmarkdown_1.3   stringr_1.2.0   digest_0.6.10  
-## [13] evaluate_0.10.1
+## [1] magrittr_1.5    tools_3.3.3     stringi_1.1.1   stringr_1.2.0  
+## [5] evaluate_0.10.1
 {% endhighlight %}
