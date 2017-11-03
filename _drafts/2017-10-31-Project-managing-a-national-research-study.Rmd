@@ -55,7 +55,9 @@ Anaesthetists are among the most technologically savvy medical professionals out
 
 In addition to actively [Tweeting](https://twitter.com/SNAP2EPICCS) throughout the study and keeping people informed about the study's progress from gaining ethics, through to launching the study, and daily updates whilst the study was active, we also emailed out [Mailchimp](https://mailchimp.com/) newsletters with pictures of people conducting the study sent to us by our collaborators on each day of the study recruitment, interspersed with interesting nuggets of information to keep collaborators engaged.
 
-We also used conventional means to communicate with our community, but augmented with technology: teleconferences were organised using an [Eventbrite](http://eventbrite.co.uk/) ticketing system to manage the teleconferences so that we could disseminate information to as many individuals simultaneously. Speaking directly to our collaborators was helpful in addressing questions directly and familiar
+We also used conventional means to communicate with our community, but augmented with technology: teleconferences were organised using an [Eventbrite](http://eventbrite.co.uk/) ticketing system to manage the teleconferences so that we could disseminate information to as many individuals simultaneously. Speaking directly to our collaborators was helpful in addressing questions directly and collaborators quickly became familiar with each other. 
+
+Unfortunately due to the huge number of sites that participated, we were unable to conduct individual site visits prior to study launch. Instead, we conducted [a couple of](https://twitter.com/SNAP2EPICCS/status/841707591893946370) [online webinars](https://twitter.com/SNAP2EPICCS/status/841634837228376065) through Twitter's Periscope function, broadcasting video presentations to a wide audience.
 
 ## Hospital Research Support Staff: Lubricating the engine
 
