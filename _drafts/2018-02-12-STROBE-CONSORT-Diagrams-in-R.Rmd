@@ -1,0 +1,156 @@
+---
+title: "STROBE/CONSORT Diagrams in R"
+author: "Danny Wong"
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+layout: post
+blog: true
+tag:
+- R
+- coding
+- R Markdown
+---
+
+I have previously posted about [producing manuscripts in R Markdown](http://dannyjnwong.github.io/Predicting-Postop-Morbidity-Elective-Surgical-Patients-using-SORT/) and highlighted my difficulty with producing STROBE/CONSORT flow diagrams programmatically in R. I ended up relying on producing the diagram in PowerPoint and then exporting the image.
+
+I have finally been able to produce a STROBE diagram for a manuscript I'm preparing for submission, borrowing heavily from the principles [described here](https://scriptsandstatistics.wordpress.com/2017/12/22/how-to-draw-a-consort-flow-diagram-using-r-and-graphviz/). 
+
+This process uses the `DiagrammeR` [package](http://rich-iannone.github.io/DiagrammeR/), and allows you to dynamically populate the values within each box, by altering the string values for the label vectors you set at the start.
+
+This relies on building a grid system for your diagram, in my case I set rows to be letters a-e, and columns to be numbers 1-2, to form a 5 row x 2 column grid. To ensure that the grid is rendered correctly, even the edges that you do not want to appear need to be specified, but you set them to have render in white so they do not get drawn.
+
+```{r, message=FALSE, warning=FALSE, dpi=300}
+library(DiagrammeR)
+library(DiagrammeRsvg) #Needed if you want to export the image
+library(rsvg) #Needed if you want to export the image
+
+#Set the values which will go into each label.
+a1 <- 'Total available patients\n(n = x)'
+b1 <- ''
+c1 <- ''
+d1 <- 'Included for analysis\n(n = x - y - z)'
+e1 <- 'Data linked with\nexternal dataset'
+a2 <- ''
+b2 <- 'Excluded because of\nexclusion criteria (n = y)'
+c2 <- 'Excluded because of\nmissing values (n = z)'
+d2 <- ''
+e2 <- ''
+
+#Create a node dataframe
+ndf <- create_node_df(
+  n = 10,
+  label = c(a1, b1, c1, d1, e1, #Column 1
+            a2, b2, c2, d2, e2), #Column 2
+  style = c('solid', 'invis', 'invis', 'solid', 'solid', #Column 1
+            'invis', 'solid', 'solid', 'invis', 'invis'), #Column 2
+  shape = c('box', 'point', 'point', 'box', 'box', #Column 1 
+            'plaintext', 'box', 'box', 'point', 'point'), #Column 2
+  width = c(3, 0.001, 0.001, 3, 3, #Column 1
+            2, 2.5, 2.5, 0.001, 0.001), #Column 2
+  height = c(1, 0.001, 0.001, 1, 1, #Column 1
+             1, 1, 1, 0.001, 0.001), #Column 2
+  fontsize = c(rep(14, 10)),
+  fontname = c(rep('Helvetica', 10)),
+  penwidth = 1.5,
+  fixedsize = 'true')
+
+#Create an edge dataframe
+edf <- create_edge_df(
+  from = c(1, 2, 3, 4, #Column 1
+           6, 7, 8, 9, #Column 2
+           2, 3 #Horizontals
+           ),
+  to = c(2, 3, 4, 5, #Column 1
+         7, 8, 9, 10, #Column 2
+         7, 8 #Horizontals
+         ),
+  arrowhead = c('none', 'none', 'normal', 'normal', #Column 1
+                'none', 'none', 'none', 'none', #Column 2
+                'normal', 'normal' #Horizontals
+                ),
+  color = c('black', 'black', 'black', 'black', #Column 1
+            '#00000000', '#00000000', '#00000000', '#00000000', #Column 2
+            'black', 'black' #Horizontals
+            ),
+  constraint = c(rep('true', 8), #Columns
+                 rep('false', 2) #Horizontals
+                 )
+)
+  
+g <- create_graph(ndf,
+                  edf,
+                  attr_theme = NULL)
+
+#Not run: but to run this in R Studio, uncomment below
+#render_graph(g)
+
+export_graph(g, file_name = "STROBE.png")
+```
+![STROBE](/figures/2018-02-12-STROBE-CONSORT-Diagrams-in-R/grid.png)
+
+To break down how it works, let me re-draw it, this time, however we make the grid structure obvious:
+
+```{r, message=FALSE, warning=FALSE, dpi=300}
+#Set the values which will go into each label.
+a1 <- 'a1'
+b1 <- 'b1'
+c1 <- 'c1'
+d1 <- 'd1'
+e1 <- 'e1'
+a2 <- 'a2'
+b2 <- 'b2'
+c2 <- 'c2'
+d2 <- 'd2'
+e2 <- 'e2'
+
+#Create a node dataframe
+ndf <- create_node_df(
+  n = 10,
+  label = c(a1, b1, c1, d1, e1, #Column 1
+            a2, b2, c2, d2, e2), #Column 2
+  style = c('solid', 'solid', 'solid', 'solid', 'solid', #Column 1
+            'solid', 'solid', 'solid', 'solid', 'solid'), #Column 2
+  shape = c('box', 'box', 'box', 'box', 'box', #Column 1 
+            'box', 'box', 'box', 'box', 'box'), #Column 2
+  width = c(1, 1, 1, 1, 1, #Column 1
+            1, 1, 1, 1, 1), #Column 2
+  height = c(1, 1, 1, 1, 1, #Column 1
+             1, 1, 1, 1, 1), #Column 2
+  fontsize = c(rep(14, 10)),
+  fontname = c(rep('Helvetica', 10)),
+  penwidth = 1.5,
+  fixedsize = 'true')
+
+#Create an edge dataframe
+edf <- create_edge_df(
+  from = c(1, 2, 3, 4, #Column 1
+           6, 7, 8, 9, #Column 2
+           2, 3 #Horizontals
+           ),
+  to = c(2, 3, 4, 5, #Column 1
+         7, 8, 9, 10, #Column 2
+         7, 8 #Horizontals
+         ),
+  arrowhead = c('none', 'none', 'normal', 'normal', #Column 1
+                'none', 'none', 'none', 'none', #Column 2
+                'normal', 'normal' #Horizontals
+                ),
+  color = c('black', 'black', 'black', 'black', #Column 1
+            '#00000000', '#00000000', '#00000000', '#00000000', #Column 2
+            'black', 'black' #Horizontals
+            ),
+  constraint = c(rep('true', 8), #Columns
+                 rep('false', 2) #Horizontals
+                 )
+)
+  
+g <- create_graph(ndf,
+                  edf,
+                  attr_theme = NULL)
+
+export_graph(g, file_name = "grid.png")
+```
+![grid](/figures/2018-02-12-STROBE-CONSORT-Diagrams-in-R/grid.png)
+
+```{r}
+sessionInfo()
+```
