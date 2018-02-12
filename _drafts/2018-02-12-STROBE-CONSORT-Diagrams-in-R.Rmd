@@ -83,7 +83,7 @@ g <- create_graph(ndf,
 #Not run: but to run this in R Studio, uncomment below
 #render_graph(g)
 
-export_graph(g, file_name = "STROBE.png")
+export_graph(g, file_name = "STROBE.png", width = 1600, height = 1800)
 ```
 ![STROBE](/figures/2018-02-12-STROBE-CONSORT-Diagrams-in-R/STROBE.png)
 
@@ -147,7 +147,7 @@ g <- create_graph(ndf,
                   edf,
                   attr_theme = NULL)
 
-export_graph(g, file_name = "grid.png")
+export_graph(g, file_name = "grid.png", width = 600, height = 1800)
 ```
 ![grid](/figures/2018-02-12-STROBE-CONSORT-Diagrams-in-R/grid.png)
 
