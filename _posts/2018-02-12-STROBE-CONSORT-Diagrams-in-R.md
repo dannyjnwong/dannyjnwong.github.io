@@ -86,7 +86,7 @@ g <- create_graph(ndf,
 
 export_graph(g, file_name = "STROBE.png")
 {% endhighlight %}
-![STROBE](/figures/2018-02-12-STROBE-CONSORT-Diagrams-in-R/grid.png)
+![STROBE](/figures/2018-02-12-STROBE-CONSORT-Diagrams-in-R/STROBE.png)
 
 To break down how it works, let me re-draw it, this time, however we make the grid structure obvious:
 
