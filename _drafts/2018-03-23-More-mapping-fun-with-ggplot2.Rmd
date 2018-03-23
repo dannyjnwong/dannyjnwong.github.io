@@ -1,0 +1,161 @@
+---
+title: "More mapping fun with ggplot2"
+author: "Danny Wong"
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+layout: post
+blog: true
+tag:
+- R
+- coding
+- GIS
+---
+
+I was recently tasked with creating a map for a friend to use in a paper. It contained a bunch of metrics from different institutions across a number of regions in the UK. As it often happens in situations like this, London tends to be a disproporionate outlier due to its density and concentration of stuff in relation to the rest of the country.
+
+Therefore, we elected to plot an overall map for the whole country, and then zoom in to London more specifically and plot out London's constituents separately so that it didn't distort the rest of the country. I'll show here what we did, using some random play data.
+
+First we start by reading in the data:
+
+```{r}
+#Load libraries and data
+library(tidyverse)
+library(ggplot2)
+library(readxl) #to read in data
+library(rgdal) #to read shapefiles
+
+#Load the data for all cities
+city_data <- read_excel("../data/City_data.xlsx", skip = 1)
+colnames(city_data) <- c("City", "Metric_n", "Metric_x")
+
+#Load coordinates for all cities
+city_data_coords <- read.csv("../data/city_data_coords.csv") %>% 
+  filter((lon > -7 & lon < 1)) %>% 
+  select(City, lon, lat)
+
+#Join coordinates to data
+city_data <- city_data_coords %>% 
+  left_join(city_data, by = "City")
+
+#Load London data separately
+london_data <- read_excel("../data/City_london_data.xlsx", skip = 1)
+colnames(london_data) <- c("Institution", "Metric_n", "Metric_x")
+london_data <- london_data %>% 
+  arrange(Metric_x)
+
+#Join coordinates to London data
+london_data_coords <- read.csv("../data/City_london_data_coords.csv")
+london_data <- london_data %>% 
+  left_join(london_data_coords, by = "Institution")
+
+#Load the map data for the UK
+UK_map_data <- map_data("world", c("UK", "Isle of Man", "Isle of Wight", "Wales:Anglesey", "Ireland"))
+
+#Load polygon data for London
+london <- readOGR("../data/shapefiles/london.shp")
+```
+
+Now we can start plotting a map. The first will include London data
+
+```{r}
+map_1 <- ggplot() + 
+  geom_polygon(data = UK_map_data, aes(x = long, y = lat, group = group), colour = alpha("black", 1/4), fill = NA) +
+  geom_polygon(data = london, aes(long, lat, group = group), fill = "grey", colour = alpha("grey", 1/4)) +
+  #Add city points:
+  #geom_point(data = city_data %>% filter(City == "London"), aes(x = lon, y = lat, 
+  #                                                              size = Metric_x), col = "green", alpha = 0) +
+  #geom_point(data = city_data %>% filter(City != "London"), aes(x = lon, y = lat, 
+  #                                                              size = Metric_x, col = Metric_n), alpha = 0.8) +
+  geom_point(data = city_data, aes(x = lon, y = lat, size = Metric_x, col = Metric_n), alpha = 0.8) +
+  ggtitle("All of UK") +
+  #Adjust the map projection
+  coord_map("albers", lat0 = 49.84, lat1 = 60.85) +
+  #Adjust the theme:
+  theme_classic() +
+  scale_colour_gradient2(low = "red", mid = "yellow", high = "green", midpoint = 20) +
+  scale_size(range = c(1, 20)) +
+  labs(size = "Metric (x)", col = "Metric (n)") +
+  #scale_colour_brewer(palette = "RdYlGn") +
+  theme(panel.border = element_blank(),
+        axis.text = element_blank(),
+        line = element_blank(),
+        axis.title = element_blank(),
+        plot.title = element_text(size = 20, face = "bold"),
+        plot.subtitle = element_text(size = 12, face = "italic"),
+        legend.title = element_text(size = 12),
+        legend.text = element_text (size = 12),
+        legend.position = "right")
+
+map_1
+```
+
+Notice how London completely distorts the scale? It would be far better to plot the rest of the country and then London separately in two different maps.
+
+```{r}
+map_2 <- ggplot() + 
+  geom_polygon(data = UK_map_data, aes(x = long, y = lat, group = group), colour = alpha("black", 1/4), fill = NA) +
+  geom_polygon(data = london, aes(long, lat, group = group), fill = "grey", colour = alpha("grey", 1/4)) +
+  #Add city points:
+  geom_point(data = city_data %>% filter(City == "London"), aes(x = lon, y = lat, 
+                                                                size = Metric_x), col = "green", alpha = 0) +
+  geom_point(data = city_data %>% filter(City != "London"), aes(x = lon, y = lat, 
+                                                                size = Metric_x, col = Metric_n), alpha = 0.8) +
+  ggtitle("UK minus London") +
+  #Adjust the map projection
+  coord_map("albers", lat0 = 49.84, lat1 = 60.85) +
+  #Adjust the theme:
+  theme_classic() +
+  scale_colour_gradient2(low = "red", mid = "yellow", high = "green", midpoint = 20) +
+  scale_size(range = c(1, 20)) +
+  labs(size = "Metric (x)", col = "Metric (n)") +
+  #scale_colour_brewer(palette = "RdYlGn") +
+  theme(panel.border = element_blank(),
+        axis.text = element_blank(),
+        line = element_blank(),
+        axis.title = element_blank(),
+        plot.title = element_text(size = 20, face = "bold"),
+        plot.subtitle = element_text(size = 12, face = "italic"),
+        legend.title = element_text(size = 12),
+        legend.text = element_text (size = 12),
+        legend.position = "right")
+
+map_2
+```
+
+Now we can appreciate the scales outside of London. Notice I have replaced London with a little polygon of the City's boundaries? We can now zoom into London on a separate plot. We will also list them out in a nice order to appreciate the rankings.
+
+```{r}
+map_3 <- ggplot() + 
+  #geom_polygon(data = UK_map_data, aes(x = long, y = lat, group = group), colour = alpha("black", 1/4), fill = NA) +
+  geom_polygon(data = london, aes(long, lat, group = group), fill = "grey", colour = alpha("grey", 1/4)) +
+  #Add points:
+  geom_point(data = london_data, aes(x = lon, y = lat, size = Metric_x, col = Metric_n), alpha = 0.6) +
+  geom_point(data = london_data, aes(x = -1, y = c(49.5, 49.75, 50, 50.25, 50.5, 50.75, 51), 
+                                     size = Metric_x, col = Metric_n), alpha = 0.8) +
+  geom_text(data = london_data, aes(x = -0.8, y = c(49.5, 49.75, 50, 50.25, 50.5, 50.75, 51), 
+                                    label = Institution), hjust = 0) +
+  #Add a title:
+  ggtitle("London") +
+  #Adjust the map projection
+  coord_map("albers", lat0 = 49.84, lat1 = 60.85) +
+  #Adjust the theme:
+  theme_classic() +
+  scale_colour_gradient2(low = "red", mid = "yellow",
+                         high = "green", midpoint = 20) +
+  scale_size(range = c(1, 15)) +
+  labs(size = "Metric (x)", col = "Metric (n)") +
+  #scale_colour_brewer(palette = "RdYlBu") +
+  theme(panel.border = element_blank(),
+        axis.text = element_blank(),
+        line = element_blank(),
+        axis.title = element_blank(),
+        plot.title = element_text(size = 20, face = "bold"),
+        legend.title = element_text(size = 12),
+        legend.text = element_text (size = 12),
+        legend.position = "right")
+
+map_3
+```
+
+```{r}
+sessionInfo()
+```
