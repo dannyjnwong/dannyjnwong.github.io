@@ -162,10 +162,10 @@ test_data <- data.frame(
   Diuretics = c(0, 0, 1, 0, 0),
   AntiAnginals = c(0, 0, 1, 0, 0),
   Digoxin = c(0, 0, 0, 0, 0),
-  AntiHypertensives = c(0, 1, 0, 0, 1),
-  Dyspnoea = c(0, 0, 0, 1, 0),
+  AntiHypertensives = c("N", "Y", "N", "N", "Y"),
+  Dyspnoea = c(FALSE, FALSE, FALSE, TRUE, FALSE),
   Consolidation = c(0, 0, 0, 0, 0),
-  PulmonaryFibrosis = c(0, 0, 0, 0, 0),
+  PulmonaryFibrosis = c("N", "N", "N", "N", "N"),
   COPD = c(0, 0, 0, 1, 0),
   SysBP = c(120, 117, 140, 123, 118),
   HR = c(45, 51, 65, 50, 90),
@@ -197,11 +197,11 @@ head(test_data)
 ## 4  75   0            1      1        0         0            0       0
 ## 5  90   1            1      1        1         0            0       0
 ##   AntiHypertensives Dyspnoea Consolidation PulmonaryFibrosis COPD SysBP HR
-## 1                 0        0             0                 0    0   120 45
-## 2                 1        0             0                 0    0   117 51
-## 3                 0        0             0                 0    0   140 65
-## 4                 0        1             0                 0    1   123 50
-## 5                 1        0             0                 0    0   118 90
+## 1                 N    FALSE             0                 N    0   120 45
+## 2                 Y    FALSE             0                 N    0   117 51
+## 3                 N    FALSE             0                 N    0   140 65
+## 4                 N     TRUE             0                 N    1   123 50
+## 5                 Y    FALSE             0                 N    0   118 90
 ##   GCS   Hb  WCC  Ur  Na   K    ECG OpSeverity ProcedureCount  EBL
 ## 1  15 13.1  4.5 4.3 131 3.7    NOR        Min            GT2    0
 ## 2  15 12.6  4.3 4.6 134 4.5 AF6090        Int              1  101
@@ -216,6 +216,7 @@ head(test_data)
 ## 5                      LP        MDM       Ele
 {% endhighlight %}
 
+Notice that I have set the binary variables in three different ways: as `0`s and `1`s, `N`s and `Y`s, and `FALSE`s and `TRUE`s. The function should parse any of these correctly.
 
 
 {% highlight r %}
@@ -234,6 +235,28 @@ test_output
 ## 3        28      13        1.04      -2.3124
 ## 4        40      24        5.05       1.4230
 ## 5        27      26        3.35      -0.4666
+{% endhighlight %}
+
+In order to convert the computed log-odds into probability risks, we can use the `invlogit` function from the `arm` package
+
+
+{% highlight r %}
+test_output$POSSUMProb <- arm::invlogit(test_output$POSSUMLogit)
+
+test_output$pPOSSUMProb <- arm::invlogit(test_output$pPOSSUMLogit)
+
+test_output
+{% endhighlight %}
+
+
+
+{% highlight text %}
+##   PhysScore OpScore POSSUMLogit pPOSSUMLogit POSSUMProb pPOSSUMProb
+## 1        13      13       -1.36      -4.8504  0.2042403 0.007764488
+## 2        23       9       -0.52      -3.7784  0.3728522 0.022348370
+## 3        28      13        1.04      -2.3124  0.7388500 0.090101192
+## 4        40      24        5.05       1.4230  0.9936315 0.805808291
+## 5        27      26        3.35      -0.4666  0.9661048 0.385421293
 {% endhighlight %}
 
 
