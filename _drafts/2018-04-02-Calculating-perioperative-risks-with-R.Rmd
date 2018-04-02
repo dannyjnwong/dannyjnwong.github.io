@@ -1,7 +1,7 @@
 ---
-title: "Calculating perioperative risks"
+title: "Calculating perioperative risks with R"
 author: "Danny Wong"
-date: "02 April, 2018"
+date: "`r format(Sys.time(), '%d %B, %Y')`"
 layout: post
 blog: true
 tag:
@@ -56,8 +56,7 @@ To use the function, there is some pre-processing that needs to be done to manip
 
 The actual function uses `dplyr` as a dependency, and the code for the function is as follows:
 
-
-{% highlight r %}
+```{r echo=TRUE}
 gen.POSSUM <- function(x){
   require(dplyr)
   
@@ -146,12 +145,11 @@ gen.POSSUM <- function(x){
   
   return(possum.df)
 }
-{% endhighlight %}
+```
 
 Let's see it in action:
 
-
-{% highlight r %}
+```{r message=FALSE, warning=FALSE}
 #Let's create a fake dataset with 5 patients
 test_data <- data.frame(
   Age = c(25, 40, 60, 75, 90),
@@ -185,115 +183,27 @@ test_data <- data.frame(
   )
 
 head(test_data)
-{% endhighlight %}
-
-
-
-{% highlight text %}
-##   Age JVP Cardiomegaly Oedema Warfarin Diuretics AntiAnginals Digoxin
-## 1  25   0            0      0        0         0            0       0
-## 2  40   1            0      0        0         0            0       0
-## 3  60   1            0      0        0         1            1       0
-## 4  75   0            1      1        0         0            0       0
-## 5  90   1            1      1        1         0            0       0
-##   AntiHypertensives Dyspnoea Consolidation PulmonaryFibrosis COPD SysBP HR
-## 1                 N    FALSE             0                 N    0   120 45
-## 2                 Y    FALSE             0                 N    0   117 51
-## 3                 N    FALSE             0                 N    0   140 65
-## 4                 N     TRUE             0                 N    1   123 50
-## 5                 Y    FALSE             0                 N    0   118 90
-##   GCS   Hb  WCC  Ur  Na   K    ECG OpSeverity ProcedureCount  EBL
-## 1  15 13.1  4.5 4.3 131 3.7    NOR        Min            GT2    0
-## 2  15 12.6  4.3 4.6 134 4.5 AF6090        Int              1  101
-## 3  15  8.9  2.6 5.7 155 4.4    NOR        Xma              1    0
-## 4  15  8.0 14.1 8.1 141 5.1  AF>90        Com              2  501
-## 5  14 11.6 11.2 6.5 142 5.8    NOR        Maj              1 1000
-##   PeritonealContamination Malignancy OpUrgency
-## 1                      NA         NM       Ele
-## 2                      NS         PM       Ele
-## 3                      NS         NM       Exp
-## 4                      MS         PM         U
-## 5                      LP        MDM       Ele
-{% endhighlight %}
+```
 
 Notice that I have set the binary variables in three different ways: as `0`s and `1`s, `N`s and `Y`s, and `FALSE`s and `TRUE`s. The function should parse any of these correctly.
 
-
-{% highlight r %}
+```{r}
 #Let's run run the function with the test data
 test_output <- gen.POSSUM(test_data)
 
 test_output
-{% endhighlight %}
-
-
-
-{% highlight text %}
-##   PhysScore OpScore POSSUMLogit pPOSSUMLogit
-## 1        13      13       -1.36      -4.8504
-## 2        23       9       -0.52      -3.7784
-## 3        28      13        1.04      -2.3124
-## 4        40      24        5.05       1.4230
-## 5        27      26        3.35      -0.4666
-{% endhighlight %}
+```
 
 In order to convert the computed log-odds into probability risks, we can use the `invlogit` function from the `arm` package
 
-
-{% highlight r %}
+```{r}
 test_output$POSSUMProb <- arm::invlogit(test_output$POSSUMLogit)
 
 test_output$pPOSSUMProb <- arm::invlogit(test_output$pPOSSUMLogit)
 
 test_output
-{% endhighlight %}
+```
 
-
-
-{% highlight text %}
-##   PhysScore OpScore POSSUMLogit pPOSSUMLogit POSSUMProb pPOSSUMProb
-## 1        13      13       -1.36      -4.8504  0.2042403 0.007764488
-## 2        23       9       -0.52      -3.7784  0.3728522 0.022348370
-## 3        28      13        1.04      -2.3124  0.7388500 0.090101192
-## 4        40      24        5.05       1.4230  0.9936315 0.805808291
-## 5        27      26        3.35      -0.4666  0.9661048 0.385421293
-{% endhighlight %}
-
-
-{% highlight r %}
+```{r}
 sessionInfo()
-{% endhighlight %}
-
-
-
-{% highlight text %}
-## R version 3.4.2 (2017-09-28)
-## Platform: x86_64-w64-mingw32/x64 (64-bit)
-## Running under: Windows >= 8 x64 (build 9200)
-## 
-## Matrix products: default
-## 
-## locale:
-## [1] LC_COLLATE=English_United Kingdom.1252 
-## [2] LC_CTYPE=English_United Kingdom.1252   
-## [3] LC_MONETARY=English_United Kingdom.1252
-## [4] LC_NUMERIC=C                           
-## [5] LC_TIME=English_United Kingdom.1252    
-## 
-## attached base packages:
-## [1] stats     graphics  grDevices utils     datasets  methods   base     
-## 
-## other attached packages:
-## [1] knitr_1.17   bindrcpp_0.2 dplyr_0.7.4  sp_1.2-3    
-## 
-## loaded via a namespace (and not attached):
-##  [1] Rcpp_0.12.14     bindr_0.1        magrittr_1.5     splines_3.4.2   
-##  [5] MASS_7.3-47      munsell_0.4.3    colorspace_1.2-6 arm_1.9-1       
-##  [9] lattice_0.20-35  R6_2.1.2         rlang_0.1.4      minqa_1.2.4     
-## [13] highr_0.6        stringr_1.2.0    plyr_1.8.4       tools_3.4.2     
-## [17] grid_3.4.2       nlme_3.1-131     gtable_0.2.0     coda_0.18-1     
-## [21] abind_1.4-5      lme4_1.1-13      yaml_2.1.14      lazyeval_0.2.0  
-## [25] assertthat_0.1   tibble_1.3.4     Matrix_1.2-11    nloptr_1.0.4    
-## [29] ggplot2_2.2.1    evaluate_0.10.1  glue_1.1.1       stringi_1.1.1   
-## [33] compiler_3.4.2   scales_0.5.0     pkgconfig_2.0.1
-{% endhighlight %}
+```
