@@ -1,0 +1,59 @@
+---
+title: "Caesarean section rates and peripartum outcomes"
+author: "Danny Wong"
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+layout: post
+blog: true
+tag:
+- r
+- coding
+- medicine
+---
+
+I recently saw an interesting Tweet which got me to thinking what the associations were between Caesarean section rates in different countries and maternal and baby outcomes:
+
+<blockquote class="twitter-tweet" data-lang="en"><p lang="en" dir="ltr">Instead of &quot;experts say&quot; can we have &quot;evidence suggests&quot; please? (With links to high quality evidence.) <a href="https://t.co/X2K3XQ03ib">https://t.co/X2K3XQ03ib</a></p>&mdash; Steven Shorrock (@StevenShorrock) <a href="https://twitter.com/StevenShorrock/status/984759303100870663?ref_src=twsrc%5Etfw">April 13, 2018</a></blockquote>
+<script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+
+So I went away and looked for the OECD data which might help with looking at this question. I found 2 sources from the OECD website, one for the [Caesarean section rates](https://data.oecd.org/healthcare/caesarean-sections.htm) and another for the [outcomes](http://stats.oecd.org/index.aspx?queryid=30116#). I used the 2015 data (the most recent available).
+
+```{r, message=FALSE, warning=FALSE, dpi = 600}
+#Load the required packages
+library(tidyverse)
+library(readr)
+library(ggrepel)
+
+#Load the data
+Caesarean_rates <- read_csv("../data/DP_LIVE_13042018135921941.csv")
+Outcomes <- read_csv("../data/HEALTH_STAT_13042018135958973.csv")
+
+#Join the two sources
+Caesarean_rates <- Caesarean_rates %>% filter(TIME == 2015) %>%
+  select(LOCATION, TIME, Caesarean_rate = Value)
+
+Outcomes <- Outcomes %>% filter(Year == 2015, VAR != "MATINETW", VAR != "MATIINTW") %>%
+  select(COU, VAR, Country, Variable, Year, Outcome_Value = "Value") %>%
+#rename the variables into something more understandable
+  mutate(VAR = recode(VAR, `MATIINFA` = "Infant mortality",
+                      `MATIMATM` = "Maternal mortality",
+                      `MATINEON` = "Neonatal mortality",
+                      `MATIPERI` = "Perinatal mortality"))
+
+Combined <- left_join(Outcomes, Caesarean_rates, by = c(COU = "LOCATION"))
+
+#Plot the data
+ggplot(data = Combined , aes(x = Caesarean_rate, y = Outcome_Value)) + 
+  geom_point() +
+  geom_smooth(method = "lm") +
+  geom_text_repel(aes(label = Country)) +
+  facet_wrap(~ VAR, nrow = 2) +
+  labs(x = "Caesarean sections (per 1,000 live births)",
+       y = "Deaths (per 1,000 live births)") +
+  theme_light()
+```
+
+So it seems that all outcomes are worse in countries with higher Caesarean section rates. Of course this is not causal. But it's an interesting association. Also Latvia seems to have a huge maternal mortality compared to all the other OECD countries, and is not an outlier for baby deaths. I wonder what that's all about.
+
+```{r}
+sessionInfo()
+```
