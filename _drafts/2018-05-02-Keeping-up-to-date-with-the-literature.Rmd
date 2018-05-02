@@ -20,7 +20,7 @@ I've recently found out that [PubMed](https://www.ncbi.nlm.nih.gov/pubmed) has a
 
 Go to [PubMed](https://www.ncbi.nlm.nih.gov/pubmed) and create a search, it can be as simple or as complicated as you wish.
 
-![Step 1: Create your search](figures/2018-05-02-Keeping-up-to-date-with-the-literature/step1.png)
+![Step 1: Create your search](../figures/2018-05-02-Keeping-up-to-date-with-the-literature/step1.png)
 
 ## 2. Create your RSS feed
 
@@ -28,7 +28,7 @@ Click on the `Create RSS` link just under the search bar.
 
 A little configuration box will pop up. Select your settings (I chose to keep 100 articles on my feed). Then click on the `Create RSS` button.
 
-![Step 2: Create your RSS feed](figures/2018-05-02-Keeping-up-to-date-with-the-literature/step2.png)
+![Step 2: Create your RSS feed](../figures/2018-05-02-Keeping-up-to-date-with-the-literature/step2.png)
 
 ## 3. Cut and paste into RSS feed reader
 
@@ -36,7 +36,7 @@ If you haven't already got an RSS feed reader installed. Install one. There're l
 
 You can now open it up on your RSS feed reader like so:
 
-![Step 3: RSS feed reader](figures/2018-05-02-Keeping-up-to-date-with-the-literature/step3.png)
+![Step 3: RSS feed reader](../figures/2018-05-02-Keeping-up-to-date-with-the-literature/step3.png)
 
 Quickly browse through the articles and their abstracts and click on the ones you think are relevant, and add it to your bibliography or print it out or do what you would normally to digest this information. Or maybe more realistically: file it away and let it stack up till when you have the time, if you EVER get the time.
 
