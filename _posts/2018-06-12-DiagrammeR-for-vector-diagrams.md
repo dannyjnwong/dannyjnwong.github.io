@@ -73,7 +73,7 @@ digraph dot {
 Pathway_diagram_enhanced %>% export_svg() %>% charToRaw() %>%   rsvg_png("../figures/2018-06-12-DiagrammeR-for-vector-diagrams/Pathway_enhanced.png", height = 850)
 {% endhighlight %}
 
-![Enhanced care areas (Level 1+ units) in the surgical pathway.](../figures/Pathway_enhanced.png)
+![Enhanced care areas (Level 1+ units) in the surgical pathway.](../figures//2018-06-12-DiagrammeR-for-vector-diagrams/Pathway_enhanced.png)
 
 
 {% highlight r %}
@@ -103,21 +103,21 @@ sessionInfo()
 ## [1] rsvg_1.1          DiagrammeRsvg_0.1 DiagrammeR_0.9.2  knitr_1.17       
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] Rcpp_0.12.14       highr_0.6          pillar_1.2.1      
-##  [4] compiler_3.4.2     RColorBrewer_1.1-2 influenceR_0.1.0  
-##  [7] plyr_1.8.4         bindr_0.1          viridis_0.4.1     
-## [10] tools_3.4.2        digest_0.6.14      jsonlite_1.5      
-## [13] viridisLite_0.2.0  evaluate_0.10.1    anomalize_0.1.0   
-## [16] tibble_1.4.2       gtable_0.2.0       rgexf_0.15.3      
-## [19] pkgconfig_2.0.1    rlang_0.2.0        igraph_1.1.2      
-## [22] rstudioapi_0.7     curl_1.2           yaml_2.1.18       
-## [25] bindrcpp_0.2       gridExtra_2.3      downloader_0.4    
-## [28] dplyr_0.7.4        stringr_1.2.0      htmlwidgets_1.0   
-## [31] hms_0.4.2          grid_3.4.2         glue_1.1.1        
-## [34] R6_2.1.2           Rook_1.1-1         XML_3.98-1.4      
-## [37] tidyr_0.7.2        ggplot2_2.2.1      purrr_0.2.4       
-## [40] readr_1.1.1        magrittr_1.5       scales_0.5.0      
-## [43] htmltools_0.3.6    assertthat_0.2.0   colorspace_1.2-6  
-## [46] brew_1.0-6         V8_1.5             stringi_1.1.7     
-## [49] visNetwork_2.0.3   lazyeval_0.2.0     munsell_0.4.3
+##  [1] Rcpp_0.12.14       pillar_1.2.1       compiler_3.4.2    
+##  [4] RColorBrewer_1.1-2 influenceR_0.1.0   plyr_1.8.4        
+##  [7] bindr_0.1          viridis_0.4.1      tools_3.4.2       
+## [10] digest_0.6.14      jsonlite_1.5       viridisLite_0.2.0 
+## [13] evaluate_0.10.1    anomalize_0.1.0    tibble_1.4.2      
+## [16] gtable_0.2.0       rgexf_0.15.3       pkgconfig_2.0.1   
+## [19] rlang_0.2.0        igraph_1.1.2       rstudioapi_0.7    
+## [22] curl_1.2           yaml_2.1.18        bindrcpp_0.2      
+## [25] gridExtra_2.3      downloader_0.4     dplyr_0.7.4       
+## [28] stringr_1.2.0      htmlwidgets_1.0    hms_0.4.2         
+## [31] grid_3.4.2         glue_1.1.1         R6_2.1.2          
+## [34] Rook_1.1-1         XML_3.98-1.4       tidyr_0.7.2       
+## [37] ggplot2_2.2.1      purrr_0.2.4        readr_1.1.1       
+## [40] magrittr_1.5       scales_0.5.0       htmltools_0.3.6   
+## [43] assertthat_0.2.0   colorspace_1.2-6   brew_1.0-6        
+## [46] V8_1.5             stringi_1.1.7      visNetwork_2.0.3  
+## [49] lazyeval_0.2.0     munsell_0.4.3
 {% endhighlight %}

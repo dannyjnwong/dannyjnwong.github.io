@@ -72,7 +72,7 @@ digraph dot {
 Pathway_diagram_enhanced %>% export_svg() %>% charToRaw() %>%   rsvg_png("../figures/2018-06-12-DiagrammeR-for-vector-diagrams/Pathway_enhanced.png", height = 850)
 ```
 
-![Enhanced care areas (Level 1+ units) in the surgical pathway.](../figures/Pathway_enhanced.png)
+![Enhanced care areas (Level 1+ units) in the surgical pathway.](../figures//2018-06-12-DiagrammeR-for-vector-diagrams/Pathway_enhanced.png)
 
 ```{r}
 sessionInfo()
