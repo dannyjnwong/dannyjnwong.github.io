@@ -1,0 +1,79 @@
+---
+title: "DiagrammeR for vector diagrams"
+author: "Danny Wong"
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+layout: post
+blog: true
+tag:
+- r
+- coding
+- Perioperative Medicine
+---
+
+I've previously shown how we can use the `DiagrammeR` package to draw [STROBE/CONSORT diagrams in R](http://dannyjnwong.github.io/STROBE-CONSORT-Diagrams-in-R/). But the package has far more capabilities than that! I'm using it to draw some figures in my MPhil to PhD Upgrade Report and will eventually use it in my thesis.
+
+Here is an example of how useful it can be:
+
+```{r message=FALSE, warning=FALSE}
+library(DiagrammeR)    #To draw the diagram
+library(DiagrammeRsvg) #To convert it to an SVG
+library(rsvg)          #To convert the SVG into a PNG
+
+Pathway_diagram_enhanced <- grViz("
+digraph dot {
+      
+      graph [layout = dot]
+      
+      node [shape = rectangle,
+      style = filled,
+      color = white,
+      width = 3,
+      fontsize = 14,
+      fontname = 'Arial']
+      
+      node [fillcolor = grey]
+      Home [label = 'Home']
+      
+      node [fillcolor = skyblue]
+      Surgical [label = 'Surgical Management']
+      PreOp [label = 'Preoperative planning\n- Address modifiable risks\n- Further investigations']
+      IntraOp [label = 'Intraoperative management\n(Undergoes surgery)']
+      PostOp [label = 'Postoperative recovery']
+      
+      node [fillcolor = pink]
+      ICU [label = 'Critical Care']
+      
+      Ward [label = 'Surgical Ward']
+      
+      node [fillcolor = orange]
+      Enhanced [label = 'Enhanced Care Area\n(Level 1+ unit)']
+      
+      edge [color = grey, constraint = true]
+      Surgical -> PreOp
+      PreOp -> IntraOp
+      IntraOp -> PostOp
+      
+      PostOp -> {ICU Enhanced Ward}      
+      
+      edge [color = grey, constraint = false]
+      ICU -> {Enhanced Ward}
+      Ward -> {Enhanced ICU}
+
+      edge [color = grey, constraint = true]
+      Enhanced -> {ICU Ward}      
+      
+      edge [xlabel = 'Discharge',
+      fontsize = 14,
+      fontname = 'Arial']
+      Ward -> Home
+
+      }")
+
+Pathway_diagram_enhanced %>% export_svg() %>% charToRaw() %>%   rsvg_png("../figures/2018-06-12-DiagrammeR-for-vector-diagrams/Pathway_enhanced.png", height = 850)
+```
+
+![Enhanced care areas (Level 1+ units) in the surgical pathway.](../figures/Pathway_enhanced.png)
+
+```{r}
+sessionInfo()
+```
