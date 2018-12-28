@@ -23,4 +23,4 @@ My research interests include anaesthesia, perioperative medicine, reproducible 
 
 ### Publications
 
-<script src="https://bibbase.org/show?bib=https%3A%2F%2Fapi.zotero.org%2Fusers%2F1188758%2Fcollections%2FWJHTC5UZ%2Fitems%3Fkey%3D7QzWTTX0ysbCCy2IG4B2maFv%26format%3Dbibtex%26limit%3D100&jsonp=1"></script>
+<iframe src="https://bibbase.org/show?bib=https%3A%2F%2Fapi.zotero.org%2Fusers%2F1188758%2Fcollections%2FWJHTC5UZ%2Fitems%3Fkey%3D7QzWTTX0ysbCCy2IG4B2maFv%26format%3Dbibtex%26limit%3D100"></iframe>
