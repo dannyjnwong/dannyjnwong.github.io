@@ -17,6 +17,10 @@ My research interests include anaesthesia, perioperative medicine, reproducible 
 
 [Click here for my CV](https://www.dropbox.com/s/3rajirtkko7lhsa/Curriculum%20Vitae%20-%20Danny%20Wong.pdf?dl=0)
 
+### Publications
+
+<script src="https://bibbase.org/show?bib=https%3A%2F%2Fapi.zotero.org%2Fusers%2F1188758%2Fcollections%2FWJHTC5UZ%2Fitems%3Fkey%3D7QzWTTX0ysbCCy2IG4B2maFv%26format%3Dbibtex%26limit%3D100&jsonp=1"></script>
+
 ### Contact me
 
 [danny.jn.wong@gmail.com](mailto:danny.jn.wong@gmail.com)
