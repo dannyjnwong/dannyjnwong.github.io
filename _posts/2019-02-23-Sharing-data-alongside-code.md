@@ -11,7 +11,7 @@ tag:
 - Perioperative Medicine
 ---
 
-Earlier this month the second paper from [SNAP-2: EPICCS](http://dannyjnwong.github.io/SNAP-2-EPICCS/) was published [online in the BJA](https://bjanaesthesia.org/article/S0007-0912(19)30011-X/fulltext), looking at the postoperative critical are capacities in the UK, Australia and New Zealand[^reference]. The paper highlights the differences in available critical care resources in the three countries as well as differences in staffing levels in general surgical wards, and the presences of high-acuity care areas outside of ICUs and HDUs where higher risk patients get sent to for postoperative recovery. 
+Earlier this month the second paper from [SNAP-2: EPICCS](http://dannyjnwong.github.io/SNAP-2-EPICCS/) was published [online in the BJA](https://bjanaesthesia.org/article/S0007-0912(19)30011-X/fulltext), looking at the postoperative critical are capacities in the UK, Australia and New Zealand[^reference]. The paper highlights the differences in available critical care resources in the three countries as well as differences in staffing levels in general surgical wards, and the presence of high-acuity care areas outside of ICUs and HDUs where higher risk patients get sent to for postoperative recovery. 
 
 [^reference]: Wong DJN, Popham S, Wilson AM, Barneto LM, Lindsay HA, Farmer L, et al. Postoperative critical care and high-acuity care provision in the United Kingdom, Australia, and New Zealand. British Journal of Anaesthesia. 2019; Available from: http://www.sciencedirect.com/science/article/pii/S000709121930011X
 
