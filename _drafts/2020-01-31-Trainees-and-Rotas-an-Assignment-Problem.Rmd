@@ -1,0 +1,66 @@
+---
+title: "Trainees and Rotas: an Assignment Problem"
+author: "Danny Wong"
+date: "31 January 2020"
+layout: post
+blog: true
+tag:
+- coding
+- R
+---
+
+I saw this tweet last nigt on Twitter:
+
+<blockquote class="twitter-tweet"><p lang="en" dir="ltr">The worst solution is:<br><br>Line A - Person 1<br> B - 2<br> C - 8<br> D - 6<br> E - 4<br> F - 3<br> G - 7<br> H - 5<br><br>This has a mean choice of 6.5 out of 8. <br><br>What&#39;s the best combination? <a href="https://t.co/HKPrn5MizT">https://t.co/HKPrn5MizT</a> <a href="https://t.co/ZeWnCVmHhC">pic.twitter.com/ZeWnCVmHhC</a></p>&mdash; Graham McCracken (@grahamccracken) <a href="https://twitter.com/grahamccracken/status/1222933576347504642?ref_src=twsrc%5Etfw">January 30, 2020</a></blockquote> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+
+[Graham McCracken](https://twitter.com/grahamccracken) raised a problem that is frequently encountered by hospital consultants and junior doctors who are in charge of the rota: fairly assigning rota slots to trainees according to their preferences. Of course this is essentially an example of the [Assignment Problem](https://en.wikipedia.org/wiki/Assignment_problem).
+
+So I decided to have a go at solving this problem using the `lpSolve` package in `R`.
+
+```{r message=FALSE, warning=FALSE}
+# Load library
+library(lpSolve)
+
+# Set up the Trainees' preferences
+prefT <- matrix(c(1, 1, 1, 1, 1, 1, 1, 1,
+                  2, 6, 2, 2, 2, 2, 2, 2,
+                  3, 8, 8, 6, 5, 6, 7, 8,
+                  4, 5, 7, 3, 7, 8, 6, 3,
+                  5, 4, 3, 7, 3, 4, 5, 6,
+                  6, 3, 6, 5, 4, 3, 4, 5,
+                  7, 2, 4, 8, 6, 5, 8, 7,
+                  8, 7, 5, 4, 8, 7, 3, 4),
+                nrow = 8, ncol = 8, byrow = TRUE,
+                dimnames = list(LETTERS[1:8],
+                                1:8))
+prefT
+```
+
+After loading up the `lpSolve` package, we set up the Trainee's (numbered 1 to 8) preferences (`prefT`) for particular rota lines (A to H) in a matrix. After we have set up the preferences, we can use the `lp.assign()` function to perform the match.
+
+```{r message=FALSE, warning=FALSE}
+# Run the assignment
+matching <- lp.assign(prefT)
+matching$solution
+```
+
+The `lp.assign()` returns the solution of the match is a matrix. There should be more than 1 permutation of the solution available but in this instance, the function only returns one permutation. We can then view the result.
+
+```{r}
+# Make a dataframe of the results in a human interpretable format
+Rota <- rownames(prefT)
+ix <- round(matching$solution %*% seq_len(ncol(prefT)))
+Trainee <- colnames(prefT)[ifelse(ix == 0, NA, ix)]
+results <- data.frame(Trainee, Rota)
+
+results <- results[order(results$Trainee),]
+
+# Print the results dataframe
+pander::pander(results)
+```
+
+In this example we have 8 trainees for 8 rota lines, but we could presumably also reformulate it for fewer trainees if there are rota gaps.
+
+```{r}
+sessionInfo()
+```
