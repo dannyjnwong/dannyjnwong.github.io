@@ -9,7 +9,7 @@ tag:
 - R
 ---
 
-I saw this tweet last nigt on Twitter:
+I saw this tweet last night on Twitter:
 
 <blockquote class="twitter-tweet"><p lang="en" dir="ltr">The worst solution is:<br><br>Line A - Person 1<br> B - 2<br> C - 8<br> D - 6<br> E - 4<br> F - 3<br> G - 7<br> H - 5<br><br>This has a mean choice of 6.5 out of 8. <br><br>What&#39;s the best combination? <a href="https://t.co/HKPrn5MizT">https://t.co/HKPrn5MizT</a> <a href="https://t.co/ZeWnCVmHhC">pic.twitter.com/ZeWnCVmHhC</a></p>&mdash; Graham McCracken (@grahamccracken) <a href="https://twitter.com/grahamccracken/status/1222933576347504642?ref_src=twsrc%5Etfw">January 30, 2020</a></blockquote> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
 
@@ -82,34 +82,24 @@ The `lp.assign()` returns the solution of the match is a matrix. There should be
 Rota <- rownames(prefT)
 ix <- round(matching$solution %*% seq_len(ncol(prefT)))
 Trainee <- colnames(prefT)[ifelse(ix == 0, NA, ix)]
-results <- data.frame(Trainee, Rota)
-
-results <- results[order(results$Trainee),]
+results <- data.frame(Rota, Trainee)
 
 # Print the results dataframe
-pander::pander(results)
+knitr::kable(results)
 {% endhighlight %}
 
 
--------------------------
- &nbsp;   Trainee   Rota 
--------- --------- ------
- **3**       1       C   
 
- **7**       2       G   
-
- **5**       3       E   
-
- **4**       4       D   
-
- **2**       5       B   
-
- **6**       6       F   
-
- **8**       7       H   
-
- **1**       8       A   
--------------------------
+|Rota |Trainee |
+|:----|:-------|
+|A    |8       |
+|B    |5       |
+|C    |1       |
+|D    |4       |
+|E    |3       |
+|F    |6       |
+|G    |2       |
+|H    |7       |
 
 In this example we have 8 trainees for 8 rota lines, but we could presumably also reformulate it for fewer trainees if there are rota gaps.
 
@@ -141,7 +131,8 @@ sessionInfo()
 ## [1] knitr_1.25     lpSolve_5.6.15
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] compiler_3.5.2  magrittr_1.5    tools_3.5.2     Rcpp_1.0.1     
-##  [5] pander_0.6.2    stringi_1.1.7   stringr_1.3.1   digest_0.6.16  
-##  [9] xfun_0.10       packrat_0.4.9-3 evaluate_0.14
+##  [1] compiler_3.5.2  magrittr_1.5    htmltools_0.3.6 tools_3.5.2    
+##  [5] Rcpp_1.0.1      pander_0.6.2    stringi_1.1.7   rmarkdown_1.16 
+##  [9] highr_0.7       stringr_1.3.1   xfun_0.10       digest_0.6.16  
+## [13] packrat_0.4.9-3 evaluate_0.14
 {% endhighlight %}

@@ -9,7 +9,7 @@ tag:
 - R
 ---
 
-I saw this tweet last nigt on Twitter:
+I saw this tweet last night on Twitter:
 
 <blockquote class="twitter-tweet"><p lang="en" dir="ltr">The worst solution is:<br><br>Line A - Person 1<br> B - 2<br> C - 8<br> D - 6<br> E - 4<br> F - 3<br> G - 7<br> H - 5<br><br>This has a mean choice of 6.5 out of 8. <br><br>What&#39;s the best combination? <a href="https://t.co/HKPrn5MizT">https://t.co/HKPrn5MizT</a> <a href="https://t.co/ZeWnCVmHhC">pic.twitter.com/ZeWnCVmHhC</a></p>&mdash; Graham McCracken (@grahamccracken) <a href="https://twitter.com/grahamccracken/status/1222933576347504642?ref_src=twsrc%5Etfw">January 30, 2020</a></blockquote> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
 
@@ -51,12 +51,10 @@ The `lp.assign()` returns the solution of the match is a matrix. There should be
 Rota <- rownames(prefT)
 ix <- round(matching$solution %*% seq_len(ncol(prefT)))
 Trainee <- colnames(prefT)[ifelse(ix == 0, NA, ix)]
-results <- data.frame(Trainee, Rota)
-
-results <- results[order(results$Trainee),]
+results <- data.frame(Rota, Trainee)
 
 # Print the results dataframe
-pander::pander(results)
+knitr::kable(results)
 ```
 
 In this example we have 8 trainees for 8 rota lines, but we could presumably also reformulate it for fewer trainees if there are rota gaps.
