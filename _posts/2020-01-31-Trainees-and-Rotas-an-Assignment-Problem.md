@@ -51,7 +51,7 @@ prefT
 ## H 8 7 5 4 8 7 3 4
 {% endhighlight %}
 
-After loading up the `lpSolve` package, we set up the Trainee's (numbered 1 to 8) preferences (`prefT`) for particular rota lines (A to H) in a matrix. After we have set up the preferences, we can use the `lp.assign()` function to perform the match.
+After loading up the `lpSolve` package, we set up the Trainees' (numbered 1 to 8) preferences (`prefT`) for particular rota lines (A to H) in a matrix. After we have set up the preferences, we can use the `lp.assign()` function to perform the match.
 
 
 {% highlight r %}
@@ -74,7 +74,7 @@ matching$solution
 ## [8,]    0    0    0    0    0    0    1    0
 {% endhighlight %}
 
-The `lp.assign()` returns the solution of the match is a matrix. There should be more than 1 permutation of the solution available but in this instance, the function only returns one permutation. We can then view the result.
+The `lp.assign()` returns the solution of the match as a matrix. There should be more than 1 permutation of the solution available but in this instance, the function only returns one permutation. We can then view the result.
 
 
 {% highlight r %}
