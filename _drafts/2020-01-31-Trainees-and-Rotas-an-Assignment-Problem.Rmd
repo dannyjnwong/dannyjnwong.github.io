@@ -51,13 +51,15 @@ The `lp.assign()` returns the solution of the match as a matrix. There should be
 Rota <- rownames(prefT)
 ix <- round(matching$solution %*% seq_len(ncol(prefT)))
 Trainee <- colnames(prefT)[ifelse(ix == 0, NA, ix)]
-results <- data.frame(Rota, Trainee, Preference = prefT[as.logical(matching$solution)])
+Preference <- prefT[as.logical(matching$solution)]
+
+results <- data.frame(Rota, Trainee, Preference)
 
 # Print the results dataframe
 knitr::kable(results)
 ```
 
-As you can see, 1 Trainee received their 1st choice, 2 received their 2nd choices, and the remaining 5 received their 3rd choices. This gives a mean preference ranking of `r sum(results$Preference)/nrow(results)` for this solution, which is the best result if you were to try every single permutation of Rota and Trainee there is available. For 8 Rota lines and 8 Trainees, the number of possible permutations would be $ 8! = 40320 $.
+As you can see, 1 Trainee received their 1st choice, 2 received their 2nd choices, and the remaining 5 received their 3rd choices. This gives a mean preference ranking of `r sum(results$Preference)/nrow(results)` for this solution, which is the best result if you were to try every single permutation of Rota and Trainee there is available. For 8 Rota lines and 8 Trainees, the number of possible permutations would be 8! = 40320.
 
 Also, in this example we have 8 trainees for 8 rota lines, but we could presumably also reformulate it for fewer trainees if there are rota gaps.
 

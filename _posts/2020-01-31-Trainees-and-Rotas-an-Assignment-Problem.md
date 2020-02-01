@@ -82,7 +82,9 @@ The `lp.assign()` returns the solution of the match as a matrix. There should be
 Rota <- rownames(prefT)
 ix <- round(matching$solution %*% seq_len(ncol(prefT)))
 Trainee <- colnames(prefT)[ifelse(ix == 0, NA, ix)]
-results <- data.frame(Rota, Trainee, Preference = prefT[as.logical(matching$solution)])
+Preference <- prefT[as.logical(matching$solution)]
+
+results <- data.frame(Rota, Trainee, Preference)
 
 # Print the results dataframe
 knitr::kable(results)
@@ -101,7 +103,7 @@ knitr::kable(results)
 |G    |2       |          3|
 |H    |7       |          1|
 
-As you can see, 1 Trainee received their 1st choice, 2 received their 2nd choices, and the remaining 5 received their 3rd choices. This gives a mean preference ranking of 2.5 for this solution, which is the best result if you were to try every single permutation of Rota and Trainee there is available. For 8 Rota lines and 8 Trainees, the number of possible permutations would be $ 8! = 40320 $.
+As you can see, 1 Trainee received their 1st choice, 2 received their 2nd choices, and the remaining 5 received their 3rd choices. This gives a mean preference ranking of 2.5 for this solution, which is the best result if you were to try every single permutation of Rota and Trainee there is available. For 8 Rota lines and 8 Trainees, the number of possible permutations would be 8! = 40320.
 
 Also, in this example we have 8 trainees for 8 rota lines, but we could presumably also reformulate it for fewer trainees if there are rota gaps.
 
@@ -130,11 +132,10 @@ sessionInfo()
 ## [1] stats     graphics  grDevices utils     datasets  methods   base     
 ## 
 ## other attached packages:
-## [1] knitr_1.25     lpSolve_5.6.15
+## [1] lpSolve_5.6.15 knitr_1.25    
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] compiler_3.5.2  magrittr_1.5    htmltools_0.3.6 tools_3.5.2    
-##  [5] Rcpp_1.0.1      stringi_1.1.7   rmarkdown_1.16  highr_0.7      
-##  [9] stringr_1.3.1   digest_0.6.16   xfun_0.10       packrat_0.4.9-3
-## [13] evaluate_0.14
+## [1] compiler_3.5.2  magrittr_1.5    tools_3.5.2     stringi_1.1.7  
+## [5] highr_0.7       stringr_1.3.1   xfun_0.10       packrat_0.4.9-3
+## [9] evaluate_0.14
 {% endhighlight %}
