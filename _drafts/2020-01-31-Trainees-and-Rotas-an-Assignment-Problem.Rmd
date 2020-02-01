@@ -51,7 +51,7 @@ The `lp.assign()` returns the solution of the match as a matrix. There should be
 Rota <- rownames(prefT)
 ix <- round(matching$solution %*% seq_len(ncol(prefT)))
 Trainee <- colnames(prefT)[ifelse(ix == 0, NA, ix)]
-Preference <- prefT[as.logical(matching$solution)]
+Preference <- t(prefT)[as.logical(t(matching$solution))]
 
 results <- data.frame(Rota, Trainee, Preference)
 

@@ -82,7 +82,7 @@ The `lp.assign()` returns the solution of the match as a matrix. There should be
 Rota <- rownames(prefT)
 ix <- round(matching$solution %*% seq_len(ncol(prefT)))
 Trainee <- colnames(prefT)[ifelse(ix == 0, NA, ix)]
-Preference <- prefT[as.logical(matching$solution)]
+Preference <- t(prefT)[as.logical(t(matching$solution))]
 
 results <- data.frame(Rota, Trainee, Preference)
 
@@ -94,14 +94,14 @@ knitr::kable(results)
 
 |Rota |Trainee | Preference|
 |:----|:-------|----------:|
-|A    |8       |          3|
+|A    |8       |          1|
 |B    |5       |          2|
 |C    |1       |          3|
 |D    |4       |          3|
-|E    |3       |          2|
+|E    |3       |          3|
 |F    |6       |          3|
-|G    |2       |          3|
-|H    |7       |          1|
+|G    |2       |          2|
+|H    |7       |          3|
 
 As you can see, 1 Trainee received their 1st choice, 2 received their 2nd choices, and the remaining 5 received their 3rd choices. This gives a mean preference ranking of 2.5 for this solution, which is the best result if you were to try every single permutation of Rota and Trainee there is available. For 8 Rota lines and 8 Trainees, the number of possible permutations would be 8! = 40320.
 
@@ -135,7 +135,8 @@ sessionInfo()
 ## [1] lpSolve_5.6.15 knitr_1.25    
 ## 
 ## loaded via a namespace (and not attached):
-## [1] compiler_3.5.2  magrittr_1.5    tools_3.5.2     stringi_1.1.7  
-## [5] highr_0.7       stringr_1.3.1   xfun_0.10       packrat_0.4.9-3
-## [9] evaluate_0.14
+##  [1] compiler_3.5.2  magrittr_1.5    htmltools_0.3.6 tools_3.5.2    
+##  [5] Rcpp_1.0.1      rmarkdown_1.16  stringi_1.1.7   highr_0.7      
+##  [9] digest_0.6.16   stringr_1.3.1   xfun_0.10       packrat_0.4.9-3
+## [13] evaluate_0.14
 {% endhighlight %}
