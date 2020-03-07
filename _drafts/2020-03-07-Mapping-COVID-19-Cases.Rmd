@@ -1,0 +1,54 @@
+---
+title: "Mapping COVID-19 Cases"
+author: "Danny Wong"
+date: "07 March 2020"
+layout: post
+blog: true
+tag:
+- R
+- coding
+---
+
+COVID-19 is dominating the news, and since a fair number of patients who have tested positive for the virus are being cared for in the hospital I work at, I've been following the news intently. As expected, the `R` community have been at the cutting edge of research in this area and there's now a `coronavirus` package released by [Rami Krispin](https://github.com/RamiKrispin) that provides tidy data for all the cases worldwide pulled from the [Johns Hopkins University Center for Systems Science and Engineering (JHU CCSE) Coronavirus repository](https://github.com/CSSEGISandData/COVID-19).
+
+I thought I'd have a look at the data myself.
+
+```{r message=FALSE, warning=FALSE}
+#Load the required libraries
+library(coronavirus)
+library(tidyverse)
+library(lubridate)
+
+#Load the data
+coronavirus <- coronavirus
+head(coronavirus)
+```
+
+I was particularly interested in seeing the rate of increase in the cumulative number of cases confirmed within the UK. There was some debate on Twitter as to whether the confirmed case numbers looked to be following an exponential rise or not.
+
+<blockquote class="twitter-tweet"><p lang="en" dir="ltr">UM CorVid19 cases double every 2 days. So 100+ today. 200 sat 400 mon 3200 in 8 days. 200,000 in a couple of weeks. 5-10% need ICU = 10-20k: 2-4x number of UK ICU beds, which are already full. Do your bit. Wash hands. Self isolate.</p>&mdash; Hugh Montgomery (@hugh_montgomery) <a href="https://twitter.com/hugh_montgomery/status/1235754637191524352?ref_src=twsrc%5Etfw">March 6, 2020</a></blockquote> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+
+Let's see what it looks like when the UK numbers are plotted out over time.
+
+```{r message=FALSE, warning=FALSE, dpi=300}
+coronavirus %>% filter(Country.Region == "UK") %>%
+  filter(type == "confirmed") %>%
+  mutate(cumul_freq = cumsum(cases)) %>%
+  mutate(date = ymd(date)) %>%
+  ggplot(aes(x = date, y = cumul_freq)) + 
+  geom_line() +
+  labs(x = "Date", 
+       y = "Cases",
+       title = "Cumulative frequency of confirmed cases",
+       subtitle = "Data from the 2019 Novel Coronavirus Visual Dashboard\nJohns Hopkins University Center for Systems Science and Engineering (JHU CSSE)") +
+  scale_x_date(labels = scales::date_format("%d-%m-%Y")) +
+  theme_classic()
+```
+
+Certainly looks like it's rising at what looks like an exponential rate at this early stage. The data from this source is updated daily, but there is a lag and the last entry was dated 6 March 2020, the news today (7 March 2020) seems to suggest we have actually exceeded 200 cases. 
+
+I'm slightly worried...
+
+```{r}
+sessionInfo()
+```
