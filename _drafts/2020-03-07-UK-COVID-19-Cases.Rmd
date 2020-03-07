@@ -1,5 +1,5 @@
 ---
-title: "Mapping COVID-19 Cases"
+title: "UK COVID-19 Cases"
 author: "Danny Wong"
 date: "07 March 2020"
 layout: post
@@ -30,7 +30,7 @@ I was particularly interested in seeing the rate of increase in the cumulative n
 
 Let's see what it looks like when the UK numbers are plotted out over time.
 
-```{r message=FALSE, warning=FALSE, dpi=300}
+```{r message=FALSE, warning=FALSE, dpi=300, fig.height=5, fig.width=8}
 coronavirus %>% filter(Country.Region == "UK") %>%
   filter(type == "confirmed") %>%
   mutate(cumul_freq = cumsum(cases)) %>%

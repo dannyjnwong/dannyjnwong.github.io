@@ -1,5 +1,5 @@
 ---
-title: "Mapping COVID-19 Cases"
+title: "UK COVID-19 Cases"
 author: "Danny Wong"
 date: "07 March 2020"
 layout: post
@@ -61,7 +61,7 @@ coronavirus %>% filter(Country.Region == "UK") %>%
   theme_classic()
 {% endhighlight %}
 
-![center](/figures/2020-03-07-Mapping-COVID-19-Cases/unnamed-chunk-19-1.png)
+![center](/figures/2020-03-07-UK-COVID-19-Cases/unnamed-chunk-2-1.png)
 
 Certainly looks like it's rising at what looks like an exponential rate at this early stage. The data from this source is updated daily, but there is a lag and the last entry was dated 6 March 2020, the news today (7 March 2020) seems to suggest we have actually exceeded 200 cases. 
 
