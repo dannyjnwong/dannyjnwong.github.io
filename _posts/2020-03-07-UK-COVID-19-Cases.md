@@ -30,7 +30,7 @@ head(coronavirus)
 {% highlight text %}
 ## # A tibble: 6 x 7
 ##   Province.State Country.Region   Lat  Long date       cases type     
-##   <chr>          <chr>          <dbl> <dbl> <date>     <dbl> <chr>    
+##   <chr>          <chr>          <dbl> <dbl> <date>     <int> <chr>    
 ## 1 ""             Japan           36    138  2020-01-22     2 confirmed
 ## 2 ""             South Korea     36    128  2020-01-22     1 confirmed
 ## 3 ""             Thailand        15    101  2020-01-22     2 confirmed
@@ -61,11 +61,49 @@ coronavirus %>% filter(Country.Region == "UK") %>%
   theme_classic()
 {% endhighlight %}
 
-![center](/figures/2020-03-07-UK-COVID-19-Cases/unnamed-chunk-2-1.png)
+![center](/figures/2020-03-07-UK-COVID-19-Cases/unnamed-chunk-8-1.png)
+
+{% highlight r %}
+#ggsave("updated_plot1.png", dpi = 300, height = 5, width = 8)
+{% endhighlight %}
 
 Certainly looks like it's rising at what looks like an exponential rate at this early stage. The data from this source is updated daily, but there is a lag and the last entry was dated 6 March 2020, the news today (7 March 2020) seems to suggest we have actually exceeded 200 cases. 
 
 I'm slightly worried...
+
+## Edited 09 March 2020
+
+I decided to refresh the numbers a bit with more recent data and also look at the curves for some of the other European countries with similar GDPs to the UK.
+
+
+{% highlight r %}
+coronavirus %>%
+    group_by(Country.Region, Province.State, type) %>%
+    mutate(cumul_freq = cumsum(cases)) %>%
+    mutate(date = ymd(date)) %>% 
+  filter(Country.Region %in% c("Germany", "UK", "France", "Italy", "Spain", "Netherlands")) %>%
+  filter(date > ymd("2020-02-01")) %>%
+  rename(Country = Country.Region) %>%
+  filter(type == "confirmed") %>%
+  ggplot(aes(x = date, y = cumul_freq, col = Country)) + 
+  geom_line() +
+  labs(x = "Date", 
+       y = "Cases",
+       title = "Cumulative frequency of confirmed cases by country",
+       subtitle = "Data from the 2019 Novel Coronavirus Visual Dashboard\nJohns Hopkins University Center for Systems Science and Engineering (JHU CSSE)") +
+  scale_x_date(labels = scales::date_format("%d-%m-%Y")) +
+  theme_classic() +
+  theme(legend.position="bottom")
+{% endhighlight %}
+
+![center](/figures/2020-03-07-UK-COVID-19-Cases/unnamed-chunk-9-1.png)
+
+{% highlight r %}
+#ggsave("updated_plot2.png", dpi = 300, height = 5, width = 8)
+{% endhighlight %}
+
+It looks like the case numbers are all following an exponential function...
+
 
 
 {% highlight r %}
@@ -98,16 +136,21 @@ sessionInfo()
 ## [10] ggplot2_3.0.0          tidyverse_1.2.1        coronavirus_0.1.0.9000
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] tidyselect_0.2.5 xfun_0.10        haven_1.1.2      lattice_0.20-38 
-##  [5] colorspace_1.3-2 utf8_1.1.4       rlang_0.3.4      pillar_1.3.1    
-##  [9] glue_1.3.0       withr_2.1.2      modelr_0.1.2     readxl_1.1.0    
-## [13] plyr_1.8.4       munsell_0.5.0    gtable_0.2.0     cellranger_1.1.0
-## [17] rvest_0.3.2      devtools_1.13.6  memoise_1.1.0    evaluate_0.14   
-## [21] labeling_0.3     curl_3.2         fansi_0.4.0      highr_0.7       
-## [25] broom_0.5.0      Rcpp_1.0.1       scales_1.0.0     backports_1.1.2 
-## [29] jsonlite_1.5     hms_0.4.2        packrat_0.4.9-3  digest_0.6.16   
-## [33] stringi_1.1.7    grid_3.5.2       cli_1.1.0        tools_3.5.2     
-## [37] magrittr_1.5     lazyeval_0.2.1   crayon_1.3.4     pkgconfig_2.0.2 
-## [41] xml2_1.2.0       assertthat_0.2.0 httr_1.3.1       rstudioapi_0.7  
-## [45] R6_2.2.2         nlme_3.1-137     git2r_0.23.0     compiler_3.5.2
+##  [1] progress_1.2.0    tidyselect_0.2.5  xfun_0.10        
+##  [4] haven_1.1.2       lattice_0.20-38   colorspace_1.3-2 
+##  [7] gganimate_1.0.5   utf8_1.1.4        rlang_0.3.4      
+## [10] pillar_1.3.1      glue_1.3.0        withr_2.1.2      
+## [13] tweenr_1.0.1      modelr_0.1.2      readxl_1.1.0     
+## [16] plyr_1.8.4        munsell_0.5.0     gtable_0.2.0     
+## [19] cellranger_1.1.0  rvest_0.3.2       evaluate_0.14    
+## [22] labeling_0.3      fansi_0.4.0       highr_0.7        
+## [25] broom_0.5.0       Rcpp_1.0.1        backports_1.1.2  
+## [28] scales_1.0.0      magick_2.2        jsonlite_1.5     
+## [31] farver_1.0        hms_0.4.2         packrat_0.4.9-3  
+## [34] digest_0.6.16     stringi_1.1.7     grid_3.5.2       
+## [37] cli_1.1.0         tools_3.5.2       magrittr_1.5     
+## [40] lazyeval_0.2.1    crayon_1.3.4      pkgconfig_2.0.2  
+## [43] xml2_1.2.0        prettyunits_1.0.2 assertthat_0.2.0 
+## [46] httr_1.3.1        rstudioapi_0.7    R6_2.2.2         
+## [49] nlme_3.1-137      compiler_3.5.2
 {% endhighlight %}

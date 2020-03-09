@@ -43,11 +43,42 @@ coronavirus %>% filter(Country.Region == "UK") %>%
        subtitle = "Data from the 2019 Novel Coronavirus Visual Dashboard\nJohns Hopkins University Center for Systems Science and Engineering (JHU CSSE)") +
   scale_x_date(labels = scales::date_format("%d-%m-%Y")) +
   theme_classic()
+
+#ggsave("updated_plot1.png", dpi = 300, height = 5, width = 8)
 ```
 
 Certainly looks like it's rising at what looks like an exponential rate at this early stage. The data from this source is updated daily, but there is a lag and the last entry was dated 6 March 2020, the news today (7 March 2020) seems to suggest we have actually exceeded 200 cases. 
 
 I'm slightly worried...
+
+## Edited 09 March 2020
+
+I decided to refresh the numbers a bit with more recent data and also look at the curves for some of the other European countries with similar GDPs to the UK.
+
+```{r message=FALSE, warning=FALSE, dpi=300, fig.height=5, fig.width=8}
+coronavirus %>%
+    group_by(Country.Region, Province.State, type) %>%
+    mutate(cumul_freq = cumsum(cases)) %>%
+    mutate(date = ymd(date)) %>% 
+  filter(Country.Region %in% c("Germany", "UK", "France", "Italy", "Spain", "Netherlands")) %>%
+  filter(date > ymd("2020-02-01")) %>%
+  rename(Country = Country.Region) %>%
+  filter(type == "confirmed") %>%
+  ggplot(aes(x = date, y = cumul_freq, col = Country)) + 
+  geom_line() +
+  labs(x = "Date", 
+       y = "Cases",
+       title = "Cumulative frequency of confirmed cases by country",
+       subtitle = "Data from the 2019 Novel Coronavirus Visual Dashboard\nJohns Hopkins University Center for Systems Science and Engineering (JHU CSSE)") +
+  scale_x_date(labels = scales::date_format("%d-%m-%Y")) +
+  theme_classic() +
+  theme(legend.position="bottom")
+
+#ggsave("updated_plot2.png", dpi = 300, height = 5, width = 8)
+```
+
+It looks like the case numbers are all following an exponential function...
+
 
 ```{r}
 sessionInfo()
