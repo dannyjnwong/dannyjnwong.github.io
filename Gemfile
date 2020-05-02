@@ -12,4 +12,3 @@ gem 'jekyll-seo-tag'
 gem 'jekyll-feed'
 gem 'jekyll-sitemap'
 gem 'jekyll-gist'
-gem "nokogiri", ">= 1.10.8"
