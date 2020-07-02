@@ -1,0 +1,35 @@
+---
+title: "intubateCOVID"
+author: "Danny Wong"
+date: "02 July 2020"
+layout: post
+blog: false
+projects: true
+hidden: true # don't count this post in blog pagination
+description: "This is a project page for the intubateCOVID study"
+category: project
+tag:
+- "Projects"
+---
+
+![intubateCOVID logo](https://lirp-cdn.multiscreensite.com/4345920a/dms3rep/multi/opt/Screenshot+2020-04-14+at+21.34.08-480w.png)
+
+I was a co-investigator for the [intubateCOVID project](https://www.intubatecovid.org/info), a user-reported registry of COVID-19 intubations and subsequent COVID-19 related outcomes in healthcare workers worldwide.
+
+The incidence of COVID-19 in healthcare workers is thought to be higher than the general population. This incidence may be higher in healthcare workers who have been exposed to high viral loads while undertaking aerosol-generating procedures, such as tracheal intubation. There was previously no large-scale data on the association between airway management and the development of COVID-19. Our aims for the registry were:
+
+1.  To ascertain the incidence of airway managers and assistants who develop COVID-19 in the weeks following an airway management episode.
+2.  To document associations of risk factors with COVID-19.
+3.  To examine the use of personal protective equipment (PPE) during airway management of COVID-19 patients. 
+4.  To allow healthcare professionals to track their airway management activity
+5.  To assess the demographic of airway managers.
+6. To allow local, national and international reporting of airway management activity and provide information to support policymakers.
+
+We have thus far received data from over 2000 users working at over 600 hospitals in 30 countries:
+
+<div class="u_1805219057 dmRespRow hide-for-small" id="1805219057"> <div class="dmRespColsWrapper" id="1948072698"> <div class="dmRespCol large-12 medium-12 small-12 u_1513530463" id="1513530463"> <div data-element-type="html" class="dmCustomHtml u_1626932494" id="1626932494"> <iframe src="https://dannyjnwong.github.io/assets/others/intubateCOVID_flexdashboard_map.html" width="1000px" height="700px" frameborder="0" scrolling="yes" allowfullscreen=""></iframe> 
+</div> 
+
+```{r}
+sessionInfo()
+```
