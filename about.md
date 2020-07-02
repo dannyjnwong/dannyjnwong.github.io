@@ -7,11 +7,13 @@ published: true
 
 ![Profile Image]({{ site.url }}/{{ site.picture }})
 
-I am an Anaesthetic Specialty Registrar from London, currently working at [Guy's and St Thomas' NHS Foundation Trust](https://www.guysandstthomas.nhs.uk/Home.aspx). I recently completed my PhD in Health Services Research with the [Division of Surgery, UCL](https://www.ucl.ac.uk/surgery/) and [National Institute of Academic Anaesthesia Health Services Research Centre (NIAA HSRC)](http://www.niaa-hsrc.org.uk/). My research project was the Epidemiology of Critical Care provision after Surgery (EpiCCS), it has been designated the [2nd Sprint National Anaesthesia Project (SNAP-2)](http://www.niaa-hsrc.org.uk/SNAP-2).
+I am an Anaesthetic Specialty Registrar from London, currently working at [Guy's and St Thomas' NHS Foundation Trust](https://www.guysandstthomas.nhs.uk/Home.aspx). I recently completed my PhD in Health Services Research with the [Division of Surgery, UCL](https://www.ucl.ac.uk/surgery/) and [National Institute of Academic Anaesthesia Health Services Research Centre (NIAA HSRC)](http://www.niaa-hsrc.org.uk/). My PhD research investigated the Epidemiology of Critical Care provision after Surgery (EpiCCS), and was designated the [2nd Sprint National Anaesthesia Project (SNAP-2)](http://www.niaa-hsrc.org.uk/SNAP-2).
 
-I am a [2017 Fellow](https://www.software.ac.uk/fellowship-programme) of the [Software Sustainability Institute](https://www.software.ac.uk), a national facility for cultivating and improving research software to support world-class research. I contribute to the [Data Science for Docs](http://datascibc.org/Data-Science-for-Docs/) course, which aims to teach medical professionals basic concepts, skills, and tools for working more effectively with data.
+I am an [Associate of King's College](https://www.kcl.ac.uk/aboutkings/principal/dean/akc/akc-handbook/starting/values), a [Member of the Royal College of Physicians (UK)](https://www.mrcpuk.org/about-us), a [Fellow of the Royal College of Anaesthetists](https://rcoa.ac.uk/examinations), an [Associate Fellow of the Higher Education Academy](https://www.advance-he.ac.uk/fellowship/associate-fellowship), and a [Member of the Faculty of Clinical Informatics](https://facultyofclinicalinformatics.org.uk/).
 
-My research interests include anaesthesia, perioperative medicine, reproducible science and statistical computing & mapping with R & QGIS.
+In addition to my academic qualifications, I am also a [2017 Fellow](https://www.software.ac.uk/fellowship-programme) of the [Software Sustainability Institute](https://www.software.ac.uk), a national facility for cultivating and improving research software to support world-class research. I contribute to the [Data Science for Docs](http://datascibc.org/Data-Science-for-Docs/) course, which aims to teach medical professionals basic concepts, skills, and tools for working more effectively with data. 
+
+My research interests include anaesthesia, perioperative medicine, reproducible science and statistical computing & mapping with R.
 
 ### Curriculum Vitae
 
