@@ -8,7 +8,6 @@ tag:
 - "COVID-19"
 - "thoughts"
 - "medicine"
-- "R Markdown"
 ---
 
 What a whirlwind few months it has been since I last [blogged in March 2020](https://dannyjnwong.github.io/UK-COVID-19-Cases/). Back then, the COVID-19 cases were just starting to rise in the UK, following the trends from Italy. Little did we know how rapidly things would escalate, and within a couple of weeks of my post, the UK entered into lockdown as patients with COVID-19 started flooding through the hospital doors.
