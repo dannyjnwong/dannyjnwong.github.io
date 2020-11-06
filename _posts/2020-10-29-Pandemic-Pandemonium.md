@@ -1,7 +1,7 @@
 ---
 title: "Pandemic Pandemonium"
 author: "Danny Wong"
-date: "29 October, 2020"
+date: "06 November, 2020"
 layout: post
 blog: true
 tag:
@@ -40,6 +40,14 @@ While many kids around the country were isolated at home with their parents as s
 
 We can probably conclude now that 2020 is a washout. It will be a big asterisk in history, and will mark itself in most people's memories as a terrible year. As I write this, the cases are again rising exponentially across the UK and much of Western Europe, and pressures are starting again to build in the health service. Another lockdown is imminent, and I think it's a question of when and not whether it will happen. I am worried, as many others probably are, about the future. We can only hope it gets better soon.
 
+## Addendum: 6th November 2020
+
+When I started writing this post on the morning of 29th October 2020, I was feeling in a reflective mood as I received a call from my dad that my grandfather was unwell and took a turn for the worst in hospital. He had been admitted to hospital the night before in Malaysia, having spiked a temperature and become short of breath. He was COVID-19 swab negative, and had right lower lobe consolidation essentially had an aspiration pneumonia. He was 94 and had a long list of comorbidities and had not been well for a year or two, bouncing in and out of hospital with recurrent pneumonias. By now he was bed-bound and had such a poor swallow that he was receiving nasogastric feeding and being kept nil by mouth: it wasn't a good quality-of-life by any measure. 
+
+My dad told me my grandfather had deteriorated and was now on intensive care and was receiving non-invasive ventilation. He was clearly not doing well. Despite the NIV, he was not improving and was clearly suffering. Over a Zoom videocall, with over twenty people on the line, we discussed with the ICU physician and a collective decision was made that we should withdraw treatment. He died about two or three hours later. 
+
+The pandemic meant that none of us abroad were able to attend the funeral in Malaysia. Again I had to participate in the funeral events remotely via Zoom over the weekend that followed. Is there anything more emblematic of 2020?
+
 
 {% highlight r %}
 sessionInfo()
@@ -68,9 +76,6 @@ sessionInfo()
 ## [1] knitr_1.25
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] compiler_3.5.2       magrittr_1.5         tools_3.5.2         
-##  [4] rstudioapi_0.11      wordcountaddin_0.2.0 stringi_1.1.7       
-##  [7] highr_0.7            koRpus_0.10-2        data.table_1.12.8   
-## [10] stringr_1.4.0        xfun_0.10            packrat_0.4.9-3     
-## [13] rlang_0.4.5          evaluate_0.14        purrr_0.3.3
+## [1] compiler_3.5.2  magrittr_1.5    tools_3.5.2     stringi_1.1.7  
+## [5] stringr_1.4.0   xfun_0.10       packrat_0.4.9-3 evaluate_0.14
 {% endhighlight %}
